@@ -1,0 +1,80 @@
+# Hello Mail - Postfix main.cf template
+# This is a Go text/template file. Render with the appropriate configuration
+# values before deploying to /etc/postfix/main.cf.
+
+# ============================================================
+# BASIC SETTINGS
+# ============================================================
+myhostname = {{.Hostname}}
+mydomain = {{.Domain}}
+myorigin = $mydomain
+mydestination = localhost
+mynetworks = 127.0.0.0/8 [::1]/128
+
+# ============================================================
+# VIRTUAL DOMAIN CONFIGURATION
+# ============================================================
+# Verified sending domains are resolved from PostgreSQL via the
+# pgsql-virtual-domains.cf lookup table.
+virtual_mailbox_domains = pgsql:/etc/postfix/pgsql-virtual-domains.cf
+virtual_transport = lmtp:unix:private/hellomail-lmtp
+
+# ============================================================
+# MILTER CONFIGURATION
+# ============================================================
+# The Hello Mail milter runs on localhost:10382 and handles
+# suppression checks, DKIM signing, and tracking injection.
+smtpd_milters = inet:127.0.0.1:10382
+non_smtpd_milters = inet:127.0.0.1:10382
+milter_default_action = accept
+milter_protocol = 6
+
+# ============================================================
+# TLS CONFIGURATION
+# ============================================================
+smtpd_tls_cert_file = /etc/letsencrypt/live/{{.Domain}}/fullchain.pem
+smtpd_tls_key_file = /etc/letsencrypt/live/{{.Domain}}/privkey.pem
+smtpd_use_tls = yes
+smtpd_tls_security_level = may
+smtpd_tls_auth_only = yes
+smtpd_tls_loglevel = 1
+smtpd_tls_received_header = yes
+smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+
+smtp_tls_security_level = may
+smtp_tls_loglevel = 1
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+
+# ============================================================
+# SMTP RESTRICTIONS
+# ============================================================
+smtpd_helo_required = yes
+smtpd_helo_restrictions =
+    permit_mynetworks,
+    reject_invalid_helo_hostname,
+    reject_non_fqdn_helo_hostname
+
+smtpd_sender_restrictions =
+    permit_mynetworks,
+    reject_non_fqdn_sender,
+    reject_unknown_sender_domain
+
+smtpd_recipient_restrictions =
+    permit_mynetworks,
+    reject_unauth_destination,
+    reject_non_fqdn_recipient,
+    reject_unknown_recipient_domain
+
+# ============================================================
+# BOUNCE & NOTIFICATION
+# ============================================================
+bounce_queue_lifetime = 1d
+maximal_queue_lifetime = 3d
+notify_classes = bounce, resource, software
+
+# ============================================================
+# PERFORMANCE TUNING
+# ============================================================
+default_process_limit = 100
+smtp_destination_concurrency_limit = 20
+smtp_destination_rate_delay = 0s

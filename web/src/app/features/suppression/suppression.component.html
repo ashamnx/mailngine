@@ -1,0 +1,132 @@
+<div class="suppression">
+  <div class="page-header">
+    <div>
+      <h1>Suppression List</h1>
+      <p class="page-subtitle">Manage suppressed email addresses</p>
+    </div>
+    <button class="btn-primary" (click)="toggleAddForm()">
+      <span class="material-symbols-rounded sm">add</span>
+      Add Suppression
+    </button>
+  </div>
+
+  @if (showAddForm()) {
+    <div class="card add-form">
+      <h3 class="add-form-title">Add Suppression</h3>
+      <div class="add-form-fields">
+        <div class="form-field">
+          <label class="input-label" for="suppression-email">Email address</label>
+          <input
+            id="suppression-email"
+            class="input"
+            type="email"
+            placeholder="user@example.com"
+            [ngModel]="newEmail()"
+            (ngModelChange)="newEmail.set($event)"
+            (keydown.enter)="addSuppression()"
+          />
+        </div>
+        <div class="form-field">
+          <label class="input-label" for="suppression-reason">Reason</label>
+          <select
+            id="suppression-reason"
+            class="input"
+            [ngModel]="newReason()"
+            (ngModelChange)="newReason.set($event)"
+          >
+            <option value="hard_bounce">Hard Bounce</option>
+            <option value="complaint">Complaint</option>
+            <option value="manual">Manual</option>
+          </select>
+        </div>
+      </div>
+      <div class="add-form-actions">
+        <button
+          class="btn-primary"
+          (click)="addSuppression()"
+          [disabled]="isAdding() || !newEmail().trim()"
+        >
+          @if (isAdding()) {
+            Adding...
+          } @else {
+            Add to List
+          }
+        </button>
+        <button class="btn-secondary" (click)="toggleAddForm()">Cancel</button>
+      </div>
+    </div>
+  }
+
+  @if (isLoading()) {
+    <div class="loading-state">
+      <p>Loading suppression list...</p>
+    </div>
+  } @else if (suppressions().length === 0) {
+    <div class="empty-state card">
+      <span class="material-symbols-rounded lg">block</span>
+      <h2>No suppressed addresses</h2>
+      <p>Suppressed email addresses will appear here. These addresses will be excluded from future sends.</p>
+    </div>
+  } @else {
+    <div class="card table-container">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Reason</th>
+            <th>Added</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (suppression of suppressions(); track suppression.id) {
+            <tr>
+              <td class="suppression-email">{{ suppression.email }}</td>
+              <td>
+                <span [class]="reasonBadgeClass(suppression.reason)">
+                  {{ reasonLabel(suppression.reason) }}
+                </span>
+              </td>
+              <td>{{ suppression.created_at | date: 'mediumDate' }}</td>
+              <td>
+                <button
+                  class="btn-danger btn-sm"
+                  (click)="removeSuppression(suppression)"
+                >
+                  Remove
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    @if (meta(); as m) {
+      <div class="pagination">
+        <span class="pagination-info">
+          Showing {{ showingFrom() }}-{{ showingTo() }} of {{ m.total }}
+        </span>
+        <div class="pagination-controls">
+          <button
+            class="btn-secondary btn-sm"
+            (click)="prevPage()"
+            [disabled]="!hasPrev()"
+          >
+            <span class="material-symbols-rounded sm">chevron_left</span>
+            Previous
+          </button>
+          <button
+            class="btn-secondary btn-sm"
+            (click)="nextPage()"
+            [disabled]="!hasNext()"
+          >
+            Next
+            <span class="material-symbols-rounded sm">chevron_right</span>
+          </button>
+        </div>
+      </div>
+    }
+  }
+</div>

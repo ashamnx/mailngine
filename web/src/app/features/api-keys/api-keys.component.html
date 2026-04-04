@@ -1,0 +1,134 @@
+<div class="api-keys">
+  <div class="page-header">
+    <h1>API Keys</h1>
+    <button class="btn-primary" (click)="openCreateForm()">
+      <span class="material-symbols-rounded sm">add</span>
+      Create API Key
+    </button>
+  </div>
+
+  <!-- Create Form -->
+  @if (showCreateForm()) {
+    <div class="card create-section">
+      @if (createdKey()) {
+        <div class="key-created">
+          <div class="key-created-header">
+            <span class="material-symbols-rounded key-success-icon">check_circle</span>
+            <h3>API Key Created</h3>
+          </div>
+          <p class="key-warning">
+            Make sure to copy your API key now. You will not be able to see it again.
+          </p>
+          <div class="key-display">
+            <code class="key-value">{{ createdKey() }}</code>
+            <button class="btn-secondary btn-sm" (click)="copyKey()">
+              <span class="material-symbols-rounded sm">
+                {{ copied() ? 'check' : 'content_copy' }}
+              </span>
+              {{ copied() ? 'Copied' : 'Copy' }}
+            </button>
+          </div>
+          <button class="btn-text btn-sm" (click)="closeCreateForm()">Done</button>
+        </div>
+      } @else {
+        <h3 class="create-title">Create a new API key</h3>
+        <div class="create-form">
+          <div class="form-field">
+            <label class="input-label" for="keyName">Name</label>
+            <input
+              id="keyName"
+              class="input"
+              type="text"
+              placeholder="e.g. Production Key"
+              [ngModel]="newKeyName()"
+              (ngModelChange)="newKeyName.set($event)"
+            />
+          </div>
+          <div class="form-field">
+            <label class="input-label" for="keyPermission">Permission</label>
+            <select
+              id="keyPermission"
+              class="input"
+              [ngModel]="newKeyPermission()"
+              (ngModelChange)="newKeyPermission.set($event)"
+            >
+              <option value="full">Full Access</option>
+              <option value="send_only">Send Only</option>
+              <option value="read_only">Read Only</option>
+            </select>
+          </div>
+          <div class="create-actions">
+            <button
+              class="btn-primary"
+              (click)="createKey()"
+              [disabled]="!newKeyName().trim() || isCreating()"
+            >
+              {{ isCreating() ? 'Creating...' : 'Create Key' }}
+            </button>
+            <button class="btn-secondary" (click)="closeCreateForm()">Cancel</button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Keys Table -->
+  @if (isLoading()) {
+    <div class="loading-state">
+      <p>Loading API keys...</p>
+    </div>
+  } @else if (keys().length === 0 && !showCreateForm()) {
+    <div class="empty-state card">
+      <span class="material-symbols-rounded lg">key</span>
+      <h2>No API keys yet</h2>
+      <p>Create an API key to start sending emails programmatically.</p>
+      <button class="btn-primary" (click)="openCreateForm()">
+        <span class="material-symbols-rounded sm">add</span>
+        Create API Key
+      </button>
+    </div>
+  } @else if (keys().length > 0) {
+    <div class="card table-container">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Key</th>
+            <th>Permission</th>
+            <th>Created</th>
+            <th>Last Used</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (key of keys(); track key.id) {
+            <tr>
+              <td class="key-name">{{ key.name }}</td>
+              <td>
+                <code class="key-prefix">{{ key.key_prefix }}...</code>
+              </td>
+              <td>
+                <span class="badge badge--info">
+                  {{ formatPermission(key.permission) }}
+                </span>
+              </td>
+              <td>{{ key.created_at | date: 'mediumDate' }}</td>
+              <td>
+                @if (key.last_used_at) {
+                  {{ key.last_used_at | date: 'mediumDate' }}
+                } @else {
+                  <span class="text-muted">Never</span>
+                }
+              </td>
+              <td>
+                <button class="btn-danger btn-sm" (click)="revokeKey(key.id)">
+                  Revoke
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

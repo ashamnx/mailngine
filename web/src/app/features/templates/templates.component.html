@@ -1,0 +1,148 @@
+<div class="templates">
+  <div class="page-header">
+    <h1>Templates</h1>
+    <button class="btn-primary" (click)="openCreateForm()">
+      <span class="material-symbols-rounded sm">add</span>
+      Create Template
+    </button>
+  </div>
+
+  <!-- Create Template Form -->
+  @if (showCreateForm()) {
+    <div class="card create-section">
+      <h3 class="create-title">Create a new template</h3>
+      <div class="create-form">
+        <div class="form-row">
+          <div class="form-field">
+            <label class="input-label" for="templateName">Name</label>
+            <input
+              id="templateName"
+              class="input"
+              type="text"
+              placeholder="e.g., Welcome Email"
+              [ngModel]="newName()"
+              (ngModelChange)="newName.set($event)"
+            />
+          </div>
+          <div class="form-field">
+            <label class="input-label" for="templateSubject">Subject</label>
+            <input
+              id="templateSubject"
+              class="input"
+              type="text"
+              [placeholder]="'e.g., Welcome to {{company_name}}'"
+              [ngModel]="newSubject()"
+              (ngModelChange)="newSubject.set($event)"
+            />
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="input-label" for="templateHtml">HTML Body</label>
+          <textarea
+            id="templateHtml"
+            class="input textarea"
+            [placeholder]="'<h1>Hello {{name}}</h1>...'"
+            rows="6"
+            [ngModel]="newHtmlBody()"
+            (ngModelChange)="newHtmlBody.set($event)"
+          ></textarea>
+        </div>
+        <div class="form-field">
+          <label class="input-label" for="templateText">Text Body</label>
+          <textarea
+            id="templateText"
+            class="input textarea"
+            [placeholder]="'Hello {{name}}...'"
+            rows="3"
+            [ngModel]="newTextBody()"
+            (ngModelChange)="newTextBody.set($event)"
+          ></textarea>
+        </div>
+        <div class="form-field">
+          <label class="input-label" for="templateVars">Variables</label>
+          <input
+            id="templateVars"
+            class="input"
+            type="text"
+            placeholder="name, company_name, email"
+            [ngModel]="newVariables()"
+            (ngModelChange)="newVariables.set($event)"
+          />
+          <span class="input-helper">Comma-separated list of variable names</span>
+        </div>
+
+        @if (createError()) {
+          <p class="input-error">{{ createError() }}</p>
+        }
+
+        <div class="form-actions">
+          <button
+            class="btn-primary"
+            (click)="createTemplate()"
+            [disabled]="!newName().trim() || !newSubject().trim() || isCreating()"
+          >
+            {{ isCreating() ? 'Creating...' : 'Create Template' }}
+          </button>
+          <button class="btn-secondary" (click)="closeCreateForm()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Templates Table -->
+  @if (isLoading()) {
+    <div class="loading-state">
+      <p>Loading templates...</p>
+    </div>
+  } @else if (templates().length === 0 && !showCreateForm()) {
+    <div class="empty-state card">
+      <span class="material-symbols-rounded lg">draft</span>
+      <h2>No templates yet</h2>
+      <p>Create your first email template to get started.</p>
+      <button class="btn-primary" (click)="openCreateForm()">
+        <span class="material-symbols-rounded sm">add</span>
+        Create Template
+      </button>
+    </div>
+  } @else if (templates().length > 0) {
+    <div class="card table-container">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Subject</th>
+            <th>Variables</th>
+            <th>Updated</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (template of templates(); track template.id) {
+            <tr class="clickable-row" (click)="navigateToTemplate(template.id)">
+              <td class="template-name">{{ template.name }}</td>
+              <td class="template-subject">{{ template.subject }}</td>
+              <td>
+                <span class="badge badge--neutral">{{ template.variables.length }}</span>
+              </td>
+              <td>{{ template.updated_at | date: 'mediumDate' }}</td>
+              <td class="actions-cell">
+                <button
+                  class="btn-secondary btn-sm"
+                  (click)="navigateToTemplate(template.id); $event.stopPropagation()"
+                >
+                  Edit
+                </button>
+                <button
+                  class="btn-danger btn-sm"
+                  (click)="deleteTemplate(template.id, $event)"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

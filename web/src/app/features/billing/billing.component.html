@@ -1,0 +1,131 @@
+<div class="billing">
+  <div class="page-header">
+    <h1>Billing &amp; Usage</h1>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-state">
+      <p>Loading billing information...</p>
+    </div>
+  } @else {
+    <!-- Current Plan + Usage -->
+    <div class="overview-grid">
+      <!-- Current Plan -->
+      <div class="card">
+        <div class="card-header">
+          <h2>Current Plan</h2>
+          @if (plan()) {
+            <span class="badge badge--info">{{ plan()!.name }}</span>
+          }
+        </div>
+        @if (plan()) {
+          <div class="plan-info">
+            <div class="plan-detail">
+              <span class="plan-detail-label">Monthly Limit</span>
+              <span class="plan-detail-value">{{ plan()!.monthly_limit | number }} emails</span>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Usage -->
+      <div class="card">
+        <div class="card-header">
+          <h2>Usage</h2>
+          <span class="usage-pct">{{ usagePercent() }}%</span>
+        </div>
+        @if (usage()) {
+          <div class="usage-bar-container">
+            <div class="usage-bar">
+              <div
+                [class]="usageBarClass()"
+                [style.width.%]="usagePercent()"
+              ></div>
+            </div>
+            <div class="usage-stats">
+              <span>{{ usage()!.emails_sent | number }} sent</span>
+              <span>{{ usage()!.monthly_limit | number }} limit</span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Plan Comparison -->
+    <section class="card section">
+      <div class="card-header">
+        <h2>Plans</h2>
+      </div>
+      <div class="plans-grid">
+        @for (tier of planTiers; track tier.name) {
+          <div class="plan-card" [class.plan-card--active]="isCurrentPlan(tier.name)">
+            @if (isCurrentPlan(tier.name)) {
+              <span class="badge badge--info plan-badge">Current</span>
+            }
+            <h3 class="plan-card-name">{{ tier.name }}</h3>
+            <div class="plan-card-price">{{ tier.price }}<span class="plan-card-period" [hidden]="tier.price === 'Custom'">/mo</span></div>
+            <div class="plan-card-limits">
+              <div class="plan-card-limit">
+                <span class="material-symbols-rounded sm">mail</span>
+                {{ tier.emails }}
+              </div>
+              <div class="plan-card-limit">
+                <span class="material-symbols-rounded sm">dns</span>
+                {{ tier.domains }}
+              </div>
+            </div>
+            <ul class="plan-card-features">
+              @for (feature of tier.features; track feature) {
+                <li>
+                  <span class="material-symbols-rounded sm">check</span>
+                  {{ feature }}
+                </li>
+              }
+            </ul>
+            @if (isCurrentPlan(tier.name)) {
+              <button class="btn-secondary" disabled>Current Plan</button>
+            } @else {
+              <button class="btn-primary" disabled>Upgrade</button>
+            }
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- Usage History -->
+    <section class="card section">
+      <div class="card-header">
+        <h2>Usage History</h2>
+      </div>
+      @if (usageHistory().length === 0) {
+        <div class="section-empty">
+          <span class="material-symbols-rounded">bar_chart</span>
+          <p>No usage history available yet.</p>
+        </div>
+      } @else {
+        <div class="history-table-wrapper">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Month</th>
+                <th>Emails Sent</th>
+                <th>Emails Received</th>
+                <th>API Calls</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (entry of usageHistory(); track entry.month) {
+                <tr>
+                  <td class="month-cell">{{ entry.month }}</td>
+                  <td>{{ entry.sent | number }}</td>
+                  <td>{{ entry.received | number }}</td>
+                  <td>{{ entry.api_calls | number }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+  }
+</div>

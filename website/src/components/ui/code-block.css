@@ -1,0 +1,49 @@
+/* ==========================================================================
+   CodeBlock Component Styles
+   ========================================================================== */
+
+.hm-code-block {
+  position: relative;
+  background-color: #1e1e1e;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.hm-code-block__lang {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: #858585;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+.hm-code-block__pre {
+  margin: 0;
+  padding: var(--space-6);
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+  color: #d4d4d4;
+  white-space: pre;
+  tab-size: 2;
+}
+
+/* --- Syntax Tokens --- */
+
+.hm-code--keyword {
+  color: #569cd6;
+}
+
+.hm-code--string {
+  color: #6a9955;
+}
+
+.hm-code--comment {
+  color: #6a9955;
+  font-style: italic;
+  opacity: 0.7;
+}

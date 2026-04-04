@@ -1,0 +1,80 @@
+<div class="emails">
+  <div class="page-header">
+    <div>
+      <h1>Emails</h1>
+      <p class="page-subtitle">Sent emails</p>
+    </div>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-state">
+      <p>Loading emails...</p>
+    </div>
+  } @else if (emails().length === 0) {
+    <div class="empty-state card">
+      <span class="material-symbols-rounded lg">mail</span>
+      <h2>No emails sent yet</h2>
+      <p>Emails you send through the API will appear here.</p>
+    </div>
+  } @else {
+    <div class="card table-container">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>To</th>
+            <th>Subject</th>
+            <th>Status</th>
+            <th>Sent At</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (email of emails(); track email.id) {
+            <tr class="clickable-row" (click)="navigateToEmail(email.id)">
+              <td class="email-to">{{ email.to }}</td>
+              <td class="email-subject">{{ email.subject }}</td>
+              <td>
+                <span [class]="statusBadgeClass(email.status)">
+                  {{ email.status }}
+                </span>
+              </td>
+              <td>
+                @if (email.sent_at) {
+                  {{ email.sent_at | date: 'medium' }}
+                } @else {
+                  <span class="text-muted">--</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    @if (meta(); as m) {
+      <div class="pagination">
+        <span class="pagination-info">
+          Showing {{ showingFrom() }}-{{ showingTo() }} of {{ m.total }}
+        </span>
+        <div class="pagination-controls">
+          <button
+            class="btn-secondary btn-sm"
+            (click)="prevPage()"
+            [disabled]="!hasPrev()"
+          >
+            <span class="material-symbols-rounded sm">chevron_left</span>
+            Previous
+          </button>
+          <button
+            class="btn-secondary btn-sm"
+            (click)="nextPage()"
+            [disabled]="!hasNext()"
+          >
+            Next
+            <span class="material-symbols-rounded sm">chevron_right</span>
+          </button>
+        </div>
+      </div>
+    }
+  }
+</div>

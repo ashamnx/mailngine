@@ -1,0 +1,42 @@
+/* ==========================================================================
+   Badge Component Styles
+   ========================================================================== */
+
+.hm-badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-primary);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+/* --- Variants --- */
+
+.hm-badge--success {
+  background-color: #e6f4ea;
+  color: #1e8e3e;
+}
+
+.hm-badge--warning {
+  background-color: #fef7e0;
+  color: #b06000;
+}
+
+.hm-badge--error {
+  background-color: #fce8e6;
+  color: #c5221f;
+}
+
+.hm-badge--info {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.hm-badge--neutral {
+  background-color: var(--color-bg-surface-alt);
+  color: var(--color-text-secondary);
+}

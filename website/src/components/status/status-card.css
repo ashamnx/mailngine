@@ -1,0 +1,101 @@
+/* ==========================================================================
+   StatusCard Component Styles
+   ========================================================================== */
+
+.status-card {
+  margin-bottom: var(--space-3);
+}
+
+.status-card__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.status-card__info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.status-card__name {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.status-card__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.status-card__response-time {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-disabled);
+}
+
+.status-card__label {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.status-card__label--up {
+  color: #1e8e3e;
+}
+
+.status-card__label--down {
+  color: #c5221f;
+}
+
+.status-card__label--unknown {
+  color: var(--color-text-disabled);
+}
+
+/* --- Status Dot --- */
+
+.status-card__dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.status-card__dot--up {
+  background: #34a853;
+  animation: pulse-green 2s infinite;
+}
+
+.status-card__dot--down {
+  background: #ea4335;
+  animation: pulse-red 2s infinite;
+}
+
+.status-card__dot--unknown {
+  background: #9aa0a6;
+}
+
+@keyframes pulse-green {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(52, 168, 83, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(52, 168, 83, 0);
+  }
+}
+
+@keyframes pulse-red {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(234, 67, 53, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(234, 67, 53, 0);
+  }
+}

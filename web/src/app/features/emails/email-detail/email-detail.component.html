@@ -1,0 +1,89 @@
+@if (isLoading()) {
+  <div class="loading-state">
+    <p>Loading email...</p>
+  </div>
+} @else if (email()) {
+  <div class="email-detail">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+      <button class="btn-text btn-sm" (click)="goBack()">
+        <span class="material-symbols-rounded sm">arrow_back</span>
+        Emails
+      </button>
+    </nav>
+
+    <!-- Header -->
+    <div class="page-header">
+      <div class="page-header-info">
+        <h1>{{ email()!.subject }}</h1>
+        <span [class]="statusBadgeClass(email()!.status)">{{ email()!.status }}</span>
+      </div>
+    </div>
+
+    <!-- Metadata Card -->
+    <section class="card section">
+      <div class="card-header">
+        <h2>Email Details</h2>
+      </div>
+      <div class="metadata-grid">
+        <div class="metadata-item">
+          <span class="metadata-label">From</span>
+          <span class="metadata-value">{{ email()!.from }}</span>
+        </div>
+        <div class="metadata-item">
+          <span class="metadata-label">To</span>
+          <span class="metadata-value">{{ email()!.to }}</span>
+        </div>
+        <div class="metadata-item">
+          <span class="metadata-label">Subject</span>
+          <span class="metadata-value">{{ email()!.subject }}</span>
+        </div>
+        <div class="metadata-item">
+          <span class="metadata-label">Status</span>
+          <span class="metadata-value">
+            <span [class]="statusBadgeClass(email()!.status)">{{ email()!.status }}</span>
+          </span>
+        </div>
+        <div class="metadata-item">
+          <span class="metadata-label">Message-ID</span>
+          <code class="metadata-value mono">{{ email()!.message_id }}</code>
+        </div>
+        <div class="metadata-item">
+          <span class="metadata-label">Created At</span>
+          <span class="metadata-value">{{ email()!.created_at | date: 'medium' }}</span>
+        </div>
+        <div class="metadata-item">
+          <span class="metadata-label">Sent At</span>
+          <span class="metadata-value">
+            @if (email()!.sent_at) {
+              {{ email()!.sent_at | date: 'medium' }}
+            } @else {
+              <span class="text-muted">--</span>
+            }
+          </span>
+        </div>
+        <div class="metadata-item">
+          <span class="metadata-label">Delivered At</span>
+          <span class="metadata-value">
+            @if (email()!.delivered_at) {
+              {{ email()!.delivered_at | date: 'medium' }}
+            } @else {
+              <span class="text-muted">--</span>
+            }
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Timeline Placeholder -->
+    <section class="card section">
+      <div class="card-header">
+        <h2>Event History</h2>
+      </div>
+      <div class="timeline-placeholder">
+        <span class="material-symbols-rounded">timeline</span>
+        <p>Event timeline will be available in a future update.</p>
+      </div>
+    </section>
+  </div>
+}

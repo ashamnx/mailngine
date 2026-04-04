@@ -1,0 +1,27 @@
+[Unit]
+Description=Hello Mail API Server
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=hellomail
+Group=hellomail
+WorkingDirectory=/opt/hellomail
+ExecStart=/opt/hellomail/server
+EnvironmentFile=/opt/hellomail/.env
+Restart=always
+RestartSec=5
+
+# Security hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/hellomail
+PrivateTmp=true
+
+# Resource limits
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target

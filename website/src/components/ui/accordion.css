@@ -1,0 +1,85 @@
+/* ==========================================================================
+   Accordion Component Styles (native <details>/<summary>)
+   ========================================================================== */
+
+.hm-accordion {
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.hm-accordion__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-5) 0;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  transition: color var(--transition-fast);
+}
+
+/* Remove default marker in all browsers */
+.hm-accordion__summary::-webkit-details-marker {
+  display: none;
+}
+
+.hm-accordion__summary::marker {
+  display: none;
+  content: "";
+}
+
+.hm-accordion__title {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.hm-accordion__summary:hover .hm-accordion__title {
+  color: var(--color-primary);
+}
+
+/* Plus / Minus indicator using pseudo-elements */
+.hm-accordion__icon {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-left: var(--space-4);
+}
+
+.hm-accordion__icon::before,
+.hm-accordion__icon::after {
+  content: "";
+  position: absolute;
+  background-color: var(--color-text-secondary);
+  transition: transform var(--transition-normal);
+}
+
+/* Horizontal bar (always visible) */
+.hm-accordion__icon::before {
+  top: 50%;
+  left: 2px;
+  right: 2px;
+  height: 2px;
+  transform: translateY(-50%);
+}
+
+/* Vertical bar (rotates away when open) */
+.hm-accordion__icon::after {
+  left: 50%;
+  top: 2px;
+  bottom: 2px;
+  width: 2px;
+  transform: translateX(-50%);
+}
+
+.hm-accordion[open] .hm-accordion__icon::after {
+  transform: translateX(-50%) rotate(90deg);
+  opacity: 0;
+}
+
+.hm-accordion__content {
+  padding-bottom: var(--space-5);
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}

@@ -1,0 +1,58 @@
+/* ==========================================================================
+   Section Component Styles
+   ========================================================================== */
+
+.hm-section {
+  width: 100%;
+}
+
+.hm-section__inner {
+  max-width: var(--section-max-width);
+  margin: 0 auto;
+  padding-left: var(--space-6);
+  padding-right: var(--space-6);
+}
+
+/* --- Backgrounds --- */
+
+.hm-section--bg-white {
+  background-color: var(--color-bg-app);
+}
+
+.hm-section--bg-surface {
+  background-color: var(--color-bg-surface);
+}
+
+.hm-section--bg-gradient {
+  background: linear-gradient(
+    180deg,
+    var(--color-bg-app) 0%,
+    var(--color-primary-light) 100%
+  );
+}
+
+.hm-section--bg-primary {
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+
+.hm-section--bg-primary p {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* --- Padding --- */
+
+.hm-section--pad-sm {
+  padding-top: var(--space-8);
+  padding-bottom: var(--space-8);
+}
+
+.hm-section--pad-md {
+  padding-top: var(--space-16);
+  padding-bottom: var(--space-16);
+}
+
+.hm-section--pad-lg {
+  padding-top: 96px;
+  padding-bottom: 96px;
+}

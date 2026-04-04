@@ -1,0 +1,156 @@
+@use 'styles/variables' as *;
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $space-8;
+
+  h1 {
+    font-size: $font-size-3xl;
+  }
+}
+
+// ── Create Section ──────────────────────────────────────────────
+
+.create-section {
+  margin-bottom: $space-6;
+}
+
+.create-title {
+  font-size: $font-size-lg;
+  margin-bottom: $space-5;
+}
+
+.create-form {
+  display: flex;
+  flex-direction: column;
+  gap: $space-5;
+  max-width: 480px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.create-actions {
+  display: flex;
+  gap: $space-3;
+}
+
+// ── Key Created ─────────────────────────────────────────────────
+
+.key-created {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.key-created-header {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+
+  h3 {
+    font-size: $font-size-lg;
+  }
+}
+
+.key-success-icon {
+  color: $color-success;
+}
+
+.key-warning {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.key-display {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-4;
+  background-color: $color-bg-surface;
+  border: $border-default;
+  border-radius: $border-radius-sm;
+}
+
+.key-value {
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  word-break: break-all;
+  flex: 1;
+}
+
+// ── Table ───────────────────────────────────────────────────────
+
+.table-container {
+  padding: 0;
+  overflow-x: auto;
+
+  .table {
+    th:first-child,
+    td:first-child {
+      padding-left: $space-6;
+    }
+
+    th:last-child,
+    td:last-child {
+      padding-right: $space-6;
+    }
+  }
+}
+
+.key-name {
+  font-weight: $font-weight-medium;
+}
+
+.key-prefix {
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  padding: $space-1 $space-2;
+  background-color: $color-bg-surface;
+  border-radius: $border-radius-sm;
+}
+
+.text-muted {
+  color: $color-text-disabled;
+}
+
+// ── Empty State ─────────────────────────────────────────────────
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $space-16 $space-6;
+  text-align: center;
+  gap: $space-4;
+
+  .material-symbols-rounded {
+    color: $color-text-disabled;
+  }
+
+  h2 {
+    font-size: $font-size-xl;
+  }
+
+  p {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    margin-bottom: $space-2;
+  }
+}
+
+// ── Loading ─────────────────────────────────────────────────────
+
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-16;
+  color: $color-text-secondary;
+}

@@ -1,0 +1,242 @@
+@use 'styles/variables' as *;
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $space-8;
+
+  h1 {
+    font-size: $font-size-3xl;
+  }
+}
+
+// -- Overview Grid -----------------------------------------------------
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-6;
+  margin-bottom: $space-6;
+}
+
+.plan-info {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.plan-detail {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.plan-detail-label {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.plan-detail-value {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+}
+
+// -- Usage Bar ---------------------------------------------------------
+
+.usage-pct {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-semibold;
+  color: $color-primary;
+}
+
+.usage-bar-container {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.usage-bar {
+  height: 8px;
+  background-color: $color-bg-surface-alt;
+  border-radius: $border-radius-pill;
+  overflow: hidden;
+}
+
+.usage-fill {
+  height: 100%;
+  background-color: $color-primary;
+  border-radius: $border-radius-pill;
+  transition: width $transition-slow;
+
+  &--warning {
+    background-color: $color-warning;
+  }
+
+  &--critical {
+    background-color: $color-error;
+  }
+}
+
+.usage-stats {
+  display: flex;
+  justify-content: space-between;
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+// -- Plans Grid --------------------------------------------------------
+
+.section {
+  margin-bottom: $space-6;
+}
+
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $space-5;
+}
+
+.plan-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: $space-6;
+  border: $border-default;
+  border-radius: $border-radius-md;
+  transition: border-color $transition-fast;
+
+  &--active {
+    border-color: $color-primary;
+    background-color: $color-primary-light;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    margin-top: auto;
+    width: 100%;
+  }
+}
+
+.plan-badge {
+  position: absolute;
+  top: $space-4;
+  right: $space-4;
+}
+
+.plan-card-name {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  margin-bottom: $space-2;
+}
+
+.plan-card-price {
+  font-size: $font-size-4xl;
+  font-weight: $font-weight-semibold;
+  margin-bottom: $space-5;
+  letter-spacing: $letter-spacing-tight;
+}
+
+.plan-card-period {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-regular;
+  color: $color-text-secondary;
+}
+
+.plan-card-limits {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  margin-bottom: $space-5;
+  padding-bottom: $space-5;
+  border-bottom: 1px solid $color-border-light;
+}
+
+.plan-card-limit {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+
+  .material-symbols-rounded {
+    color: $color-primary;
+  }
+}
+
+.plan-card-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 $space-6;
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+
+    .material-symbols-rounded {
+      color: $color-success;
+      font-size: 18px;
+    }
+  }
+}
+
+// -- History Table -----------------------------------------------------
+
+.history-table-wrapper {
+  overflow-x: auto;
+  margin: 0 (-$space-6);
+
+  .table {
+    th:first-child,
+    td:first-child {
+      padding-left: $space-6;
+    }
+
+    th:last-child,
+    td:last-child {
+      padding-right: $space-6;
+    }
+  }
+}
+
+.month-cell {
+  font-weight: $font-weight-medium;
+}
+
+// -- Section States ----------------------------------------------------
+
+.section-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $space-10 $space-6;
+  text-align: center;
+  gap: $space-3;
+
+  .material-symbols-rounded {
+    font-size: 32px;
+    color: $color-text-disabled;
+  }
+
+  p {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+  }
+}
+
+// -- Loading -----------------------------------------------------------
+
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-16;
+  color: $color-text-secondary;
+}

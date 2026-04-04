@@ -1,0 +1,21 @@
+[Unit]
+Description=Hello Mail API Server
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/mailngine
+EnvironmentFile=/opt/mailngine/.env
+ExecStart=/opt/mailngine/bin/server
+Restart=always
+RestartSec=5
+LimitNOFILE=65535
+
+# Security
+NoNewPrivileges=true
+ProtectHome=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

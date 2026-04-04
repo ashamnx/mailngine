@@ -1,0 +1,298 @@
+@use 'styles/variables' as *;
+
+// ============================================================
+// PAGE LAYOUT
+// ============================================================
+
+.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8edf2 50%, #dce3ec 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+// ============================================================
+// DECORATIVE BACKGROUND SHAPES
+// ============================================================
+
+.login-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.login-bg__shape {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.4;
+}
+
+.login-bg__shape--1 {
+  width: 600px;
+  height: 600px;
+  background: $color-primary;
+  top: -200px;
+  right: -100px;
+  opacity: 0.08;
+}
+
+.login-bg__shape--2 {
+  width: 400px;
+  height: 400px;
+  background: #34A853;
+  bottom: -100px;
+  left: -100px;
+  opacity: 0.06;
+}
+
+.login-bg__shape--3 {
+  width: 300px;
+  height: 300px;
+  background: #FBBC04;
+  top: 50%;
+  left: 60%;
+  opacity: 0.05;
+}
+
+// ============================================================
+// CONTAINER
+// ============================================================
+
+.login-container {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-8;
+}
+
+// ============================================================
+// CARD
+// ============================================================
+
+.login-card {
+  max-width: 400px;
+  width: 100%;
+  padding: $space-10 $space-10 $space-8;
+  text-align: center;
+  background: $color-bg-app;
+  border: $border-default;
+  border-radius: $border-radius-xl;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+// ============================================================
+// LOGO
+// ============================================================
+
+.login-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: $space-6;
+}
+
+.login-logo__icon {
+  width: 56px;
+  height: 56px;
+  border-radius: $border-radius-md;
+  background: linear-gradient(135deg, $color-primary 0%, #1557B0 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba($color-primary, 0.3);
+
+  .material-symbols-rounded {
+    font-size: 28px;
+    color: white;
+  }
+}
+
+// ============================================================
+// TYPOGRAPHY
+// ============================================================
+
+.login-title {
+  font-family: $font-primary;
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $space-1;
+  letter-spacing: $letter-spacing-tight;
+}
+
+.login-subtitle {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-bottom: $space-8;
+}
+
+// ============================================================
+// AUTH BUTTONS
+// ============================================================
+
+.login-actions {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.login-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-3;
+  width: 100%;
+  height: 44px;
+  padding: 0 $space-6;
+  font-family: $font-primary;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  border-radius: $border-radius-sm;
+  cursor: pointer;
+  transition: all $transition-fast;
+  position: relative;
+}
+
+.login-btn--google {
+  background: $color-text-primary;
+  color: white;
+  border: none;
+
+  &:hover {
+    background: lighten($color-text-primary, 10%);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.login-btn--github {
+  background: $color-bg-app;
+  color: $color-text-primary;
+  border: $border-default;
+
+  &:hover:not(:disabled) {
+    background: $color-bg-surface;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.login-btn__icon {
+  flex-shrink: 0;
+}
+
+.login-btn__badge {
+  position: absolute;
+  right: $space-3;
+  font-size: 10px;
+  font-weight: $font-weight-medium;
+  color: $color-text-secondary;
+  background: $color-bg-surface;
+  padding: 2px 6px;
+  border-radius: $border-radius-pill;
+  letter-spacing: 0.03em;
+}
+
+// ============================================================
+// DIVIDER
+// ============================================================
+
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+  margin: $space-5 0;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: $color-border-light;
+  }
+
+  span {
+    font-size: $font-size-xs;
+    color: $color-text-disabled;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}
+
+// ============================================================
+// EMAIL INPUT
+// ============================================================
+
+.login-email {
+  display: flex;
+  gap: $space-2;
+
+  .input {
+    flex: 1;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &__btn {
+    flex-shrink: 0;
+    border-radius: $border-radius-sm;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// ============================================================
+// TERMS
+// ============================================================
+
+.login-terms {
+  margin-top: $space-6;
+  font-size: $font-size-xs;
+  color: $color-text-disabled;
+  line-height: $line-height-relaxed;
+
+  a {
+    color: $color-text-secondary;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+
+    &:hover {
+      color: $color-primary;
+    }
+  }
+}
+
+// ============================================================
+// FOOTER
+// ============================================================
+
+.login-footer {
+  display: flex;
+  align-items: center;
+  gap: $space-6;
+  font-size: $font-size-xs;
+  color: $color-text-disabled;
+
+  a {
+    color: $color-text-disabled;
+    text-decoration: none;
+
+    &:hover {
+      color: $color-text-secondary;
+    }
+  }
+}

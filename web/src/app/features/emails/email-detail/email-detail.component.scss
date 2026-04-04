@@ -1,0 +1,105 @@
+@use 'styles/variables' as *;
+
+// -- Breadcrumb --------------------------------------------------------
+
+.breadcrumb {
+  margin-bottom: $space-4;
+}
+
+// -- Page Header -------------------------------------------------------
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $space-8;
+}
+
+.page-header-info {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+
+  h1 {
+    font-size: $font-size-3xl;
+  }
+}
+
+// -- Sections ----------------------------------------------------------
+
+.section {
+  margin-bottom: $space-6;
+}
+
+// -- Metadata ----------------------------------------------------------
+
+.metadata-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $space-5;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.metadata-item {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+}
+
+.metadata-label {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: $color-text-secondary;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.metadata-value {
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+
+  &.mono {
+    font-family: $font-mono;
+    font-size: $font-size-xs;
+    word-break: break-all;
+  }
+}
+
+.text-muted {
+  color: $color-text-disabled;
+}
+
+// -- Timeline Placeholder ----------------------------------------------
+
+.timeline-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $space-10 $space-6;
+  text-align: center;
+  gap: $space-3;
+
+  .material-symbols-rounded {
+    font-size: 32px;
+    color: $color-text-disabled;
+  }
+
+  p {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+  }
+}
+
+// -- Loading -----------------------------------------------------------
+
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-16;
+  color: $color-text-secondary;
+}

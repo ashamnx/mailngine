@@ -1,0 +1,22 @@
+<div class="dashboard">
+  <div class="dashboard-header">
+    <h1>Welcome back, {{ authService.user()?.name }}</h1>
+    <p class="dashboard-subtitle">
+      Set up your first domain to start sending emails
+    </p>
+  </div>
+
+  <div class="stats-grid">
+    @for (stat of stats; track stat.title) {
+      <div class="stat-card card">
+        <div class="stat-icon">
+          <span class="material-symbols-rounded">{{ stat.icon }}</span>
+        </div>
+        <div class="stat-info">
+          <span class="stat-title">{{ stat.title }}</span>
+          <span class="stat-value">{{ stat.value }}</span>
+        </div>
+      </div>
+    }
+  </div>
+</div>

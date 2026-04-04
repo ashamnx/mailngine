@@ -1,0 +1,46 @@
+# Binaries
+bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Go
+vendor/
+*.test
+*.out
+coverage.txt
+
+# Environment
+.env
+.env.local
+.env.*.local
+deploy/production/.env.production
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Angular
+web/node_modules/
+web/dist/
+web/.angular/
+
+# Node SDKs
+sdks/node/node_modules/
+sdks/node/dist/
+
+# Laravel SDK
+sdks/laravel/vendor/
+
+# Temporary
+tmp/
+*.log

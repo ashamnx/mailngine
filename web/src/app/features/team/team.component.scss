@@ -1,0 +1,223 @@
+@use 'styles/variables' as *;
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $space-8;
+
+  h1 {
+    font-size: $font-size-3xl;
+  }
+}
+
+// -- Sections ----------------------------------------------------------
+
+.section {
+  margin-bottom: $space-6;
+}
+
+// -- Org Form ----------------------------------------------------------
+
+.org-form {
+  max-width: 480px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.org-input-row {
+  display: flex;
+  gap: $space-3;
+
+  .input {
+    flex: 1;
+  }
+}
+
+.save-success {
+  font-size: $font-size-xs;
+  color: $color-success;
+  font-weight: $font-weight-medium;
+  margin-top: $space-2;
+}
+
+// -- Invite Form -------------------------------------------------------
+
+.invite-title {
+  font-size: $font-size-lg;
+  margin-bottom: $space-5;
+}
+
+.invite-form {
+  display: flex;
+  flex-direction: column;
+  gap: $space-5;
+}
+
+.invite-row {
+  display: flex;
+  gap: $space-5;
+}
+
+.invite-email {
+  flex: 2;
+}
+
+.invite-role {
+  flex: 1;
+}
+
+.form-actions {
+  display: flex;
+  gap: $space-3;
+}
+
+// -- Members Table -----------------------------------------------------
+
+.member-count {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.members-table-wrapper {
+  overflow-x: auto;
+  margin: 0 (-$space-6);
+
+  .table {
+    th:first-child,
+    td:first-child {
+      padding-left: $space-6;
+    }
+
+    th:last-child,
+    td:last-child {
+      padding-right: $space-6;
+    }
+  }
+}
+
+.member-info {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+}
+
+.member-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.member-avatar-placeholder {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: $color-primary-light;
+  color: $color-primary;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  flex-shrink: 0;
+}
+
+.member-details {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.member-name {
+  font-weight: $font-weight-medium;
+  font-size: $font-size-sm;
+}
+
+.member-email {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// -- Role Edit ---------------------------------------------------------
+
+.role-edit {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+
+  .input-sm {
+    height: 32px;
+    width: auto;
+    min-width: 100px;
+    font-size: $font-size-xs;
+    padding: $space-1 $space-3;
+  }
+}
+
+// -- Member Actions ----------------------------------------------------
+
+.member-actions {
+  display: flex;
+  gap: $space-2;
+}
+
+.danger-text {
+  color: $color-error;
+
+  &:hover:not(:disabled) {
+    background-color: rgba($color-error, 0.08);
+    color: $color-error;
+  }
+}
+
+.remove-confirm {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+}
+
+.remove-text {
+  font-size: $font-size-xs;
+  color: $color-error;
+  font-weight: $font-weight-medium;
+}
+
+// -- Section States ----------------------------------------------------
+
+.section-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $space-10 $space-6;
+  text-align: center;
+  gap: $space-3;
+
+  .material-symbols-rounded {
+    font-size: 32px;
+    color: $color-text-disabled;
+  }
+
+  p {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+  }
+}
+
+// -- Loading -----------------------------------------------------------
+
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-16;
+  color: $color-text-secondary;
+}

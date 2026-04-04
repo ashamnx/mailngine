@@ -1,0 +1,206 @@
+/* ==========================================================================
+   Pricing Page Styles
+   ========================================================================== */
+
+/* --- Pricing Hero --- */
+
+.pricing-hero__inner {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.pricing-hero__title {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-4);
+}
+
+.pricing-hero__subtitle {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+}
+
+/* --- Pricing Grid --- */
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-6);
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .pricing-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .pricing-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Plan Card --- */
+
+.plan-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.plan-card--highlighted {
+  border-color: var(--color-primary);
+  border-width: 2px;
+  position: relative;
+}
+
+.plan-card__header {
+  margin-bottom: var(--space-6);
+}
+
+.plan-card__name-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.plan-card__name {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-medium);
+}
+
+.plan-card__price {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+}
+
+.plan-card__amount {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  line-height: 1;
+}
+
+.plan-card__period {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+}
+
+/* --- Plan Card Features --- */
+
+.plan-card__features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--space-8);
+  flex: 1;
+}
+
+.plan-card__feature {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.plan-card__feature:last-child {
+  border-bottom: none;
+}
+
+.plan-card__check {
+  font-size: 18px;
+  color: var(--color-success);
+  flex-shrink: 0;
+}
+
+/* --- Plan Card CTA --- */
+
+.plan-card__cta {
+  margin-top: auto;
+}
+
+.plan-card__button {
+  width: 100%;
+}
+
+/* --- Feature Matrix --- */
+
+.feature-matrix-wrapper {
+  max-width: 100%;
+}
+
+.feature-matrix__heading {
+  text-align: center;
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-10);
+}
+
+.feature-matrix__scroll {
+  overflow-x: auto;
+}
+
+.feature-matrix {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+
+.feature-matrix th,
+.feature-matrix td {
+  padding: var(--space-3) var(--space-4);
+  text-align: center;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.feature-matrix__feature-col {
+  text-align: left;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  min-width: 180px;
+}
+
+.feature-matrix__plan-col {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  min-width: 120px;
+}
+
+.feature-matrix__feature-name {
+  text-align: left;
+  color: var(--color-text-secondary);
+}
+
+.feature-matrix__cell {
+  color: var(--color-text-secondary);
+}
+
+.feature-matrix__cell--check {
+  color: var(--color-success);
+  font-size: var(--font-size-lg);
+}
+
+.feature-matrix__cell--dash {
+  color: var(--color-text-disabled);
+}
+
+/* --- Pricing FAQ --- */
+
+.pricing-faq {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.pricing-faq__heading {
+  text-align: center;
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-10);
+}

@@ -1,0 +1,252 @@
+@use 'variables' as *;
+
+// ============================================================
+// BUTTONS
+// ============================================================
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+  padding: $space-2 $space-6;
+  font-family: $font-primary;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-normal;
+  border-radius: $border-radius-pill;
+  transition: background-color $transition-fast, box-shadow $transition-fast;
+  white-space: nowrap;
+  height: 40px;
+
+  &:focus-visible {
+    outline: 2px solid $color-primary;
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+  }
+}
+
+.btn-primary {
+  @extend .btn;
+  background-color: $color-primary;
+  color: $color-text-inverse;
+
+  &:hover:not(:disabled) {
+    background-color: $color-primary-hover;
+    box-shadow: $shadow-sm;
+  }
+}
+
+.btn-secondary {
+  @extend .btn;
+  background-color: transparent;
+  color: $color-primary;
+  border: $border-default;
+
+  &:hover:not(:disabled) {
+    background-color: $color-primary-light;
+  }
+}
+
+.btn-text {
+  @extend .btn;
+  background-color: transparent;
+  color: $color-primary;
+
+  &:hover:not(:disabled) {
+    background-color: $color-primary-light;
+  }
+}
+
+.btn-danger {
+  @extend .btn;
+  background-color: $color-error;
+  color: $color-text-inverse;
+
+  &:hover:not(:disabled) {
+    background-color: #D32F2F;
+  }
+}
+
+.btn-sm {
+  height: 32px;
+  padding: $space-1 $space-4;
+  font-size: $font-size-xs;
+}
+
+.btn-lg {
+  height: 48px;
+  padding: $space-3 $space-8;
+  font-size: $font-size-base;
+}
+
+// ============================================================
+// CARDS
+// ============================================================
+
+.card {
+  background-color: $color-bg-app;
+  border: $border-default;
+  border-radius: $border-radius-md;
+  padding: $space-6;
+
+  &--elevated {
+    border: none;
+    box-shadow: $shadow-sm;
+  }
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $space-6;
+
+  h2, h3 {
+    font-size: $font-size-xl;
+  }
+}
+
+// ============================================================
+// INPUTS
+// ============================================================
+
+.input {
+  width: 100%;
+  height: 40px;
+  padding: $space-2 $space-4;
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  background-color: $color-bg-app;
+  border: $border-default;
+  border-radius: $border-radius-sm;
+  transition: border-color $transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 2px $color-primary-light;
+  }
+
+  &::placeholder {
+    color: $color-text-disabled;
+  }
+
+  &--error {
+    border-color: $color-error;
+
+    &:focus {
+      box-shadow: 0 0 0 2px rgba($color-error, 0.1);
+    }
+  }
+}
+
+.input-label {
+  display: block;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  margin-bottom: $space-2;
+}
+
+.input-helper {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  margin-top: $space-1;
+}
+
+.input-error {
+  font-size: $font-size-xs;
+  color: $color-error;
+  margin-top: $space-1;
+}
+
+// ============================================================
+// BADGES / CHIPS
+// ============================================================
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: $space-1 $space-3;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  border-radius: $border-radius-pill;
+  line-height: 1;
+
+  &--success {
+    background-color: rgba($color-success, 0.1);
+    color: $color-success;
+  }
+
+  &--warning {
+    background-color: rgba($color-warning, 0.1);
+    color: #F59E0B;
+  }
+
+  &--error {
+    background-color: rgba($color-error, 0.1);
+    color: $color-error;
+  }
+
+  &--info {
+    background-color: rgba($color-info, 0.1);
+    color: $color-info;
+  }
+
+  &--neutral {
+    background-color: $color-bg-surface;
+    color: $color-text-secondary;
+  }
+}
+
+// ============================================================
+// TABLES
+// ============================================================
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th {
+    text-align: left;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+    color: $color-text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: $space-3 $space-4;
+    border-bottom: $border-default;
+  }
+
+  td {
+    padding: $space-3 $space-4;
+    font-size: $font-size-sm;
+    border-bottom: 1px solid $color-border-light;
+  }
+
+  tr:hover td {
+    background-color: $color-bg-surface;
+  }
+}
+
+// ============================================================
+// STATUS DOT
+// ============================================================
+
+.status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: $space-2;
+
+  &--active { background-color: $color-success; }
+  &--pending { background-color: $color-warning; }
+  &--error { background-color: $color-error; }
+  &--inactive { background-color: $color-text-disabled; }
+}

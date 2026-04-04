@@ -1,0 +1,344 @@
+<div class="inbox-layout">
+  <!-- Left Panel: Labels -->
+  <aside class="labels-panel">
+    <nav class="labels-nav">
+      @for (label of systemLabels; track label.id) {
+        <button
+          class="label-item"
+          [class.label-item--active]="activeLabel() === label.id && !isSearching()"
+          (click)="selectLabel(label.id)"
+        >
+          <span class="material-symbols-rounded sm">{{ label.icon }}</span>
+          <span class="label-name">{{ label.name }}</span>
+        </button>
+      }
+    </nav>
+
+    <div class="labels-divider"></div>
+
+    <div class="labels-section-header">
+      <span class="labels-section-title">Labels</span>
+    </div>
+
+    <nav class="labels-nav">
+      @for (label of customLabels(); track label.id) {
+        <button
+          class="label-item"
+          [class.label-item--active]="activeLabel() === label.id && !isSearching()"
+          (click)="selectLabel(label.id)"
+        >
+          <span class="label-dot" [style.background-color]="label.color"></span>
+          <span class="label-name">{{ label.name }}</span>
+        </button>
+      } @empty {
+        @if (!isLoadingLabels()) {
+          <span class="labels-empty">No custom labels</span>
+        }
+      }
+    </nav>
+
+    @if (showCreateLabel()) {
+      <div class="create-label-form">
+        <input
+          class="input"
+          type="text"
+          placeholder="Label name"
+          [ngModel]="newLabelName()"
+          (ngModelChange)="newLabelName.set($event)"
+          (keydown.enter)="createLabel()"
+        />
+        <div class="create-label-actions">
+          <input
+            type="color"
+            class="color-picker"
+            [ngModel]="newLabelColor()"
+            (ngModelChange)="newLabelColor.set($event)"
+          />
+          <button class="btn-primary btn-sm" (click)="createLabel()">Add</button>
+          <button class="btn-text btn-sm" (click)="toggleCreateLabel()">Cancel</button>
+        </div>
+      </div>
+    } @else {
+      <button class="create-label-link" (click)="toggleCreateLabel()">
+        <span class="material-symbols-rounded sm">add</span>
+        Create label
+      </button>
+    }
+  </aside>
+
+  <!-- Middle Panel: Thread List -->
+  <section class="threads-panel">
+    <!-- Search Bar -->
+    <div class="threads-toolbar">
+      <div class="search-bar">
+        <span class="material-symbols-rounded sm search-icon">search</span>
+        <input
+          class="search-input"
+          type="text"
+          placeholder="Search mail..."
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($event)"
+          (keydown.enter)="onSearch()"
+        />
+        @if (searchQuery()) {
+          <button class="search-clear" (click)="clearSearch()">
+            <span class="material-symbols-rounded sm">close</span>
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- Bulk Action Toolbar -->
+    <div class="bulk-toolbar">
+      <label class="checkbox-wrapper" (click)="toggleSelectAll()">
+        <input
+          type="checkbox"
+          [checked]="allSelected()"
+          [indeterminate]="someSelected() && !allSelected()"
+        />
+      </label>
+
+      @if (someSelected()) {
+        <div class="bulk-actions">
+          <button
+            class="icon-btn"
+            title="Archive"
+            (click)="archiveSelected()"
+          >
+            <span class="material-symbols-rounded sm">archive</span>
+          </button>
+          <button
+            class="icon-btn"
+            title="Trash"
+            (click)="trashSelected()"
+          >
+            <span class="material-symbols-rounded sm">delete</span>
+          </button>
+          <button
+            class="icon-btn"
+            title="{{ hasUnreadSelected() ? 'Mark as read' : 'Mark as unread' }}"
+            (click)="toggleReadSelected()"
+          >
+            <span class="material-symbols-rounded sm">
+              {{ hasUnreadSelected() ? 'mark_email_read' : 'mark_email_unread' }}
+            </span>
+          </button>
+        </div>
+      }
+
+      @if (meta(); as m) {
+        <span class="threads-count">
+          {{ showingFrom() }}-{{ showingTo() }} of {{ m.total }}
+        </span>
+        <div class="pagination-mini">
+          <button
+            class="icon-btn"
+            [disabled]="!hasPrev()"
+            (click)="prevPage()"
+            title="Previous page"
+          >
+            <span class="material-symbols-rounded sm">chevron_left</span>
+          </button>
+          <button
+            class="icon-btn"
+            [disabled]="!hasNext()"
+            (click)="nextPage()"
+            title="Next page"
+          >
+            <span class="material-symbols-rounded sm">chevron_right</span>
+          </button>
+        </div>
+      }
+    </div>
+
+    <!-- Thread List -->
+    @if (isLoadingThreads()) {
+      <div class="loading-state">
+        <p>Loading...</p>
+      </div>
+    } @else if (threads().length === 0) {
+      <div class="empty-state">
+        <span class="material-symbols-rounded lg">inbox</span>
+        @if (isSearching()) {
+          <h3>No results found</h3>
+          <p>Try a different search term</p>
+        } @else {
+          <h3>Your inbox is empty</h3>
+          <p>Messages you receive will appear here</p>
+        }
+      </div>
+    } @else {
+      <div class="thread-list">
+        @for (thread of threads(); track thread.id) {
+          <div
+            class="thread-row"
+            [class.thread-row--unread]="!thread.is_read"
+            [class.thread-row--selected]="isThreadSelected(thread.id)"
+            [class.thread-row--active]="isActiveThread(thread.id)"
+            (click)="selectThread(thread)"
+          >
+            <label
+              class="checkbox-wrapper"
+              (click)="toggleThreadSelection($event, thread.id)"
+            >
+              <input
+                type="checkbox"
+                [checked]="isThreadSelected(thread.id)"
+              />
+            </label>
+
+            <button
+              class="star-btn"
+              [class.star-btn--active]="thread.is_starred"
+              (click)="toggleStar($event, thread)"
+              title="{{ thread.is_starred ? 'Unstar' : 'Star' }}"
+            >
+              <span class="material-symbols-rounded sm" [class.filled]="thread.is_starred">
+                {{ thread.is_starred ? 'star' : 'star_border' }}
+              </span>
+            </button>
+
+            <div class="thread-content">
+              <span class="thread-from">
+                {{ formatParticipants(thread.participant_addresses) }}
+              </span>
+              <span class="thread-subject">
+                {{ thread.subject }}
+                @if (thread.snippet) {
+                  <span class="thread-snippet"> - {{ thread.snippet }}</span>
+                }
+              </span>
+            </div>
+
+            @if (thread.message_count > 1) {
+              <span class="thread-count">{{ thread.message_count }}</span>
+            }
+
+            <span class="thread-date">{{ formatDate(thread.last_message_at) }}</span>
+          </div>
+        }
+      </div>
+    }
+  </section>
+
+  <!-- Right Panel: Thread Detail -->
+  <section
+    class="detail-panel"
+    [class.detail-panel--open]="selectedThread() !== null"
+  >
+    @if (isLoadingThread()) {
+      <div class="loading-state">
+        <p>Loading thread...</p>
+      </div>
+    } @else if (selectedThread()) {
+      <div class="detail-header">
+        <button
+          class="icon-btn detail-back"
+          (click)="closeThreadDetail()"
+          title="Back to list"
+        >
+          <span class="material-symbols-rounded sm">arrow_back</span>
+        </button>
+        <h2 class="detail-subject">{{ selectedThread()!.thread.subject }}</h2>
+        <div class="detail-actions">
+          <button
+            class="icon-btn"
+            title="Archive"
+            (click)="archiveThread(selectedThread()!.thread.id)"
+          >
+            <span class="material-symbols-rounded sm">archive</span>
+          </button>
+          <button
+            class="icon-btn"
+            title="Trash"
+            (click)="trashThread(selectedThread()!.thread.id)"
+          >
+            <span class="material-symbols-rounded sm">delete</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="messages-list">
+        @for (message of selectedThread()!.messages; track message.id) {
+          <div class="message-card" [class.message-card--collapsed]="!isMessageExpanded(message.id)">
+            <div class="message-header" (click)="toggleMessage(message.id)">
+              <div class="message-sender">
+                <span class="sender-avatar">
+                  {{ message.from_name ? message.from_name[0] : message.from_address[0] }}
+                </span>
+                <div class="sender-info">
+                  <span class="sender-name">
+                    {{ message.from_name || message.from_address }}
+                  </span>
+                  @if (!isMessageExpanded(message.id)) {
+                    <span class="message-snippet">{{ message.snippet }}</span>
+                  } @else {
+                    <span class="sender-email">
+                      &lt;{{ message.from_address }}&gt;
+                    </span>
+                  }
+                </div>
+              </div>
+              <div class="message-meta">
+                <span class="message-date">{{ formatDate(message.received_at) }}</span>
+                @if (isMessageExpanded(message.id)) {
+                  <button
+                    class="icon-btn"
+                    [class.star-btn--active]="message.is_starred"
+                    (click)="starMessage(message); $event.stopPropagation()"
+                  >
+                    <span class="material-symbols-rounded sm" [class.filled]="message.is_starred">
+                      {{ message.is_starred ? 'star' : 'star_border' }}
+                    </span>
+                  </button>
+                }
+                <span class="expand-icon material-symbols-rounded sm">
+                  {{ isMessageExpanded(message.id) ? 'expand_less' : 'expand_more' }}
+                </span>
+              </div>
+            </div>
+
+            @if (isMessageExpanded(message.id)) {
+              <div class="message-recipients">
+                <span class="recipients-label">to</span>
+                <span class="recipients-list">{{ message.to_addresses.join(', ') }}</span>
+                @if (message.cc_addresses.length > 0) {
+                  <span class="recipients-label">cc</span>
+                  <span class="recipients-list">{{ message.cc_addresses.join(', ') }}</span>
+                }
+              </div>
+              <div class="message-body">
+                @if (message.body_html) {
+                  <div [innerHTML]="message.body_html"></div>
+                } @else {
+                  <pre class="message-text">{{ message.body_text }}</pre>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Reply placeholder -->
+      <div class="reply-section">
+        <div class="reply-box">
+          <textarea
+            class="reply-input"
+            placeholder="Reply..."
+            rows="3"
+            disabled
+          ></textarea>
+          <div class="reply-actions">
+            <button class="btn-primary btn-sm" disabled>Send</button>
+          </div>
+        </div>
+      </div>
+    } @else {
+      <div class="empty-state">
+        <span class="material-symbols-rounded lg">forum</span>
+        <h3>Select a conversation</h3>
+        <p>Choose a thread from the list to read messages</p>
+      </div>
+    }
+  </section>
+</div>

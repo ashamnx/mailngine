@@ -1,0 +1,121 @@
+<div class="webhooks">
+  <div class="page-header">
+    <h1>Webhooks</h1>
+    <button class="btn-primary" (click)="openCreateForm()">
+      <span class="material-symbols-rounded sm">add</span>
+      Create Webhook
+    </button>
+  </div>
+
+  <!-- Create Form -->
+  @if (showCreateForm()) {
+    <div class="card create-section">
+      <h3 class="create-title">Create a new webhook</h3>
+      <div class="create-form">
+        <div class="form-field">
+          <label class="input-label" for="webhookUrl">Endpoint URL</label>
+          <input
+            id="webhookUrl"
+            class="input"
+            type="url"
+            placeholder="https://example.com/webhook"
+            [ngModel]="newUrl()"
+            (ngModelChange)="newUrl.set($event)"
+          />
+        </div>
+        <div class="form-field">
+          <label class="input-label">Events</label>
+          <div class="event-checkboxes">
+            @for (event of allEvents; track event) {
+              <label class="event-checkbox">
+                <input
+                  type="checkbox"
+                  [checked]="isEventSelected(event)"
+                  (change)="toggleEvent(event)"
+                />
+                <span class="event-checkbox-label">{{ event }}</span>
+              </label>
+            }
+          </div>
+        </div>
+
+        @if (createError()) {
+          <p class="input-error">{{ createError() }}</p>
+        }
+
+        <div class="create-actions">
+          <button
+            class="btn-primary"
+            (click)="createWebhook()"
+            [disabled]="!newUrl().trim() || selectedEvents().size === 0 || isCreating()"
+          >
+            {{ isCreating() ? 'Creating...' : 'Create Webhook' }}
+          </button>
+          <button class="btn-secondary" (click)="closeCreateForm()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Table -->
+  @if (isLoading()) {
+    <div class="loading-state">
+      <p>Loading webhooks...</p>
+    </div>
+  } @else if (webhooks().length === 0 && !showCreateForm()) {
+    <div class="empty-state card">
+      <span class="material-symbols-rounded lg">webhook</span>
+      <h2>No webhooks yet</h2>
+      <p>Create a webhook to receive real-time notifications about email events.</p>
+      <button class="btn-primary" (click)="openCreateForm()">
+        <span class="material-symbols-rounded sm">add</span>
+        Create Webhook
+      </button>
+    </div>
+  } @else if (webhooks().length > 0) {
+    <div class="card table-container">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>URL</th>
+            <th>Events</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (webhook of webhooks(); track webhook.id) {
+            <tr class="clickable-row" (click)="navigateToWebhook(webhook.id)">
+              <td class="webhook-url">
+                <code>{{ truncateUrl(webhook.url) }}</code>
+              </td>
+              <td>
+                <div class="event-pills">
+                  @for (event of webhook.events; track event) {
+                    <span class="badge badge--neutral">{{ formatEventName(event) }}</span>
+                  }
+                </div>
+              </td>
+              <td>
+                <span [class]="webhook.active ? 'badge badge--success' : 'badge badge--neutral'">
+                  {{ webhook.active ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+              <td>{{ webhook.created_at | date: 'mediumDate' }}</td>
+              <td>
+                <button
+                  class="btn-text btn-sm"
+                  (click)="navigateToWebhook(webhook.id); $event.stopPropagation()"
+                >
+                  View
+                  <span class="material-symbols-rounded sm">chevron_right</span>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

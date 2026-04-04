@@ -1,0 +1,22 @@
+/*
+ * Global CSS entry point.
+ * Imports the design system tokens, then component-level styles.
+ */
+
+/* Design system foundation */
+@import "./styles/global.css";
+
+/* UI component styles */
+@import "./components/ui/button.css";
+@import "./components/ui/section.css";
+@import "./components/ui/badge.css";
+@import "./components/ui/card.css";
+@import "./components/ui/code-block.css";
+@import "./components/ui/accordion.css";
+
+/* Feature component styles */
+@import "./components/status/status-card.css";
+
+/* Page styles */
+@import "./components/home/home.css";
+@import "./components/pricing/pricing.css";

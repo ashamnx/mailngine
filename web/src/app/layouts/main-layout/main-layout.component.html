@@ -1,0 +1,66 @@
+<div class="layout">
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <span class="logo">Hello Mail</span>
+    </div>
+
+    <div class="topbar-center">
+      <div class="search-placeholder">
+        <span class="material-symbols-rounded sm">search</span>
+        <span class="search-text">Search...</span>
+      </div>
+    </div>
+
+    <div class="topbar-right">
+      <div class="user-menu-container">
+        <button class="avatar-btn" (click)="toggleUserMenu()">
+          @if (authService.user()?.avatar_url) {
+            <img
+              class="avatar-img"
+              [src]="authService.user()!.avatar_url"
+              [alt]="authService.user()!.name"
+            />
+          } @else {
+            <span class="material-symbols-rounded">account_circle</span>
+          }
+        </button>
+
+        @if (userMenuOpen()) {
+          <div class="user-dropdown" (click)="closeUserMenu()">
+            <div class="user-info">
+              <span class="user-name">{{ authService.user()?.name }}</span>
+              <span class="user-email">{{ authService.user()?.email }}</span>
+            </div>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item" (click)="signOut()">
+              <span class="material-symbols-rounded sm">logout</span>
+              Sign out
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <nav class="sidebar-nav">
+      @for (item of navItems; track item.path) {
+        <a
+          class="nav-item"
+          [routerLink]="item.path"
+          routerLinkActive="nav-item--active"
+        >
+          <span class="material-symbols-rounded sm">{{ item.icon }}</span>
+          <span class="nav-label">{{ item.label }}</span>
+        </a>
+      }
+    </nav>
+  </aside>
+
+  <!-- Content -->
+  <main class="content">
+    <router-outlet />
+  </main>
+</div>

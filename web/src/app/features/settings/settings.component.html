@@ -1,0 +1,93 @@
+<div class="settings">
+  <div class="page-header">
+    <h1>Settings</h1>
+  </div>
+
+  <!-- Profile -->
+  <section class="card section">
+    <div class="card-header">
+      <h2>Profile</h2>
+    </div>
+    <p class="section-description">
+      Your profile information is managed through your authentication provider.
+    </p>
+    <div class="profile-fields">
+      <div class="profile-field">
+        <span class="profile-label">Name</span>
+        <span class="profile-value">Managed by auth provider</span>
+      </div>
+      <div class="profile-field">
+        <span class="profile-label">Email</span>
+        <span class="profile-value">Managed by auth provider</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Notifications -->
+  <section class="card section">
+    <div class="card-header">
+      <h2>Notifications</h2>
+    </div>
+    <p class="section-description">
+      Manage your notification preferences. These settings are placeholders and will be connected in a future update.
+    </p>
+    <div class="notification-settings">
+      <div class="setting-row">
+        <div class="setting-info">
+          <span class="setting-label">Email Delivery Reports</span>
+          <span class="setting-description">Receive daily summaries of email delivery status</span>
+        </div>
+        <label class="toggle">
+          <input
+            type="checkbox"
+            [checked]="notifyEmails()"
+            (change)="toggleNotifyEmails()"
+          />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="setting-row">
+        <div class="setting-info">
+          <span class="setting-label">Product Updates</span>
+          <span class="setting-description">Get notified about new features and improvements</span>
+        </div>
+        <label class="toggle">
+          <input
+            type="checkbox"
+            [checked]="notifyUpdates()"
+            (change)="toggleNotifyUpdates()"
+          />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="setting-row">
+        <div class="setting-info">
+          <span class="setting-label">Security Alerts</span>
+          <span class="setting-description">Receive alerts about security events on your account</span>
+        </div>
+        <label class="toggle">
+          <input
+            type="checkbox"
+            [checked]="notifySecurity()"
+            (change)="toggleNotifySecurity()"
+          />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+  </section>
+
+  <!-- Danger Zone -->
+  <section class="card section danger-zone">
+    <div class="card-header">
+      <h2>Danger Zone</h2>
+    </div>
+    <p class="section-description">
+      Permanently delete your account and all associated data. This action cannot be undone.
+    </p>
+    <button class="btn-danger" disabled>
+      <span class="material-symbols-rounded sm">delete_forever</span>
+      Delete Account
+    </button>
+  </section>
+</div>

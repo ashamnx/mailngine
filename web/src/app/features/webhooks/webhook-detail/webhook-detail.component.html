@@ -1,0 +1,233 @@
+@if (isLoading()) {
+  <div class="loading-state">
+    <p>Loading webhook...</p>
+  </div>
+} @else if (webhook()) {
+  <div class="webhook-detail">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+      <button class="btn-text btn-sm" (click)="goBack()">
+        <span class="material-symbols-rounded sm">arrow_back</span>
+        Webhooks
+      </button>
+    </nav>
+
+    <!-- Header -->
+    <div class="page-header">
+      <div class="page-header-info">
+        <h1>
+          <code class="header-url">{{ webhook()!.url }}</code>
+        </h1>
+        <span [class]="webhook()!.active ? 'badge badge--success' : 'badge badge--neutral'">
+          {{ webhook()!.active ? 'Active' : 'Inactive' }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Configuration -->
+    <section class="card section">
+      <div class="card-header">
+        <h2>Configuration</h2>
+      </div>
+      <div class="config-form">
+        <div class="form-field">
+          <label class="input-label" for="webhookUrl">Endpoint URL</label>
+          <input
+            id="webhookUrl"
+            class="input"
+            type="url"
+            placeholder="https://example.com/webhook"
+            [ngModel]="editUrl()"
+            (ngModelChange)="editUrl.set($event)"
+          />
+        </div>
+        <div class="form-field">
+          <label class="input-label">Events</label>
+          <div class="event-checkboxes">
+            @for (event of allEvents; track event) {
+              <label class="event-checkbox">
+                <input
+                  type="checkbox"
+                  [checked]="isEventSelected(event)"
+                  (change)="toggleEvent(event)"
+                />
+                <span class="event-checkbox-label">{{ event }}</span>
+              </label>
+            }
+          </div>
+        </div>
+        <div class="form-field">
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-label">Active</span>
+              <span class="setting-description">Enable or disable this webhook</span>
+            </div>
+            <label class="toggle">
+              <input
+                type="checkbox"
+                [checked]="editActive()"
+                (change)="editActive.set(!editActive())"
+              />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        @if (saveError()) {
+          <p class="input-error">{{ saveError() }}</p>
+        }
+
+        <div class="form-actions">
+          <button
+            class="btn-primary"
+            (click)="saveWebhook()"
+            [disabled]="!editUrl().trim() || editEvents().size === 0 || isSaving()"
+          >
+            {{ isSaving() ? 'Saving...' : 'Save Changes' }}
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Signing Secret -->
+    <section class="card section">
+      <div class="card-header">
+        <h2>Signing Secret</h2>
+      </div>
+      <p class="section-description">
+        Use this secret to verify that webhook payloads are sent by Hello Mail.
+      </p>
+      <div class="secret-field">
+        <code class="secret-value">
+          {{ secretRevealed() ? webhook()!.secret : maskedSecret() }}
+        </code>
+        <div class="secret-actions">
+          <button class="icon-btn" (click)="toggleSecretReveal()" [attr.aria-label]="secretRevealed() ? 'Hide secret' : 'Reveal secret'">
+            <span class="material-symbols-rounded sm">
+              {{ secretRevealed() ? 'visibility_off' : 'visibility' }}
+            </span>
+          </button>
+          <button class="icon-btn" (click)="copySecret()" aria-label="Copy secret">
+            <span class="material-symbols-rounded sm">
+              {{ secretCopied() ? 'check' : 'content_copy' }}
+            </span>
+            @if (secretCopied()) {
+              <span class="copied-tooltip">Copied!</span>
+            }
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Deliveries -->
+    <section class="card section">
+      <div class="card-header">
+        <h2>Recent Deliveries</h2>
+      </div>
+
+      @if (deliveriesLoading()) {
+        <div class="section-loading">
+          <p>Loading deliveries...</p>
+        </div>
+      } @else if (deliveries().length === 0) {
+        <div class="section-empty">
+          <span class="material-symbols-rounded">send</span>
+          <p>No deliveries yet. Deliveries will appear here when events are triggered.</p>
+        </div>
+      } @else {
+        <div class="deliveries-table-wrapper">
+          <table class="table deliveries-table">
+            <thead>
+              <tr>
+                <th>Event Type</th>
+                <th>Status</th>
+                <th>Response Code</th>
+                <th>Attempt</th>
+                <th>Timestamp</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (delivery of deliveries(); track delivery.id) {
+                <tr>
+                  <td>
+                    <span class="badge badge--neutral">{{ formatEventName(delivery.event_type) }}</span>
+                  </td>
+                  <td>
+                    <span [class]="deliveryStatusClass(delivery.status)">{{ delivery.status }}</span>
+                  </td>
+                  <td>
+                    @if (delivery.response_code) {
+                      <code class="response-code">{{ delivery.response_code }}</code>
+                    } @else {
+                      <span class="text-muted">--</span>
+                    }
+                  </td>
+                  <td>{{ delivery.attempt }}</td>
+                  <td>{{ delivery.created_at | date: 'medium' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        @if (deliveriesMeta(); as m) {
+          <div class="pagination">
+            <span class="pagination-info">
+              Showing {{ showingFrom() }}-{{ showingTo() }} of {{ m.total }}
+            </span>
+            <div class="pagination-controls">
+              <button
+                class="btn-secondary btn-sm"
+                (click)="prevDeliveries()"
+                [disabled]="!hasPrevDeliveries()"
+              >
+                <span class="material-symbols-rounded sm">chevron_left</span>
+                Previous
+              </button>
+              <button
+                class="btn-secondary btn-sm"
+                (click)="nextDeliveries()"
+                [disabled]="!hasNextDeliveries()"
+              >
+                Next
+                <span class="material-symbols-rounded sm">chevron_right</span>
+              </button>
+            </div>
+          </div>
+        }
+      }
+    </section>
+
+    <!-- Danger Zone -->
+    <section class="card section danger-zone">
+      <div class="card-header">
+        <h2>Danger Zone</h2>
+      </div>
+      <p class="section-description">
+        Deleting a webhook is permanent and cannot be undone. All delivery history will be lost.
+      </p>
+      @if (showDeleteConfirm()) {
+        <div class="delete-confirm">
+          <p class="delete-warning">
+            Are you sure you want to delete this webhook? This action cannot be undone.
+          </p>
+          <div class="form-actions">
+            <button
+              class="btn-danger"
+              (click)="deleteWebhook()"
+              [disabled]="isDeleting()"
+            >
+              {{ isDeleting() ? 'Deleting...' : 'Yes, Delete Webhook' }}
+            </button>
+            <button class="btn-secondary" (click)="cancelDelete()">Cancel</button>
+          </div>
+        </div>
+      } @else {
+        <button class="btn-danger" (click)="confirmDelete()">
+          <span class="material-symbols-rounded sm">delete</span>
+          Delete Webhook
+        </button>
+      }
+    </section>
+  </div>
+}

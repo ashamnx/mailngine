@@ -1,0 +1,147 @@
+@use 'styles/variables' as *;
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: $space-8;
+
+  h1 {
+    font-size: $font-size-3xl;
+    margin-bottom: $space-1;
+  }
+}
+
+// -- Create Form ---------------------------------------------------------
+
+.create-section {
+  margin-bottom: $space-6;
+}
+
+.create-title {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-medium;
+  margin-bottom: $space-5;
+}
+
+.create-form {
+  display: flex;
+  flex-direction: column;
+  gap: $space-5;
+  max-width: 560px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.event-checkboxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-3;
+  margin-top: $space-2;
+}
+
+.event-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  cursor: pointer;
+
+  input[type='checkbox'] {
+    width: 16px;
+    height: 16px;
+    accent-color: $color-primary;
+    cursor: pointer;
+  }
+}
+
+.event-checkbox-label {
+  font-size: $font-size-sm;
+  font-family: $font-mono;
+  color: $color-text-primary;
+}
+
+.create-actions {
+  display: flex;
+  gap: $space-3;
+}
+
+// -- Table ---------------------------------------------------------------
+
+.table-container {
+  padding: 0;
+  overflow-x: auto;
+
+  .table {
+    th:first-child,
+    td:first-child {
+      padding-left: $space-6;
+    }
+
+    th:last-child,
+    td:last-child {
+      padding-right: $space-6;
+    }
+  }
+}
+
+.clickable-row {
+  cursor: pointer;
+}
+
+.webhook-url {
+  code {
+    font-family: $font-mono;
+    font-size: $font-size-xs;
+    color: $color-text-primary;
+  }
+
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.event-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-1;
+}
+
+// -- Empty State ---------------------------------------------------------
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $space-16 $space-6;
+  text-align: center;
+  gap: $space-4;
+
+  .material-symbols-rounded {
+    color: $color-text-disabled;
+  }
+
+  h2 {
+    font-size: $font-size-xl;
+  }
+
+  p {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    margin-bottom: $space-2;
+  }
+}
+
+// -- Loading -------------------------------------------------------------
+
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-16;
+  color: $color-text-secondary;
+}

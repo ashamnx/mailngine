@@ -1,0 +1,147 @@
+@use 'styles/variables' as *;
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $space-8;
+
+  h1 {
+    font-size: $font-size-3xl;
+  }
+}
+
+// -- Sections ----------------------------------------------------------
+
+.section {
+  margin-bottom: $space-6;
+}
+
+.section-description {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-bottom: $space-5;
+}
+
+// -- Profile -----------------------------------------------------------
+
+.profile-fields {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+  max-width: 480px;
+}
+
+.profile-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $space-3 $space-4;
+  background-color: $color-bg-surface;
+  border-radius: $border-radius-sm;
+}
+
+.profile-label {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+}
+
+.profile-value {
+  font-size: $font-size-sm;
+  color: $color-text-disabled;
+}
+
+// -- Notification Settings ---------------------------------------------
+
+.notification-settings {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $space-4;
+  background-color: $color-bg-surface;
+  border-radius: $border-radius-sm;
+}
+
+.setting-info {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+}
+
+.setting-label {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+}
+
+.setting-description {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+// -- Toggle Switch -----------------------------------------------------
+
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: $color-border;
+  border-radius: $border-radius-pill;
+  transition: background-color $transition-fast;
+
+  &::before {
+    content: '';
+    position: absolute;
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: $color-bg-app;
+    border-radius: 50%;
+    transition: transform $transition-fast;
+  }
+}
+
+.toggle input:checked + .toggle-slider {
+  background-color: $color-primary;
+
+  &::before {
+    transform: translateX(20px);
+  }
+}
+
+.toggle input:focus-visible + .toggle-slider {
+  outline: 2px solid $color-primary;
+  outline-offset: 2px;
+}
+
+// -- Danger Zone -------------------------------------------------------
+
+.danger-zone {
+  border-color: rgba($color-error, 0.3);
+
+  .card-header h2 {
+    color: $color-error;
+  }
+}

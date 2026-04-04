@@ -1,0 +1,229 @@
+<div class="wizard">
+  <!-- Step indicator -->
+  <div class="wizard-steps">
+    <div class="wizard-step" [class.active]="step() === 'input'" [class.done]="step() !== 'input'">
+      <span class="wizard-step__num">1</span>
+      <span>Enter Domain</span>
+    </div>
+    <div class="wizard-step__line"></div>
+    <div class="wizard-step" [class.active]="step() === 'analysis'" [class.done]="step() === 'confirm'">
+      <span class="wizard-step__num">2</span>
+      <span>Review</span>
+    </div>
+    <div class="wizard-step__line"></div>
+    <div class="wizard-step" [class.active]="step() === 'confirm'">
+      <span class="wizard-step__num">3</span>
+      <span>Confirm</span>
+    </div>
+  </div>
+
+  <!-- Step 1: Enter domain name -->
+  @if (step() === 'input') {
+    <div class="wizard-panel">
+      <h3>Add a sending domain</h3>
+      <p class="wizard-desc">Enter the domain you want to send emails from. We'll check your existing DNS configuration before making any changes.</p>
+
+      <div class="form-field">
+        <label class="input-label" for="domainName">Domain Name</label>
+        <input
+          id="domainName"
+          class="input"
+          type="text"
+          placeholder="e.g., mail.example.com or example.com"
+          [ngModel]="domainName()"
+          (ngModelChange)="domainName.set($event)"
+          (keydown.enter)="analyze()"
+        />
+      </div>
+
+      @if (analyzeError()) {
+        <div class="wizard-error">
+          <span class="material-symbols-rounded sm">error</span>
+          {{ analyzeError() }}
+        </div>
+      }
+
+      <div class="wizard-actions">
+        <button
+          class="btn-primary"
+          (click)="analyze()"
+          [disabled]="!domainName().trim() || isAnalyzing()"
+        >
+          <span class="material-symbols-rounded sm">search</span>
+          {{ isAnalyzing() ? 'Checking DNS...' : 'Check Domain' }}
+        </button>
+        <button class="btn-text" (click)="cancel()">Cancel</button>
+      </div>
+    </div>
+  }
+
+  <!-- Step 2: Analysis results -->
+  @if (step() === 'analysis') {
+    <div class="wizard-panel">
+      <h3>DNS Analysis for <code>{{ analysis()!.domain }}</code></h3>
+
+      <!-- Provider detection banner -->
+      @if (analysis()!.detected_provider) {
+        <div class="provider-banner">
+          <div class="provider-banner__icon">
+            <span class="material-symbols-rounded">mail</span>
+          </div>
+          <div class="provider-banner__info">
+            <strong>{{ analysis()!.detected_provider!.name }} detected</strong>
+            <p>This domain currently receives email via {{ analysis()!.detected_provider!.name }}. We'll set up Hello Mail for <strong>sending only</strong> to avoid disrupting your mailboxes.</p>
+          </div>
+        </div>
+
+        @if (suggestedSubdomain()) {
+          <div class="subdomain-suggestion">
+            <span class="material-symbols-rounded sm">lightbulb</span>
+            <span>Want full control? Use a subdomain instead:</span>
+            <button class="btn-secondary btn-sm" (click)="useSuggestedSubdomain()">
+              Switch to {{ suggestedSubdomain() }}
+            </button>
+          </div>
+        }
+      } @else if (!analysis()!.has_mx) {
+        <div class="provider-banner provider-banner--success">
+          <div class="provider-banner__icon provider-banner__icon--success">
+            <span class="material-symbols-rounded">check_circle</span>
+          </div>
+          <div class="provider-banner__info">
+            <strong>No existing email provider detected</strong>
+            <p>This domain has no MX records. You can safely use it for both sending and receiving.</p>
+          </div>
+        </div>
+      }
+
+      <!-- Recommendations -->
+      <div class="recs">
+        @for (rec of analysis()!.recommendations; track rec.title) {
+          <div [class]="recClass(rec.type)">
+            <span class="material-symbols-rounded sm">{{ recIcon(rec.type) }}</span>
+            <div>
+              <strong>{{ rec.title }}</strong>
+              <p>{{ rec.message }}</p>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Existing records found -->
+      @if (analysis()!.has_spf) {
+        <div class="existing-record">
+          <h4>Existing SPF Record</h4>
+          <code class="existing-record__value">{{ analysis()!.existing_spf }}</code>
+          <h4>Merged SPF Record <span class="badge badge--success">Ready to use</span></h4>
+          <code class="existing-record__value existing-record__value--new">{{ analysis()!.merged_spf }}</code>
+          <p class="existing-record__note">Replace your current SPF record with this merged version. It includes both your existing configuration and Hello Mail.</p>
+        </div>
+      }
+
+      @if (analysis()!.has_dmarc) {
+        <div class="existing-record">
+          <h4>Existing DMARC Record <span class="badge badge--info">Keeping yours</span></h4>
+          <code class="existing-record__value">{{ analysis()!.existing_dmarc }}</code>
+          <p class="existing-record__note">Your existing DMARC policy will be preserved. We won't create a new one.</p>
+        </div>
+      }
+
+      <!-- Inbound toggle (only if no provider conflict) -->
+      @if (!hasProviderConflict()) {
+        <div class="inbound-option">
+          <label class="toggle-field">
+            <input
+              type="checkbox"
+              [checked]="enableInbound()"
+              (change)="enableInbound.set(!enableInbound())"
+            />
+            <span class="toggle-field__label">
+              <strong>Enable inbound email</strong>
+              <span class="toggle-field__desc">Add MX records to receive email on this domain via Hello Mail.</span>
+            </span>
+          </label>
+        </div>
+      }
+
+      <div class="wizard-actions">
+        <button class="btn-primary" (click)="proceedToConfirm()">
+          Continue
+          <span class="material-symbols-rounded sm">arrow_forward</span>
+        </button>
+        <button class="btn-text" (click)="backToInput()">
+          <span class="material-symbols-rounded sm">arrow_back</span>
+          Back
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- Step 3: Confirm and create -->
+  @if (step() === 'confirm') {
+    <div class="wizard-panel">
+      <h3>Confirm domain setup</h3>
+
+      <div class="confirm-summary">
+        <div class="confirm-row">
+          <span class="confirm-label">Domain</span>
+          <code class="confirm-value">{{ analysis()!.domain }}</code>
+        </div>
+        <div class="confirm-row">
+          <span class="confirm-label">Sending</span>
+          <span class="badge badge--success">Enabled</span>
+        </div>
+        <div class="confirm-row">
+          <span class="confirm-label">Receiving</span>
+          <span [class]="enableInbound() ? 'badge badge--success' : 'badge badge--neutral'">
+            {{ enableInbound() ? 'Enabled' : 'Disabled' }}
+          </span>
+        </div>
+        <div class="confirm-row">
+          <span class="confirm-label">SPF</span>
+          <span class="badge badge--info">{{ analysis()!.has_spf ? 'Merged with existing' : 'New record' }}</span>
+        </div>
+        <div class="confirm-row">
+          <span class="confirm-label">DKIM</span>
+          <span class="badge badge--info">New record (selector: hm1)</span>
+        </div>
+        <div class="confirm-row">
+          <span class="confirm-label">DMARC</span>
+          <span [class]="analysis()!.has_dmarc ? 'badge badge--neutral' : 'badge badge--info'">
+            {{ analysis()!.has_dmarc ? 'Using existing' : 'New record' }}
+          </span>
+        </div>
+        <div class="confirm-row">
+          <span class="confirm-label">Return-Path</span>
+          <span class="badge badge--info">New CNAME record</span>
+        </div>
+        @if (analysis()!.detected_provider) {
+          <div class="confirm-row">
+            <span class="confirm-label">{{ analysis()!.detected_provider!.name }}</span>
+            <span class="badge badge--success">Not affected</span>
+          </div>
+        }
+      </div>
+
+      @if (createError()) {
+        <div class="wizard-error">
+          <span class="material-symbols-rounded sm">error</span>
+          {{ createError() }}
+        </div>
+      }
+
+      <div class="wizard-actions">
+        <button
+          class="btn-primary"
+          (click)="createDomain()"
+          [disabled]="isCreating()"
+        >
+          <span class="material-symbols-rounded sm">add</span>
+          {{ isCreating() ? 'Creating...' : 'Create Domain' }}
+        </button>
+        <button class="btn-text" (click)="backToAnalysis()">
+          <span class="material-symbols-rounded sm">arrow_back</span>
+          Back
+        </button>
+      </div>
+    </div>
+  }
+</div>

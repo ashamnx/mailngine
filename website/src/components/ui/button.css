@@ -1,0 +1,80 @@
+/* ==========================================================================
+   Button Component Styles
+   ========================================================================== */
+
+.hm-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-primary);
+  font-weight: var(--font-weight-medium);
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    border-color var(--transition-fast);
+  white-space: nowrap;
+  border-radius: var(--radius-pill);
+  line-height: 1;
+}
+
+.hm-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* --- Variants --- */
+
+.hm-button--primary {
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+
+.hm-button--primary:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+  box-shadow: var(--shadow-sm);
+}
+
+.hm-button--secondary {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 1.5px solid var(--color-primary);
+}
+
+.hm-button--secondary:hover:not(:disabled) {
+  background-color: var(--color-primary-light);
+}
+
+.hm-button--text {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: none;
+}
+
+.hm-button--text:hover:not(:disabled) {
+  background-color: var(--color-primary-light);
+}
+
+/* --- Sizes --- */
+
+.hm-button--sm {
+  font-size: var(--font-size-sm);
+  padding: var(--space-2) var(--space-4);
+  height: 32px;
+}
+
+.hm-button--md {
+  font-size: var(--font-size-base);
+  padding: var(--space-2) var(--space-6);
+  height: 40px;
+}
+
+.hm-button--lg {
+  font-size: var(--font-size-lg);
+  padding: var(--space-3) var(--space-8);
+  height: 48px;
+}

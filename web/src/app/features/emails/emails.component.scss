@@ -1,0 +1,116 @@
+@use 'styles/variables' as *;
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: $space-8;
+
+  h1 {
+    font-size: $font-size-3xl;
+    margin-bottom: $space-1;
+  }
+}
+
+.page-subtitle {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+// -- Table -------------------------------------------------------------
+
+.table-container {
+  padding: 0;
+  overflow-x: auto;
+
+  .table {
+    th:first-child,
+    td:first-child {
+      padding-left: $space-6;
+    }
+
+    th:last-child,
+    td:last-child {
+      padding-right: $space-6;
+    }
+  }
+}
+
+.clickable-row {
+  cursor: pointer;
+}
+
+.email-to {
+  font-weight: $font-weight-medium;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.email-subject {
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-muted {
+  color: $color-text-disabled;
+}
+
+// -- Pagination --------------------------------------------------------
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: $space-5;
+  padding: $space-3 0;
+}
+
+.pagination-info {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.pagination-controls {
+  display: flex;
+  gap: $space-3;
+}
+
+// -- Empty State -------------------------------------------------------
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $space-16 $space-6;
+  text-align: center;
+  gap: $space-4;
+
+  .material-symbols-rounded {
+    color: $color-text-disabled;
+  }
+
+  h2 {
+    font-size: $font-size-xl;
+  }
+
+  p {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    margin-bottom: $space-2;
+  }
+}
+
+// -- Loading -----------------------------------------------------------
+
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-16;
+  color: $color-text-secondary;
+}

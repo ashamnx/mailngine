@@ -1,0 +1,188 @@
+@use 'styles/variables' as *;
+
+// -- Page Header -------------------------------------------------------
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: $space-8;
+
+  h1 {
+    font-size: $font-size-3xl;
+    margin-bottom: $space-1;
+  }
+}
+
+// -- Table -------------------------------------------------------------
+
+.table-container {
+  padding: 0;
+  overflow-x: auto;
+
+  .table {
+    th:first-child,
+    td:first-child {
+      padding-left: $space-4;
+      width: 32px;
+    }
+
+    th:last-child,
+    td:last-child {
+      padding-right: $space-6;
+    }
+  }
+}
+
+.log-row {
+  &--expandable {
+    cursor: pointer;
+  }
+
+  &--expanded td {
+    border-bottom-color: transparent;
+  }
+}
+
+.expand-cell {
+  width: 32px;
+  padding-right: 0 !important;
+}
+
+.expand-icon {
+  color: $color-text-disabled;
+  transition: transform $transition-fast;
+
+  &.expanded {
+    transform: rotate(90deg);
+  }
+}
+
+.action-name {
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+}
+
+.actor-cell {
+  font-size: $font-size-sm;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ip-address {
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+// -- Metadata Expandable Row -------------------------------------------
+
+.metadata-row {
+  td {
+    padding: 0 !important;
+    border-bottom: 1px solid $color-border-light;
+  }
+
+  &:hover td {
+    background-color: transparent !important;
+  }
+}
+
+.metadata-panel {
+  padding: $space-4 $space-6 $space-5;
+  background-color: $color-bg-surface;
+}
+
+.metadata-heading {
+  display: block;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: $color-text-secondary;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: $space-3;
+}
+
+.metadata-json {
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  line-height: $line-height-relaxed;
+  color: $color-text-primary;
+  background-color: $color-bg-app;
+  padding: $space-4;
+  border-radius: $border-radius-sm;
+  border: $border-default;
+  overflow-x: auto;
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+// -- Pagination --------------------------------------------------------
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: $space-5;
+  padding: $space-3 0;
+}
+
+.pagination-info {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.pagination-controls {
+  display: flex;
+  gap: $space-3;
+}
+
+// -- Empty State -------------------------------------------------------
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $space-16 $space-6;
+  text-align: center;
+  gap: $space-4;
+
+  .material-symbols-rounded {
+    color: $color-text-disabled;
+  }
+
+  h2 {
+    font-size: $font-size-xl;
+  }
+
+  p {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    max-width: 400px;
+  }
+}
+
+// -- Loading -----------------------------------------------------------
+
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-16;
+  color: $color-text-secondary;
+}
+
+// -- Responsive --------------------------------------------------------
+
+@media (max-width: 767px) {
+  .page-header {
+    flex-direction: column;
+    gap: $space-4;
+  }
+}

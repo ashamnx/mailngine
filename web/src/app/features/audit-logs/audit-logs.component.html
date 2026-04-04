@@ -1,0 +1,96 @@
+<div class="audit-logs">
+  <div class="page-header">
+    <h1>Audit Logs</h1>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-state">
+      <p>Loading audit logs...</p>
+    </div>
+  } @else if (logs().length === 0) {
+    <div class="empty-state card">
+      <span class="material-symbols-rounded lg">shield</span>
+      <h2>No audit logs yet</h2>
+      <p>Activity will be recorded here as your team uses the platform.</p>
+    </div>
+  } @else {
+    <div class="card table-container">
+      <table class="table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Action</th>
+            <th>Resource Type</th>
+            <th>User / API Key</th>
+            <th>IP Address</th>
+            <th>Timestamp</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (log of logs(); track log.id) {
+            <tr
+              class="log-row"
+              [class.log-row--expandable]="hasMetadata(log)"
+              [class.log-row--expanded]="isExpanded(log.id)"
+              (click)="hasMetadata(log) && toggleExpand(log.id)"
+            >
+              <td class="expand-cell">
+                @if (hasMetadata(log)) {
+                  <span class="material-symbols-rounded sm expand-icon" [class.expanded]="isExpanded(log.id)">
+                    chevron_right
+                  </span>
+                }
+              </td>
+              <td>
+                <code class="action-name">{{ log.action }}</code>
+              </td>
+              <td>{{ log.resource_type }}</td>
+              <td class="actor-cell">{{ log.actor }}</td>
+              <td>
+                <code class="ip-address">{{ log.ip_address }}</code>
+              </td>
+              <td>{{ log.created_at | date: 'medium' }}</td>
+            </tr>
+            @if (isExpanded(log.id) && hasMetadata(log)) {
+              <tr class="metadata-row">
+                <td colspan="6">
+                  <div class="metadata-panel">
+                    <span class="metadata-heading">Metadata</span>
+                    <pre class="metadata-json">{{ log.metadata | json }}</pre>
+                  </div>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    @if (meta(); as m) {
+      <div class="pagination">
+        <span class="pagination-info">
+          Showing {{ showingFrom() }}-{{ showingTo() }} of {{ m.total }}
+        </span>
+        <div class="pagination-controls">
+          <button
+            class="btn-secondary btn-sm"
+            (click)="prevPage()"
+            [disabled]="!hasPrev()"
+          >
+            <span class="material-symbols-rounded sm">chevron_left</span>
+            Previous
+          </button>
+          <button
+            class="btn-secondary btn-sm"
+            (click)="nextPage()"
+            [disabled]="!hasNext()"
+          >
+            Next
+            <span class="material-symbols-rounded sm">chevron_right</span>
+          </button>
+        </div>
+      </div>
+    }
+  }
+</div>

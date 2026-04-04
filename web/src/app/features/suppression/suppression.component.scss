@@ -1,0 +1,138 @@
+@use 'styles/variables' as *;
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: $space-8;
+
+  h1 {
+    font-size: $font-size-3xl;
+    margin-bottom: $space-1;
+  }
+}
+
+.page-subtitle {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+// -- Add Form --
+
+.add-form {
+  margin-bottom: $space-6;
+}
+
+.add-form-title {
+  font-size: $font-size-lg;
+  margin-bottom: $space-5;
+}
+
+.add-form-fields {
+  display: flex;
+  gap: $space-4;
+  margin-bottom: $space-5;
+
+  .form-field {
+    flex: 1;
+  }
+}
+
+.add-form-actions {
+  display: flex;
+  gap: $space-3;
+}
+
+// -- Table --
+
+.table-container {
+  padding: 0;
+  overflow-x: auto;
+
+  .table {
+    th:first-child,
+    td:first-child {
+      padding-left: $space-6;
+    }
+
+    th:last-child,
+    td:last-child {
+      padding-right: $space-6;
+    }
+  }
+}
+
+.suppression-email {
+  font-weight: $font-weight-medium;
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+}
+
+// -- Pagination --
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: $space-5;
+  padding: $space-3 0;
+}
+
+.pagination-info {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.pagination-controls {
+  display: flex;
+  gap: $space-3;
+}
+
+// -- Empty State --
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $space-16 $space-6;
+  text-align: center;
+  gap: $space-4;
+
+  .material-symbols-rounded {
+    color: $color-text-disabled;
+  }
+
+  h2 {
+    font-size: $font-size-xl;
+  }
+
+  p {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    max-width: 400px;
+  }
+}
+
+// -- Loading --
+
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-16;
+  color: $color-text-secondary;
+}
+
+// -- Responsive --
+
+@media (max-width: 767px) {
+  .page-header {
+    flex-direction: column;
+    gap: $space-4;
+  }
+
+  .add-form-fields {
+    flex-direction: column;
+  }
+}

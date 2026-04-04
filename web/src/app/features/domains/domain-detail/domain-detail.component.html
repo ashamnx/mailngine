@@ -1,0 +1,249 @@
+@if (isLoading()) {
+  <div class="loading-state">
+    <p>Loading domain...</p>
+  </div>
+} @else if (domainInfo()) {
+  <div class="domain-detail">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+      <button class="btn-text btn-sm" (click)="goBack()">
+        <span class="material-symbols-rounded sm">arrow_back</span>
+        Domains
+      </button>
+    </nav>
+
+    <!-- Header -->
+    <div class="page-header">
+      <div class="page-header-info">
+        <h1>{{ domainInfo()!.name }}</h1>
+        <span [class]="statusBadgeClass(domainInfo()!.status)">{{ domainInfo()!.status }}</span>
+      </div>
+      <button
+        class="btn-primary btn-sm"
+        (click)="verifyDns()"
+        [disabled]="isVerifying()"
+      >
+        <span class="material-symbols-rounded sm">refresh</span>
+        {{ isVerifying() ? 'Verifying...' : 'Verify DNS' }}
+      </button>
+    </div>
+
+    <!-- Manual DNS Setup -->
+    <section class="card section">
+      <div class="card-header">
+        <h2>
+          <span class="material-symbols-rounded">tune</span>
+          DNS Configuration
+        </h2>
+      </div>
+      <p class="section-description">
+        Add the following DNS records to your domain's DNS provider. Once all records are configured, click "Verify DNS" above to confirm.
+      </p>
+
+      @if (dnsRecords().length > 0) {
+        <div class="dns-table-wrapper">
+          <table class="table dns-table">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Host</th>
+                <th>Value</th>
+                <th>Purpose</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (record of dnsRecords(); track record.id) {
+                <tr>
+                  <td>
+                    <span class="record-type">{{ record.record_type }}</span>
+                  </td>
+                  <td>
+                    <div class="value-cell">
+                      <code class="mono-value">{{ record.host }}</code>
+                      <button
+                        class="icon-btn"
+                        (click)="copyValue(record.host, 'host-' + $index)"
+                        [attr.aria-label]="'Copy host'"
+                      >
+                        <span class="material-symbols-rounded sm">
+                          {{ copiedKey() === 'host-' + $index ? 'check' : 'content_copy' }}
+                        </span>
+                      </button>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="value-cell">
+                      <code
+                        class="mono-value"
+                        [class.expanded]="expandedIndex() === $index"
+                        [class.truncated]="expandedIndex() !== $index"
+                        (click)="toggleExpand($index)"
+                      >{{ record.value }}</code>
+                      <button
+                        class="icon-btn"
+                        (click)="copyValue(record.value, 'val-' + $index)"
+                        [attr.aria-label]="'Copy value'"
+                      >
+                        <span class="material-symbols-rounded sm">
+                          {{ copiedKey() === 'val-' + $index ? 'check' : 'content_copy' }}
+                        </span>
+                      </button>
+                    </div>
+                  </td>
+                  <td><span class="purpose-label">{{ record.purpose }}</span></td>
+                  <td>
+                    <span [class]="recordStatusClass(record.status)">
+                      <span class="material-symbols-rounded sm">
+                        {{ recordStatusIcon(record.status) }}
+                      </span>
+                      {{ record.status }}
+                    </span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <!-- SPF merge instruction -->
+        <div class="dns-callout dns-callout--warning">
+          <span class="material-symbols-rounded sm">warning</span>
+          <div>
+            <strong>SPF Record — Merge Required</strong>
+            <p>If you already have an SPF record (e.g., for Google Workspace or Office 365), <strong>do not create a new one</strong>. Instead, add <code>include:spf.hellomail.dev</code> to your existing record. For example:</p>
+            <code class="dns-callout__example">v=spf1 include:_spf.google.com include:spf.hellomail.dev ~all</code>
+          </div>
+        </div>
+
+        <!-- DMARC note -->
+        <div class="dns-callout dns-callout--info">
+          <span class="material-symbols-rounded sm">info</span>
+          <div>
+            <strong>DMARC Record</strong>
+            <p>If you already have a DMARC record, skip this one. Only one DMARC record is allowed per domain. DKIM records use a unique selector and are always safe to add alongside existing providers.</p>
+          </div>
+        </div>
+
+        <div class="dns-help">
+          <span class="material-symbols-rounded sm">schedule</span>
+          <span>DNS changes can take up to 48 hours to propagate. Most providers update within 5 minutes.</span>
+        </div>
+      } @else {
+        <p class="no-records">No DNS records found. This may indicate an issue with domain creation.</p>
+      }
+    </section>
+
+    <!-- Domain Connect auto-configure (shown when DNS provider supports it) -->
+    @if (domainConnectSupported()) {
+      <section class="card section">
+        <div class="card-header">
+          <h2>
+            <span class="material-symbols-rounded">bolt</span>
+            Auto-Configure DNS
+          </h2>
+          <span class="badge badge--success">{{ domainConnectProvider() }}</span>
+        </div>
+        @if (justConnected()) {
+          <div class="connect-success">
+            <span class="material-symbols-rounded sm">check_circle</span>
+            DNS records were configured successfully. Verification is in progress.
+          </div>
+        } @else {
+          <p class="section-description">
+            Your DNS provider supports automatic configuration via Domain Connect.
+            Click below to authorize Hello Mail to create the required DNS records — no manual setup needed.
+          </p>
+          <button class="btn-primary" (click)="autoConfigure()">
+            <span class="material-symbols-rounded sm">open_in_new</span>
+            Configure DNS via {{ domainConnectProvider() }}
+          </button>
+        }
+      </section>
+    }
+
+    <!-- Tracking Settings -->
+    <section class="card section">
+      <div class="card-header">
+        <h2>
+          <span class="material-symbols-rounded">analytics</span>
+          Tracking Settings
+        </h2>
+      </div>
+      <div class="settings-list">
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">Open Tracking</span>
+            <span class="setting-description">Track when recipients open your emails</span>
+          </div>
+          <label class="toggle">
+            <input
+              type="checkbox"
+              [checked]="openTracking()"
+              (change)="openTracking.set(!openTracking())"
+            />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">Click Tracking</span>
+            <span class="setting-description">Track when recipients click links in your emails</span>
+          </div>
+          <label class="toggle">
+            <input
+              type="checkbox"
+              [checked]="clickTracking()"
+              (change)="clickTracking.set(!clickTracking())"
+            />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="settings-actions">
+        <button
+          class="btn-primary"
+          (click)="saveSettings()"
+          [disabled]="isSavingSettings()"
+        >
+          {{ isSavingSettings() ? 'Saving...' : 'Save Settings' }}
+        </button>
+      </div>
+    </section>
+
+    <!-- Danger Zone -->
+    <section class="card section danger-zone">
+      <div class="card-header">
+        <h2>
+          <span class="material-symbols-rounded">warning</span>
+          Danger Zone
+        </h2>
+      </div>
+      <p class="section-description">
+        Deleting a domain is permanent and cannot be undone. All associated DNS records and settings will be removed.
+      </p>
+      @if (showDeleteConfirm()) {
+        <div class="delete-confirm">
+          <p class="delete-warning">
+            Are you sure you want to delete <strong>{{ domainInfo()!.name }}</strong>? This action cannot be undone.
+          </p>
+          <div class="form-actions">
+            <button
+              class="btn-danger"
+              (click)="deleteDomain()"
+              [disabled]="isDeleting()"
+            >
+              {{ isDeleting() ? 'Deleting...' : 'Yes, Delete Domain' }}
+            </button>
+            <button class="btn-secondary" (click)="cancelDelete()">Cancel</button>
+          </div>
+        </div>
+      } @else {
+        <button class="btn-danger" (click)="confirmDelete()">
+          <span class="material-symbols-rounded sm">delete</span>
+          Delete Domain
+        </button>
+      }
+    </section>
+  </div>
+}

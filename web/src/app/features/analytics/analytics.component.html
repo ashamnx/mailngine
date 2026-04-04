@@ -1,0 +1,117 @@
+<div class="analytics">
+  <div class="page-header">
+    <h1>Analytics</h1>
+    <div class="date-range">
+      <div class="date-field">
+        <label class="input-label" for="dateFrom">From</label>
+        <input
+          id="dateFrom"
+          class="input"
+          type="date"
+          [ngModel]="dateFrom()"
+          (ngModelChange)="dateFrom.set($event)"
+        />
+      </div>
+      <div class="date-field">
+        <label class="input-label" for="dateTo">To</label>
+        <input
+          id="dateTo"
+          class="input"
+          type="date"
+          [ngModel]="dateTo()"
+          (ngModelChange)="dateTo.set($event)"
+        />
+      </div>
+      <button class="btn-primary btn-sm date-apply" (click)="applyDateRange()">
+        Apply
+      </button>
+    </div>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-state">
+      <p>Loading analytics...</p>
+    </div>
+  } @else {
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+      @for (card of kpiCards(); track card.title) {
+        <div class="stat-card card">
+          <div class="stat-icon">
+            <span class="material-symbols-rounded">{{ card.icon }}</span>
+          </div>
+          <div class="stat-info">
+            <span class="stat-title">{{ card.title }}</span>
+            <span class="stat-value">{{ card.value }}</span>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Timeseries Table -->
+    <section class="card section">
+      <div class="card-header">
+        <h2>Daily Breakdown</h2>
+      </div>
+      @if (timeseries().length === 0) {
+        <div class="section-empty">
+          <span class="material-symbols-rounded">show_chart</span>
+          <p>No data available for the selected date range.</p>
+        </div>
+      } @else {
+        <div class="timeseries-table-wrapper">
+          <table class="table timeseries-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Sent</th>
+                <th>Delivered</th>
+                <th>Bounced</th>
+                <th>Received</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (entry of timeseries(); track entry.date) {
+                <tr>
+                  <td>{{ entry.date | date: 'mediumDate' }}</td>
+                  <td>{{ entry.sent | number }}</td>
+                  <td>{{ entry.delivered | number }}</td>
+                  <td>{{ entry.bounced | number }}</td>
+                  <td>{{ entry.received | number }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+
+    <!-- Event Breakdown -->
+    <section class="card section">
+      <div class="card-header">
+        <h2>Event Breakdown</h2>
+      </div>
+      @if (events().length === 0) {
+        <div class="section-empty">
+          <span class="material-symbols-rounded">bar_chart</span>
+          <p>No event data available for the selected date range.</p>
+        </div>
+      } @else {
+        <div class="event-bars">
+          @for (event of events(); track event.event) {
+            <div class="event-bar-row">
+              <span class="event-bar-label">{{ formatEventLabel(event.event) }}</span>
+              <div class="event-bar-track">
+                <div
+                  class="event-bar-fill"
+                  [style.width]="eventBarWidth(event.count)"
+                ></div>
+              </div>
+              <span class="event-bar-count">{{ event.count | number }}</span>
+            </div>
+          }
+        </div>
+      }
+    </section>
+  }
+</div>

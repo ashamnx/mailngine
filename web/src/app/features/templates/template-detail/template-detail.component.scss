@@ -1,0 +1,178 @@
+@use 'styles/variables' as *;
+
+// -- Breadcrumb --------------------------------------------------------
+
+.breadcrumb {
+  margin-bottom: $space-4;
+}
+
+// -- Page Header -------------------------------------------------------
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $space-8;
+}
+
+.page-header-info {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+  min-width: 0;
+
+  h1 {
+    font-size: $font-size-2xl;
+  }
+}
+
+.page-header-meta {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+// -- Sections ----------------------------------------------------------
+
+.section {
+  margin-bottom: $space-6;
+}
+
+.section-description {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-bottom: $space-5;
+}
+
+// -- Edit Form ---------------------------------------------------------
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: $space-5;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-5;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.textarea {
+  height: auto;
+  min-height: 80px;
+  resize: vertical;
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  line-height: $line-height-normal;
+  padding: $space-3 $space-4;
+}
+
+.mono {
+  font-family: $font-mono;
+}
+
+.form-actions {
+  display: flex;
+  gap: $space-3;
+}
+
+.save-success {
+  font-size: $font-size-sm;
+  color: $color-success;
+  font-weight: $font-weight-medium;
+}
+
+// -- Preview -----------------------------------------------------------
+
+.preview-controls {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+  max-width: 560px;
+  margin-bottom: $space-6;
+}
+
+.preview-result {
+  margin-top: $space-6;
+  border: $border-default;
+  border-radius: $border-radius-sm;
+  overflow: hidden;
+}
+
+.preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $space-3 $space-4;
+  background-color: $color-bg-surface;
+  border-bottom: $border-default;
+
+  h3 {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+  }
+}
+
+.preview-subject {
+  padding: $space-3 $space-4;
+  font-size: $font-size-sm;
+  border-bottom: 1px solid $color-border-light;
+  background-color: $color-bg-surface;
+}
+
+.preview-label {
+  font-weight: $font-weight-medium;
+  color: $color-text-secondary;
+  margin-right: $space-2;
+}
+
+.preview-body {
+  background-color: $color-bg-app;
+}
+
+.preview-iframe {
+  width: 100%;
+  min-height: 300px;
+  border: none;
+  display: block;
+}
+
+// -- Danger Zone -------------------------------------------------------
+
+.danger-zone {
+  border-color: rgba($color-error, 0.3);
+
+  .card-header h2 {
+    color: $color-error;
+  }
+}
+
+.delete-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.delete-warning {
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  padding: $space-4;
+  background-color: rgba($color-error, 0.05);
+  border-radius: $border-radius-sm;
+  border: 1px solid rgba($color-error, 0.2);
+}
+
+// -- Loading -----------------------------------------------------------
+
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-16;
+  color: $color-text-secondary;
+}

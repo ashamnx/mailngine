@@ -1,0 +1,160 @@
+@use 'styles/variables' as *;
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $space-8;
+
+  h1 {
+    font-size: $font-size-3xl;
+  }
+}
+
+// -- Add Section -------------------------------------------------------
+
+.add-section {
+  margin-bottom: $space-6;
+}
+
+.add-title {
+  font-size: $font-size-lg;
+  margin-bottom: $space-5;
+}
+
+.add-tip {
+  display: flex;
+  gap: $space-3;
+  padding: $space-4;
+  margin-bottom: $space-5;
+  background: rgba($color-warning, 0.08);
+  border: 1px solid rgba($color-warning, 0.2);
+  border-radius: $border-radius-sm;
+  font-size: $font-size-sm;
+  line-height: 1.6;
+
+  .material-symbols-rounded {
+    color: #D97706;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  code {
+    font-family: $font-mono;
+    font-size: $font-size-xs;
+    padding: 1px 4px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+  }
+}
+
+.add-form {
+  display: flex;
+  flex-direction: column;
+  gap: $space-5;
+  max-width: 520px;
+}
+
+.toggle-field {
+  display: flex;
+  gap: $space-3;
+  cursor: pointer;
+
+  input[type="checkbox"] {
+    margin-top: 2px;
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    accent-color: $color-primary;
+  }
+
+  &__label {
+    display: flex;
+    flex-direction: column;
+    gap: $space-1;
+
+    strong {
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+    }
+  }
+
+  &__desc {
+    font-size: $font-size-xs;
+    color: $color-text-secondary;
+    line-height: 1.5;
+  }
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.add-actions {
+  display: flex;
+  gap: $space-3;
+}
+
+// -- Table -------------------------------------------------------------
+
+.table-container {
+  padding: 0;
+  overflow-x: auto;
+
+  .table {
+    th:first-child,
+    td:first-child {
+      padding-left: $space-6;
+    }
+
+    th:last-child,
+    td:last-child {
+      padding-right: $space-6;
+    }
+  }
+}
+
+.clickable-row {
+  cursor: pointer;
+}
+
+.domain-name {
+  font-weight: $font-weight-medium;
+}
+
+// -- Empty State -------------------------------------------------------
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $space-16 $space-6;
+  text-align: center;
+  gap: $space-4;
+
+  .material-symbols-rounded {
+    color: $color-text-disabled;
+  }
+
+  h2 {
+    font-size: $font-size-xl;
+  }
+
+  p {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    margin-bottom: $space-2;
+  }
+}
+
+// -- Loading -----------------------------------------------------------
+
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-16;
+  color: $color-text-secondary;
+}
