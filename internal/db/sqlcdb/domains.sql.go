@@ -172,6 +172,32 @@ func (q *Queries) GetDomainByName(ctx context.Context, arg GetDomainByNameParams
 	return i, err
 }
 
+const getDomainByNameForInbound = `-- name: GetDomainByNameForInbound :one
+SELECT id, org_id, name, status, region, dkim_private_key, dkim_selector, open_tracking, click_tracking, cloudflare_zone_id, cloudflare_api_token_enc, verified_at, created_at, updated_at FROM domains WHERE name = $1 AND status = 'verified'
+`
+
+func (q *Queries) GetDomainByNameForInbound(ctx context.Context, name string) (Domain, error) {
+	row := q.db.QueryRow(ctx, getDomainByNameForInbound, name)
+	var i Domain
+	err := row.Scan(
+		&i.ID,
+		&i.OrgID,
+		&i.Name,
+		&i.Status,
+		&i.Region,
+		&i.DkimPrivateKey,
+		&i.DkimSelector,
+		&i.OpenTracking,
+		&i.ClickTracking,
+		&i.CloudflareZoneID,
+		&i.CloudflareApiTokenEnc,
+		&i.VerifiedAt,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
 const listDNSRecordsByDomain = `-- name: ListDNSRecordsByDomain :many
 SELECT id, domain_id, record_type, host, value, purpose, status, verified_at, created_at FROM dns_records WHERE domain_id = $1 ORDER BY purpose
 `
@@ -246,17 +272,23 @@ func (q *Queries) ListDomainsByOrg(ctx context.Context, orgID uuid.UUID) ([]Doma
 }
 
 const updateDNSRecordStatus = `-- name: UpdateDNSRecordStatus :exec
-UPDATE dns_records SET status = $2, verified_at = CASE WHEN $2 = 'verified' THEN NOW() ELSE verified_at END WHERE id = $1 AND domain_id = $3
+UPDATE dns_records SET status = $1, verified_at = CASE WHEN $2::bool THEN NOW() ELSE verified_at END WHERE id = $3 AND domain_id = $4
 `
 
 type UpdateDNSRecordStatusParams struct {
-	ID       uuid.UUID `json:"id"`
-	Status   string    `json:"status"`
-	DomainID uuid.UUID `json:"domain_id"`
+	Status      string    `json:"status"`
+	SetVerified bool      `json:"set_verified"`
+	ID          uuid.UUID `json:"id"`
+	DomainID    uuid.UUID `json:"domain_id"`
 }
 
 func (q *Queries) UpdateDNSRecordStatus(ctx context.Context, arg UpdateDNSRecordStatusParams) error {
-	_, err := q.db.Exec(ctx, updateDNSRecordStatus, arg.ID, arg.Status, arg.DomainID)
+	_, err := q.db.Exec(ctx, updateDNSRecordStatus,
+		arg.Status,
+		arg.SetVerified,
+		arg.ID,
+		arg.DomainID,
+	)
 	return err
 }
 
@@ -320,16 +352,22 @@ func (q *Queries) UpdateDomainSettings(ctx context.Context, arg UpdateDomainSett
 }
 
 const updateDomainStatus = `-- name: UpdateDomainStatus :exec
-UPDATE domains SET status = $3, verified_at = CASE WHEN $3 = 'verified' THEN NOW() ELSE verified_at END WHERE id = $1 AND org_id = $2
+UPDATE domains SET status = $1, verified_at = CASE WHEN $2::bool THEN NOW() ELSE verified_at END WHERE id = $3 AND org_id = $4
 `
 
 type UpdateDomainStatusParams struct {
-	ID     uuid.UUID `json:"id"`
-	OrgID  uuid.UUID `json:"org_id"`
-	Status string    `json:"status"`
+	Status      string    `json:"status"`
+	SetVerified bool      `json:"set_verified"`
+	ID          uuid.UUID `json:"id"`
+	OrgID       uuid.UUID `json:"org_id"`
 }
 
 func (q *Queries) UpdateDomainStatus(ctx context.Context, arg UpdateDomainStatusParams) error {
-	_, err := q.db.Exec(ctx, updateDomainStatus, arg.ID, arg.OrgID, arg.Status)
+	_, err := q.db.Exec(ctx, updateDomainStatus,
+		arg.Status,
+		arg.SetVerified,
+		arg.ID,
+		arg.OrgID,
+	)
 	return err
 }

@@ -13,7 +13,7 @@ SELECT * FROM emails WHERE org_id = $1 AND idempotency_key = $2;
 SELECT * FROM emails WHERE org_id = $1 ORDER BY created_at DESC LIMIT $2 OFFSET $3;
 
 -- name: UpdateEmailStatus :exec
-UPDATE emails SET status = $2, sent_at = CASE WHEN $2 = 'sent' THEN NOW() ELSE sent_at END, delivered_at = CASE WHEN $2 = 'delivered' THEN NOW() ELSE delivered_at END WHERE id = $1 AND org_id = $3;
+UPDATE emails SET status = @status, sent_at = CASE WHEN @set_sent::bool THEN NOW() ELSE sent_at END, delivered_at = CASE WHEN @set_delivered::bool THEN NOW() ELSE delivered_at END WHERE id = @id AND org_id = @org_id;
 
 -- name: CountEmailsByOrg :one
 SELECT COUNT(*) FROM emails WHERE org_id = $1;

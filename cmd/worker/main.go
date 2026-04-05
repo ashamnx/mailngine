@@ -9,7 +9,12 @@ import (
 
 	"github.com/hibiken/asynq"
 	"github.com/mailngine/mailngine/internal/config"
+	"github.com/mailngine/mailngine/internal/db"
+	sqlcdb "github.com/mailngine/mailngine/internal/db/sqlcdb"
+	"github.com/mailngine/mailngine/internal/email"
+	"github.com/mailngine/mailngine/internal/inbox"
 	"github.com/mailngine/mailngine/internal/observability"
+	internalsmtp "github.com/mailngine/mailngine/internal/smtp"
 	"github.com/rs/zerolog"
 )
 
@@ -32,6 +37,13 @@ func run() error {
 	logger := observability.NewLogger(cfg.Env)
 	logger.Info().Msg("starting Mailngine worker")
 
+	// Connect to PostgreSQL.
+	pool, err := db.NewPool(ctx, cfg.DatabaseURL, logger)
+	if err != nil {
+		return fmt.Errorf("connect to database: %w", err)
+	}
+	defer pool.Close()
+
 	redisOpt, err := asynq.ParseRedisURI(cfg.ValkeyURL)
 	if err != nil {
 		return fmt.Errorf("parse valkey url for asynq: %w", err)
@@ -53,23 +65,38 @@ func run() error {
 		Msg("worker configured")
 
 	mux := asynq.NewServeMux()
-	// Task handlers will be registered here in Phase 2+
 
-	shutdown := make(chan os.Signal, 1)
-	signal.Notify(shutdown, syscall.SIGINT, syscall.SIGTERM)
+	// Register task handlers.
+	smtpSender := email.NewSMTPSender(cfg.Postfix.SMTPHost, cfg.Postfix.SMTPPort)
+	sendHandler := email.NewSendHandler(pool, smtpSender, logger)
+	sendHandler.Register(mux)
 
-	errCh := make(chan error, 1)
+	logger.Info().Msg("task handlers registered")
+
+	// Start LMTP server for inbound email.
+	queries := sqlcdb.New(pool)
+	inboxSvc := inbox.NewService(pool, logger)
+	lmtpServer := internalsmtp.NewLMTPServer(cfg.LMTPSocketPath, queries, inboxSvc, logger)
+
+	errCh := make(chan error, 2)
+
+	go func() {
+		errCh <- lmtpServer.ListenAndServe()
+	}()
+
 	go func() {
 		errCh <- srv.Run(mux)
 	}()
 
-	_ = ctx // used in future phases for DB/cache connections
+	shutdown := make(chan os.Signal, 1)
+	signal.Notify(shutdown, syscall.SIGINT, syscall.SIGTERM)
 
 	select {
 	case err := <-errCh:
 		return fmt.Errorf("worker error: %w", err)
 	case sig := <-shutdown:
 		logger.Info().Str("signal", sig.String()).Msg("shutting down worker")
+		lmtpServer.Close()
 		srv.Shutdown()
 	}
 
@@ -80,8 +107,8 @@ type asynqLogger struct {
 	logger zerolog.Logger
 }
 
-func (l *asynqLogger) Debug(args ...any)                    { l.logger.Debug().Msgf("%v", args) }
-func (l *asynqLogger) Info(args ...any)                     { l.logger.Info().Msgf("%v", args) }
-func (l *asynqLogger) Warn(args ...any)                     { l.logger.Warn().Msgf("%v", args) }
-func (l *asynqLogger) Error(args ...any)                    { l.logger.Error().Msgf("%v", args) }
-func (l *asynqLogger) Fatal(args ...any)                    { l.logger.Fatal().Msgf("%v", args) }
+func (l *asynqLogger) Debug(args ...any) { l.logger.Debug().Msgf("%v", args) }
+func (l *asynqLogger) Info(args ...any)  { l.logger.Info().Msgf("%v", args) }
+func (l *asynqLogger) Warn(args ...any)  { l.logger.Warn().Msgf("%v", args) }
+func (l *asynqLogger) Error(args ...any) { l.logger.Error().Msgf("%v", args) }
+func (l *asynqLogger) Fatal(args ...any) { l.logger.Fatal().Msgf("%v", args) }

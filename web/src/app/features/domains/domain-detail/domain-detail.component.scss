@@ -378,6 +378,83 @@
   outline-offset: 2px;
 }
 
+// -- Next Steps --------------------------------------------------------
+
+.next-steps {
+  border-color: rgba($color-success, 0.3);
+
+  .card-header h2 {
+    color: $color-success;
+  }
+}
+
+.steps-list {
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+}
+
+.step {
+  display: flex;
+  gap: $space-4;
+  align-items: flex-start;
+}
+
+.step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: $color-primary;
+  color: #fff;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  flex-shrink: 0;
+}
+
+.step-content {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+
+  strong {
+    font-size: $font-size-base;
+  }
+
+  p {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    margin: 0;
+  }
+
+  .btn-secondary {
+    align-self: flex-start;
+    margin-top: $space-2;
+  }
+}
+
+.code-example {
+  margin-top: $space-3;
+  background-color: $color-bg-app;
+  border: $border-default;
+  border-radius: $border-radius-sm;
+  padding: $space-4;
+  overflow-x: auto;
+
+  code {
+    font-size: $font-size-xs;
+    color: $color-text-primary;
+  }
+
+  pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+}
+
 // -- Danger Zone -------------------------------------------------------
 
 .danger-zone {

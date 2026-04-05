@@ -316,9 +316,10 @@ func (s *Service) VerifyDomain(ctx context.Context, orgID, domainID uuid.UUID) (
 		}
 
 		if err := s.queries.UpdateDNSRecordStatus(ctx, sqlcdb.UpdateDNSRecordStatusParams{
-			ID:       rec.ID,
-			Status:   newStatus,
-			DomainID: rec.DomainID,
+			ID:          rec.ID,
+			Status:      newStatus,
+			SetVerified: verified,
+			DomainID:    rec.DomainID,
 		}); err != nil {
 			s.logger.Error().Err(err).
 				Str("record_id", rec.ID.String()).
@@ -337,9 +338,10 @@ func (s *Service) VerifyDomain(ctx context.Context, orgID, domainID uuid.UUID) (
 	}
 
 	if err := s.queries.UpdateDomainStatus(ctx, sqlcdb.UpdateDomainStatusParams{
-		ID:     domainID,
-		OrgID:  orgID,
-		Status: domainStatus,
+		ID:          domainID,
+		OrgID:       orgID,
+		Status:      domainStatus,
+		SetVerified: allVerified,
 	}); err != nil {
 		return nil, fmt.Errorf("updating domain status: %w", err)
 	}

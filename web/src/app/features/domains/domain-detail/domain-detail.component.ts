@@ -1,6 +1,6 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 interface DnsRecord {
@@ -29,7 +29,7 @@ interface DomainDetailResponse {
 @Component({
   selector: 'app-domain-detail',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: './domain-detail.component.html',
   styleUrl: './domain-detail.component.scss',
 })
@@ -46,6 +46,7 @@ export class DomainDetailComponent {
   readonly isConfiguringDns = signal(false);
   readonly cfConfigSuccess = signal(false);
   readonly showDeleteConfirm = signal(false);
+  readonly deleteConfirmInput = signal('');
   readonly isDeleting = signal(false);
   readonly copiedKey = signal<string | null>(null);
   readonly expandedIndex = signal<number | null>(null);
@@ -56,6 +57,19 @@ export class DomainDetailComponent {
 
   readonly openTracking = signal(false);
   readonly clickTracking = signal(false);
+
+  readonly curlExample = computed(() => {
+    const domain = this.domainInfo()?.name ?? 'example.com';
+    return `curl -X POST https://api.mailngine.com/v1/emails \\
+  -H "Authorization: Bearer YOUR_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "from": "you@${domain}",
+    "to": ["recipient@example.com"],
+    "subject": "Hello from Mailngine",
+    "html": "<p>Your first email!</p>"
+  }'`;
+  });
 
   private domainId = '';
 
@@ -165,6 +179,7 @@ export class DomainDetailComponent {
 
   cancelDelete(): void {
     this.showDeleteConfirm.set(false);
+    this.deleteConfirmInput.set('');
   }
 
   deleteDomain(): void {

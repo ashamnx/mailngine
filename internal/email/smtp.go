@@ -2,6 +2,7 @@ package email
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
 	"net"
 	"net/smtp"
@@ -25,17 +26,54 @@ func NewSMTPSender(host, port string) *SMTPSender {
 // The from parameter is the envelope sender (MAIL FROM), and to contains all
 // envelope recipients (RCPT TO), including CC and BCC addresses.
 //
-// Context is accepted for future use (e.g., deadline-aware dialing) but the
-// current net/smtp.SendMail implementation does not support cancellation.
+// For local relay (127.0.0.1), TLS certificate verification is skipped since
+// Postfix's self-signed cert won't have a valid SAN for loopback addresses.
 func (s *SMTPSender) Send(_ context.Context, from string, to []string, message []byte) error {
 	addr := net.JoinHostPort(s.host, s.port)
 
-	// net/smtp.SendMail handles the full SMTP conversation:
-	// EHLO/HELO, MAIL FROM, RCPT TO, DATA, and QUIT.
-	// No authentication is needed for local Postfix relay on port 25.
-	if err := smtp.SendMail(addr, nil, from, to, message); err != nil {
-		return fmt.Errorf("smtp send to %s: %w", addr, err)
+	c, err := smtp.Dial(addr)
+	if err != nil {
+		return fmt.Errorf("smtp dial %s: %w", addr, err)
+	}
+	defer c.Close()
+
+	if err := c.Hello("mx.mailngine.com"); err != nil {
+		return fmt.Errorf("smtp hello: %w", err)
 	}
 
-	return nil
+	// Upgrade to TLS if supported, skipping cert verification for local relay.
+	if ok, _ := c.Extension("STARTTLS"); ok {
+		tlsConfig := &tls.Config{
+			ServerName:         s.host,
+			InsecureSkipVerify: s.host == "127.0.0.1" || s.host == "localhost",
+		}
+		if err := c.StartTLS(tlsConfig); err != nil {
+			return fmt.Errorf("smtp starttls: %w", err)
+		}
+	}
+
+	if err := c.Mail(from); err != nil {
+		return fmt.Errorf("smtp mail from: %w", err)
+	}
+
+	for _, recipient := range to {
+		if err := c.Rcpt(recipient); err != nil {
+			return fmt.Errorf("smtp rcpt to %s: %w", recipient, err)
+		}
+	}
+
+	w, err := c.Data()
+	if err != nil {
+		return fmt.Errorf("smtp data: %w", err)
+	}
+
+	if _, err := w.Write(message); err != nil {
+		return fmt.Errorf("smtp write message: %w", err)
+	}
+
+	if err := w.Close(); err != nil {
+		return fmt.Errorf("smtp close data: %w", err)
+	}
+
+	return c.Quit()
 }

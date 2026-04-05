@@ -54,6 +54,7 @@ type Querier interface {
 	GetCurrentMonthUsage(ctx context.Context, orgID uuid.UUID) (GetCurrentMonthUsageRow, error)
 	GetDomain(ctx context.Context, arg GetDomainParams) (Domain, error)
 	GetDomainByName(ctx context.Context, arg GetDomainByNameParams) (Domain, error)
+	GetDomainByNameForInbound(ctx context.Context, name string) (Domain, error)
 	GetEmail(ctx context.Context, arg GetEmailParams) (Email, error)
 	GetEmailByIdempotencyKey(ctx context.Context, arg GetEmailByIdempotencyKeyParams) (Email, error)
 	GetEmailOrgID(ctx context.Context, id uuid.UUID) (GetEmailOrgIDRow, error)

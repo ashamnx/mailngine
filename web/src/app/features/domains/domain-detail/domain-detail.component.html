@@ -134,6 +134,44 @@
       }
     </section>
 
+    <!-- Next Steps (shown when domain is verified) -->
+    @if (domainInfo()!.status === 'verified') {
+      <section class="card section next-steps">
+        <div class="card-header">
+          <h2>
+            <span class="material-symbols-rounded">rocket_launch</span>
+            Next Steps
+          </h2>
+        </div>
+        <p class="section-description">
+          Your domain is verified and ready to send emails. Here's how to get started:
+        </p>
+        <div class="steps-list">
+          <div class="step">
+            <span class="step-number">1</span>
+            <div class="step-content">
+              <strong>Create an API Key</strong>
+              <p>Generate an API key to authenticate your requests.</p>
+              <button class="btn-secondary btn-sm" routerLink="/api-keys">
+                <span class="material-symbols-rounded sm">key</span>
+                Go to API Keys
+              </button>
+            </div>
+          </div>
+          <div class="step">
+            <span class="step-number">2</span>
+            <div class="step-content">
+              <strong>Send your first email</strong>
+              <p>Use the API to send an email from your verified domain.</p>
+              <div class="code-example">
+                <pre>{{ curlExample() }}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    }
+
     <!-- Domain Connect auto-configure (shown when DNS provider supports it) -->
     @if (domainConnectSupported()) {
       <section class="card section">
@@ -225,15 +263,24 @@
       @if (showDeleteConfirm()) {
         <div class="delete-confirm">
           <p class="delete-warning">
-            Are you sure you want to delete <strong>{{ domainInfo()!.name }}</strong>? This action cannot be undone.
+            This action cannot be undone. To confirm, type <strong>{{ domainInfo()!.name }}</strong> below.
           </p>
+          <input
+            type="text"
+            class="input"
+            [placeholder]="domainInfo()!.name"
+            [value]="deleteConfirmInput()"
+            (input)="deleteConfirmInput.set($any($event.target).value)"
+            autocomplete="off"
+            spellcheck="false"
+          />
           <div class="form-actions">
             <button
               class="btn-danger"
               (click)="deleteDomain()"
-              [disabled]="isDeleting()"
+              [disabled]="isDeleting() || deleteConfirmInput() !== domainInfo()!.name"
             >
-              {{ isDeleting() ? 'Deleting...' : 'Yes, Delete Domain' }}
+              {{ isDeleting() ? 'Deleting...' : 'Delete Domain' }}
             </button>
             <button class="btn-secondary" (click)="cancelDelete()">Cancel</button>
           </div>

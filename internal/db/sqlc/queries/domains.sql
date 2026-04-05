@@ -13,7 +13,7 @@ SELECT * FROM domains WHERE name = $1 AND org_id = $2;
 SELECT * FROM domains WHERE org_id = $1 ORDER BY created_at DESC;
 
 -- name: UpdateDomainStatus :exec
-UPDATE domains SET status = $3, verified_at = CASE WHEN $3 = 'verified' THEN NOW() ELSE verified_at END WHERE id = $1 AND org_id = $2;
+UPDATE domains SET status = @status, verified_at = CASE WHEN @set_verified::bool THEN NOW() ELSE verified_at END WHERE id = @id AND org_id = @org_id;
 
 -- name: UpdateDomainSettings :one
 UPDATE domains SET open_tracking = $3, click_tracking = $4 WHERE id = $1 AND org_id = $2 RETURNING *;
@@ -31,7 +31,10 @@ INSERT INTO dns_records (domain_id, record_type, host, value, purpose) VALUES ($
 SELECT * FROM dns_records WHERE domain_id = $1 ORDER BY purpose;
 
 -- name: UpdateDNSRecordStatus :exec
-UPDATE dns_records SET status = $2, verified_at = CASE WHEN $2 = 'verified' THEN NOW() ELSE verified_at END WHERE id = $1 AND domain_id = $3;
+UPDATE dns_records SET status = @status, verified_at = CASE WHEN @set_verified::bool THEN NOW() ELSE verified_at END WHERE id = @id AND domain_id = @domain_id;
+
+-- name: GetDomainByNameForInbound :one
+SELECT * FROM domains WHERE name = $1 AND status = 'verified';
 
 -- name: DeleteDNSRecordsByDomain :exec
 DELETE FROM dns_records WHERE domain_id = $1;

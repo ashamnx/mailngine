@@ -291,16 +291,24 @@ func (q *Queries) ListEmailsByOrg(ctx context.Context, arg ListEmailsByOrgParams
 }
 
 const updateEmailStatus = `-- name: UpdateEmailStatus :exec
-UPDATE emails SET status = $2, sent_at = CASE WHEN $2 = 'sent' THEN NOW() ELSE sent_at END, delivered_at = CASE WHEN $2 = 'delivered' THEN NOW() ELSE delivered_at END WHERE id = $1 AND org_id = $3
+UPDATE emails SET status = $1, sent_at = CASE WHEN $2::bool THEN NOW() ELSE sent_at END, delivered_at = CASE WHEN $3::bool THEN NOW() ELSE delivered_at END WHERE id = $4 AND org_id = $5
 `
 
 type UpdateEmailStatusParams struct {
-	ID     uuid.UUID `json:"id"`
-	Status string    `json:"status"`
-	OrgID  uuid.UUID `json:"org_id"`
+	Status       string    `json:"status"`
+	SetSent      bool      `json:"set_sent"`
+	SetDelivered bool      `json:"set_delivered"`
+	ID           uuid.UUID `json:"id"`
+	OrgID        uuid.UUID `json:"org_id"`
 }
 
 func (q *Queries) UpdateEmailStatus(ctx context.Context, arg UpdateEmailStatusParams) error {
-	_, err := q.db.Exec(ctx, updateEmailStatus, arg.ID, arg.Status, arg.OrgID)
+	_, err := q.db.Exec(ctx, updateEmailStatus,
+		arg.Status,
+		arg.SetSent,
+		arg.SetDelivered,
+		arg.ID,
+		arg.OrgID,
+	)
 	return err
 }

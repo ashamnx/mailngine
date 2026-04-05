@@ -104,6 +104,8 @@ func (bp *BounceProcessor) ProcessBounce(ctx context.Context, emailID, orgID uui
 			ID:     emailID,
 			Status: "bounced",
 			OrgID:  orgID,
+			SetSent: false,
+			SetDelivered: false,
 		}); err != nil {
 			return fmt.Errorf("update email status to bounced: %w", err)
 		}

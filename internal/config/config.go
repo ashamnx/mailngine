@@ -20,7 +20,8 @@ type Config struct {
 	DKIMMasterKey string
 	FrontendURL   string
 
-	Postfix PostfixConfig
+	Postfix        PostfixConfig
+	LMTPSocketPath string
 
 	WorkerShutdownTimeout time.Duration
 }
@@ -87,6 +88,7 @@ func Load() (*Config, error) {
 			SMTPHost: getEnv("POSTFIX_SMTP_HOST", "127.0.0.1"),
 			SMTPPort: getEnv("POSTFIX_SMTP_PORT", "25"),
 		},
+		LMTPSocketPath: getEnv("LMTP_SOCKET_PATH", "/var/spool/postfix/private/mailngine-lmtp"),
 	}
 
 	workerTimeout, err := time.ParseDuration(getEnv("WORKER_SHUTDOWN_TIMEOUT", "60s"))
