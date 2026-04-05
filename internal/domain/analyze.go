@@ -149,16 +149,16 @@ func detectProvider(mxRecords []string) *Provider {
 	return nil
 }
 
-// generateMergedSPF creates the correct SPF record that includes Hello Mail.
+// generateMergedSPF creates the correct SPF record that includes Mailngine.
 func generateMergedSPF(existingSPF string) string {
-	helloMailInclude := "include:spf.hellomail.dev"
+	helloMailInclude := "include:spf.mailngine.com"
 
 	if existingSPF == "" {
 		return "v=spf1 " + helloMailInclude + " ~all"
 	}
 
 	// Already has our include
-	if strings.Contains(existingSPF, "spf.hellomail.dev") {
+	if strings.Contains(existingSPF, "spf.mailngine.com") {
 		return existingSPF
 	}
 
@@ -181,7 +181,7 @@ func buildRecommendations(a *DNSAnalysis) []Recommendation {
 		recs = append(recs, Recommendation{
 			Type:    "warning",
 			Title:   a.DetectedProvider.Name + " detected",
-			Message: "This domain uses " + a.DetectedProvider.Name + " for email. Adding Hello Mail MX records would break your existing mailboxes. We recommend using a subdomain (e.g., mail." + a.Domain + ") or sending only without inbound.",
+			Message: "This domain uses " + a.DetectedProvider.Name + " for email. Adding Mailngine MX records would break your existing mailboxes. We recommend using a subdomain (e.g., mail." + a.Domain + ") or sending only without inbound.",
 			Action:  "use_subdomain",
 		})
 	} else if a.HasMX {
@@ -203,7 +203,7 @@ func buildRecommendations(a *DNSAnalysis) []Recommendation {
 		recs = append(recs, Recommendation{
 			Type:    "info",
 			Title:   "Existing SPF record found",
-			Message: "We've generated a merged SPF record that includes both your existing configuration and Hello Mail. Replace your current SPF record with the merged version.",
+			Message: "We've generated a merged SPF record that includes both your existing configuration and Mailngine. Replace your current SPF record with the merged version.",
 			Action:  "merge_spf",
 		})
 	} else {
@@ -218,7 +218,7 @@ func buildRecommendations(a *DNSAnalysis) []Recommendation {
 		recs = append(recs, Recommendation{
 			Type:    "info",
 			Title:   "Existing DMARC record found",
-			Message: "Your domain already has a DMARC policy. No changes needed — Hello Mail will respect your existing DMARC configuration.",
+			Message: "Your domain already has a DMARC policy. No changes needed — Mailngine will respect your existing DMARC configuration.",
 			Action:  "skip_dmarc",
 		})
 	}

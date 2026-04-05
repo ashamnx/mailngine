@@ -1,11 +1,11 @@
-import type { HelloMail } from '../client.js';
+import type { Mailngine } from '../client.js';
 import type { ApiKey, ApiKeyCreateResponse, CreateApiKeyParams } from '../types.js';
 
 /**
  * Resource for managing API keys.
  */
 export class ApiKeysResource {
-  constructor(private readonly client: HelloMail) {}
+  constructor(private readonly client: Mailngine) {}
 
   /**
    * Create a new API key.

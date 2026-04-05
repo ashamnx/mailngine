@@ -40,7 +40,7 @@ export default component$(() => {
         <div class="about-hero">
           <h1>Built for developers who care about email</h1>
           <p>
-            Hello Mail started with a simple frustration: email infrastructure
+            Mailngine started with a simple frustration: email infrastructure
             should not be this hard. We are a small, focused team building the
             email platform we always wished existed -- reliable, transparent, and
             designed for developers first.
@@ -72,8 +72,8 @@ export default component$(() => {
           <h2 class="about-section-title">Meet the Team</h2>
           <p class="about-team__intro">
             A small crew with big ambitions. We have built infrastructure at
-            scale before, and now we are channeling that experience into Hello
-            Mail.
+            scale before, and now we are channeling that experience into
+            Mailngine.
           </p>
           <div class="about-team__grid">
             {team.map((member) => (
@@ -96,7 +96,7 @@ export default component$(() => {
           </span>
           <h2>Built with open source</h2>
           <p>
-            Hello Mail is built on open source tools we trust: Postfix for SMTP
+            Mailngine is built on open source tools we trust: Postfix for SMTP
             delivery, OpenDKIM for message signing, Valkey for caching, and
             PostgreSQL for data storage. We believe in giving back to the
             communities that make our work possible, and we open source our SDKs
@@ -230,21 +230,21 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-  title: "About - Hello Mail",
+  title: "About - Mailngine",
   meta: [
     {
       name: "description",
       content:
-        "Learn about Hello Mail, the email infrastructure platform built for developers who care about reliability, transparency, and great developer experience.",
+        "Learn about Mailngine, the email infrastructure platform built for developers who care about reliability, transparency, and great developer experience.",
     },
     {
-      name: "og:title",
-      content: "About - Hello Mail",
+      property: "og:title",
+      content: "About - Mailngine",
     },
     {
-      name: "og:description",
+      property: "og:description",
       content:
-        "Learn about Hello Mail, the email infrastructure platform built for developers who care about reliability, transparency, and great developer experience.",
+        "Learn about Mailngine, the email infrastructure platform built for developers who care about reliability, transparency, and great developer experience.",
     },
   ],
 };

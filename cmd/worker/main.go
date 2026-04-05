@@ -8,8 +8,8 @@ import (
 	"syscall"
 
 	"github.com/hibiken/asynq"
-	"github.com/hellomail/hellomail/internal/config"
-	"github.com/hellomail/hellomail/internal/observability"
+	"github.com/mailngine/mailngine/internal/config"
+	"github.com/mailngine/mailngine/internal/observability"
 	"github.com/rs/zerolog"
 )
 
@@ -30,7 +30,7 @@ func run() error {
 	}
 
 	logger := observability.NewLogger(cfg.Env)
-	logger.Info().Msg("starting Hello Mail worker")
+	logger.Info().Msg("starting Mailngine worker")
 
 	redisOpt, err := asynq.ParseRedisURI(cfg.ValkeyURL)
 	if err != nil {
@@ -44,8 +44,13 @@ func run() error {
 			"default":  3,
 			"low":      1,
 		},
-		Logger: &asynqLogger{logger: logger},
+		ShutdownTimeout: cfg.WorkerShutdownTimeout,
+		Logger:          &asynqLogger{logger: logger},
 	})
+
+	logger.Info().
+		Dur("shutdown_timeout", cfg.WorkerShutdownTimeout).
+		Msg("worker configured")
 
 	mux := asynq.NewServeMux()
 	// Task handlers will be registered here in Phase 2+

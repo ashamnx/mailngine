@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/hellomail/hellomail/internal/api/response"
-	"github.com/hellomail/hellomail/internal/auth"
-	sqlcdb "github.com/hellomail/hellomail/internal/db/sqlcdb"
-	"github.com/hellomail/hellomail/internal/observability"
+	"github.com/mailngine/mailngine/internal/api/response"
+	"github.com/mailngine/mailngine/internal/auth"
+	sqlcdb "github.com/mailngine/mailngine/internal/db/sqlcdb"
+	"github.com/mailngine/mailngine/internal/observability"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/redis/go-redis/v9"
 )
@@ -35,7 +35,7 @@ func Authenticate(jwtMgr *auth.JWTManager, db *pgxpool.Pool, cache *redis.Client
 			logger := observability.LoggerFromContext(ctx)
 
 			// API key authentication path
-			if strings.HasPrefix(token, "hm_") {
+			if strings.HasPrefix(token, "mn_") {
 				hash := auth.HashAPIKey(token)
 				apiKey, err := queries.GetAPIKeyByHash(ctx, hash)
 				if err != nil {

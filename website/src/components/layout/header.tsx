@@ -18,11 +18,9 @@ export const Header = component$(() => {
     <header class="hm-header">
       <div class="hm-header__inner">
         {/* Logo */}
-        <a href="/" class="hm-header__logo" aria-label="Hello Mail home">
-          <span class="material-symbols-rounded hm-header__logo-icon">
-            mail
-          </span>
-          <span class="hm-header__logo-text">Hello Mail</span>
+        <a href="/" class="hm-header__logo" aria-label="Mailngine home">
+          <img src="/logo.svg" alt="Mailngine" class="hm-header__logo-img" width="120" height="48" />
+          <span class="hm-header__logo-text"><strong>Mail</strong>ngine</span>
         </a>
 
         {/* Desktop Navigation */}
@@ -36,10 +34,10 @@ export const Header = component$(() => {
 
         {/* Right Actions */}
         <div class="hm-header__actions">
-          <a href="/sign-in" class="hm-header__sign-in">
+          <a href="https://app.mailngine.com/login" class="hm-header__sign-in">
             Sign In
           </a>
-          <Button variant="primary" size="sm" href="/get-started">
+          <Button variant="primary" size="sm" href="https://app.mailngine.com/login">
             Get Started
           </Button>
         </div>
@@ -72,10 +70,10 @@ export const Header = component$(() => {
             </a>
           ))}
           <div class="hm-header__mobile-actions">
-            <a href="/sign-in" class="hm-header__mobile-link">
+            <a href="https://app.mailngine.com/login" class="hm-header__mobile-link">
               Sign In
             </a>
-            <Button variant="primary" size="md" href="/get-started">
+            <Button variant="primary" size="md" href="https://app.mailngine.com/login">
               Get Started
             </Button>
           </div>

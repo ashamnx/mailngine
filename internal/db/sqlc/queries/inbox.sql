@@ -15,7 +15,7 @@ SELECT * FROM inbox_threads WHERE org_id = $1 ORDER BY last_message_at DESC LIMI
 SELECT COUNT(*) FROM inbox_threads WHERE org_id = $1;
 
 -- name: UpdateThreadLastMessage :exec
-UPDATE inbox_threads SET last_message_at = $2, message_count = message_count + 1, participant_addresses = $3 WHERE id = $1;
+UPDATE inbox_threads SET last_message_at = $2, message_count = message_count + 1, participant_addresses = $3 WHERE id = $1 AND org_id = $4;
 
 -- name: DeleteThread :exec
 DELETE FROM inbox_threads WHERE id = $1 AND org_id = $2;
@@ -69,10 +69,14 @@ UPDATE inbox_labels SET name = $3, color = $4 WHERE id = $1 AND org_id = $2 RETU
 DELETE FROM inbox_labels WHERE id = $1 AND org_id = $2;
 
 -- name: AddMessageLabel :exec
-INSERT INTO inbox_message_labels (message_id, label_id) VALUES ($1, $2) ON CONFLICT DO NOTHING;
+INSERT INTO inbox_message_labels (message_id, label_id)
+SELECT $1, $2 WHERE EXISTS (SELECT 1 FROM inbox_labels WHERE id = $2 AND org_id = $3)
+ON CONFLICT DO NOTHING;
 
 -- name: RemoveMessageLabel :exec
-DELETE FROM inbox_message_labels WHERE message_id = $1 AND label_id = $2;
+DELETE FROM inbox_message_labels
+WHERE message_id = $1 AND label_id = $2
+AND EXISTS (SELECT 1 FROM inbox_labels WHERE id = $2 AND org_id = $3);
 
 -- name: ListMessageLabels :many
-SELECT il.* FROM inbox_labels il JOIN inbox_message_labels iml ON il.id = iml.label_id WHERE iml.message_id = $1;
+SELECT il.* FROM inbox_labels il JOIN inbox_message_labels iml ON il.id = iml.label_id WHERE iml.message_id = $1 AND il.org_id = $2;

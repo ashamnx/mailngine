@@ -13,7 +13,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
 
-	sqlcdb "github.com/hellomail/hellomail/internal/db/sqlcdb"
+	sqlcdb "github.com/mailngine/mailngine/internal/db/sqlcdb"
 )
 
 // IncomingMessage represents a raw inbound email before it is persisted.
@@ -52,7 +52,7 @@ func (s *Service) AssignThread(ctx context.Context, orgID, domainID uuid.UUID, m
 			return uuid.Nil, err
 		}
 		if threadID != uuid.Nil {
-			if err := s.updateThreadMetadata(ctx, threadID, msg); err != nil {
+			if err := s.updateThreadMetadata(ctx, orgID, threadID, msg); err != nil {
 				return uuid.Nil, err
 			}
 			return threadID, nil
@@ -68,7 +68,7 @@ func (s *Service) AssignThread(ctx context.Context, orgID, domainID uuid.UUID, m
 				return uuid.Nil, err
 			}
 			if threadID != uuid.Nil {
-				if err := s.updateThreadMetadata(ctx, threadID, msg); err != nil {
+				if err := s.updateThreadMetadata(ctx, orgID, threadID, msg); err != nil {
 					return uuid.Nil, err
 				}
 				return threadID, nil
@@ -90,7 +90,7 @@ func (s *Service) AssignThread(ctx context.Context, orgID, domainID uuid.UUID, m
 			return uuid.Nil, fmt.Errorf("find thread by subject: %w", err)
 		}
 		if err == nil {
-			if err := s.updateThreadMetadata(ctx, thread.ID, msg); err != nil {
+			if err := s.updateThreadMetadata(ctx, orgID, thread.ID, msg); err != nil {
 				return uuid.Nil, err
 			}
 			return thread.ID, nil
@@ -144,30 +144,15 @@ func (s *Service) findThreadByMessageIDHeader(ctx context.Context, orgID uuid.UU
 }
 
 // updateThreadMetadata updates a thread's last_message_at timestamp and merges new participants.
-func (s *Service) updateThreadMetadata(ctx context.Context, threadID uuid.UUID, msg *IncomingMessage) error {
+func (s *Service) updateThreadMetadata(ctx context.Context, orgID, threadID uuid.UUID, msg *IncomingMessage) error {
 	newParticipants := collectParticipants(msg)
 
 	// Fetch current thread to merge participant addresses.
 	thread, err := s.queries.GetThread(ctx, sqlcdb.GetThreadParams{
 		ID:    threadID,
-		OrgID: uuid.Nil, // Thread ID is globally unique; org scoping is handled by the caller.
+		OrgID: orgID,
 	})
 	if err != nil {
-		// If the thread is not found by org_id=Nil, try a direct query approach.
-		// Since GetThread requires org_id, we use a fallback: merge without existing data.
-		// In practice the thread was already validated, so this path is unlikely.
-		if errors.Is(err, pgx.ErrNoRows) {
-			merged, _ := json.Marshal(newParticipants)
-			receivedAt := msg.ReceivedAt
-			if receivedAt.IsZero() {
-				receivedAt = time.Now().UTC()
-			}
-			return s.queries.UpdateThreadLastMessage(ctx, sqlcdb.UpdateThreadLastMessageParams{
-				ID:                   threadID,
-				LastMessageAt:        receivedAt,
-				ParticipantAddresses: merged,
-			})
-		}
 		return fmt.Errorf("get thread for metadata update: %w", err)
 	}
 
@@ -192,6 +177,7 @@ func (s *Service) updateThreadMetadata(ctx context.Context, threadID uuid.UUID, 
 		ID:                   threadID,
 		LastMessageAt:        receivedAt,
 		ParticipantAddresses: mergedJSON,
+		OrgID:                orgID,
 	}); err != nil {
 		return fmt.Errorf("update thread last message: %w", err)
 	}

@@ -4,7 +4,7 @@ const stats = [
   { value: "99.9%", label: "Uptime" },
   { value: "<100ms", label: "API Response" },
   { value: "3", label: "Official SDKs" },
-  { value: "19", label: "Database Tables" },
+  { value: "5min", label: "Setup Time" },
 ];
 
 export const Stats = component$(() => {

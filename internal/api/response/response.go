@@ -71,6 +71,10 @@ func TooManyRequests(w http.ResponseWriter, message string) {
 	Err(w, http.StatusTooManyRequests, "rate_limit_exceeded", message)
 }
 
+func ServiceUnavailable(w http.ResponseWriter, message string) {
+	Err(w, http.StatusServiceUnavailable, "service_unavailable", message)
+}
+
 func InternalError(w http.ResponseWriter) {
 	Err(w, http.StatusInternalServerError, "internal_error", "An unexpected error occurred")
 }

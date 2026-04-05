@@ -1,3 +1,3 @@
-module github.com/hellomail/hellomail-go
+module github.com/mailngine/mailngine-go
 
 go 1.21

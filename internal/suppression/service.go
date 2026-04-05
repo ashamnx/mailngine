@@ -17,7 +17,7 @@ import (
 	"github.com/redis/go-redis/v9"
 	"github.com/rs/zerolog"
 
-	sqlcdb "github.com/hellomail/hellomail/internal/db/sqlcdb"
+	sqlcdb "github.com/mailngine/mailngine/internal/db/sqlcdb"
 )
 
 // cacheTTL is the duration a suppression check result is cached in Valkey.

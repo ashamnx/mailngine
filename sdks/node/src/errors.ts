@@ -1,7 +1,7 @@
 /**
- * Error thrown when the Hello Mail API returns a non-2xx response.
+ * Error thrown when the Mailngine API returns a non-2xx response.
  */
-export class HelloMailError extends Error {
+export class MailngineError extends Error {
   /** HTTP status code from the API. */
   public readonly statusCode: number;
 
@@ -10,7 +10,7 @@ export class HelloMailError extends Error {
 
   constructor(statusCode: number, code: string, message: string) {
     super(message);
-    this.name = 'HelloMailError';
+    this.name = 'MailngineError';
     this.statusCode = statusCode;
     this.code = code;
 

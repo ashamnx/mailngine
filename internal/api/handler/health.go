@@ -3,7 +3,7 @@ package handler
 import (
 	"net/http"
 
-	"github.com/hellomail/hellomail/internal/api/response"
+	"github.com/mailngine/mailngine/internal/api/response"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/redis/go-redis/v9"
 )
@@ -20,23 +20,22 @@ func NewHealthHandler(db *pgxpool.Pool, cache *redis.Client) *HealthHandler {
 func (h *HealthHandler) Check(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	status := map[string]string{
-		"status":   "healthy",
-		"postgres": "up",
-		"valkey":   "up",
-	}
+	healthy := true
 
 	if err := h.db.Ping(ctx); err != nil {
-		status["status"] = "degraded"
-		status["postgres"] = "down"
+		healthy = false
 	}
 
 	if err := h.cache.Ping(ctx).Err(); err != nil {
-		status["status"] = "degraded"
-		status["valkey"] = "down"
+		healthy = false
 	}
 
-	if status["status"] == "healthy" {
+	status := map[string]string{"status": "healthy"}
+	if !healthy {
+		status["status"] = "degraded"
+	}
+
+	if healthy {
 		response.JSON(w, http.StatusOK, status)
 	} else {
 		response.JSON(w, http.StatusServiceUnavailable, status)

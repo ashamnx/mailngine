@@ -5,8 +5,8 @@ const tabs = [
   {
     label: "Go",
     language: "go",
-    code: `client := hellomail.New("hm_live_...")
-email, err := client.Emails.Send(ctx, &hellomail.SendEmailParams{
+    code: `client := mailngine.New("mn_live_...")
+email, err := client.Emails.Send(ctx, &mailngine.SendEmailParams{
     From:    "hello@example.com",
     To:      []string{"user@example.com"},
     Subject: "Welcome!",
@@ -16,7 +16,7 @@ email, err := client.Emails.Send(ctx, &hellomail.SendEmailParams{
   {
     label: "Node.js",
     language: "typescript",
-    code: `const client = new HelloMail('hm_live_...');
+    code: `const client = new Mailngine('mn_live_...');
 const email = await client.emails.send({
     from: 'hello@example.com',
     to: ['user@example.com'],
@@ -27,7 +27,7 @@ const email = await client.emails.send({
   {
     label: "Laravel",
     language: "php",
-    code: `$client = new HelloMail('hm_live_...');
+    code: `$client = new Mailngine('mn_live_...');
 $email = $client->emails()->send([
     'from' => 'hello@example.com',
     'to' => ['user@example.com'],

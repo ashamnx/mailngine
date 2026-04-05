@@ -6,7 +6,7 @@ import { MeResponse, Organization, OrgListItem, User } from './auth.models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly TOKEN_KEY = 'hm_token';
+  private readonly TOKEN_KEY = 'mn_token';
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
 

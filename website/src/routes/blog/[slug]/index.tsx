@@ -1,5 +1,9 @@
 import { component$ } from "@builder.io/qwik";
-import { routeLoader$, type DocumentHead } from "@builder.io/qwik-city";
+import {
+  routeLoader$,
+  type DocumentHead,
+  type StaticGenerateHandler,
+} from "@builder.io/qwik-city";
 import { Section } from "~/components/ui/section";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
@@ -174,28 +178,34 @@ export default component$(() => {
   );
 });
 
+export const onStaticGenerate: StaticGenerateHandler = async () => {
+  return {
+    params: posts.map((post) => ({ slug: post.slug })),
+  };
+};
+
 export const head: DocumentHead = ({ resolveValue }) => {
   const post = resolveValue(useBlogPost);
 
   if (!post) {
     return {
-      title: "Post Not Found - Hello Mail",
+      title: "Post Not Found - Mailngine",
     };
   }
 
   return {
-    title: `${post.title} - Hello Mail Blog`,
+    title: `${post.title} - Mailngine Blog`,
     meta: [
       {
         name: "description",
         content: post.excerpt,
       },
       {
-        name: "og:title",
-        content: `${post.title} - Hello Mail Blog`,
+        property: "og:title",
+        content: `${post.title} - Mailngine Blog`,
       },
       {
-        name: "og:description",
+        property: "og:description",
         content: post.excerpt,
       },
     ],

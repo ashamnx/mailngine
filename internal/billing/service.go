@@ -8,7 +8,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
 
-	"github.com/hellomail/hellomail/internal/db/sqlcdb"
+	"github.com/mailngine/mailngine/internal/db/sqlcdb"
 )
 
 // PlanDefinition describes a billing plan's properties.

@@ -42,7 +42,7 @@ export default component$(() => {
       <Section background="surface" padding="lg" id="features">
         <h2 class="section-heading">Everything you need to send email</h2>
         <p class="section-subheading">
-          From transactional emails to inbound processing, Hello Mail handles
+          From transactional emails to inbound processing, Mailngine handles
           the full email lifecycle.
         </p>
         <Features />
@@ -77,21 +77,21 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-  title: "Hello Mail - Email Infrastructure for Developers",
+  title: "Mailngine - Email Infrastructure for Developers",
   meta: [
     {
       name: "description",
       content:
-        "Reliable email API with Go, Node.js, and Laravel SDKs. Domain management, analytics, webhooks, and inbox support.",
+        "Send transactional and marketing emails with a developer-first API. Go, Node.js, and Laravel SDKs. Domain verification, analytics, webhooks, and 99.9% uptime.",
     },
     {
       property: "og:title",
-      content: "Hello Mail - Email Infrastructure for Developers",
+      content: "Mailngine - Email Infrastructure for Developers",
     },
     {
       property: "og:description",
       content:
-        "Reliable email API with Go, Node.js, and Laravel SDKs.",
+        "Send transactional and marketing emails with a developer-first API. Go, Node.js, and Laravel SDKs.",
     },
     {
       property: "og:type",

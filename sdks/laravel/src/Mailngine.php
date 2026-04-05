@@ -2,29 +2,29 @@
 
 declare(strict_types=1);
 
-namespace HelloMail;
+namespace Mailngine;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
-use HelloMail\Exceptions\ApiException;
-use HelloMail\Exceptions\HelloMailException;
-use HelloMail\Resources\ApiKeys;
-use HelloMail\Resources\Domains;
-use HelloMail\Resources\Emails;
-use HelloMail\Resources\Templates;
-use HelloMail\Resources\Webhooks;
+use Mailngine\Exceptions\ApiException;
+use Mailngine\Exceptions\MailngineException;
+use Mailngine\Resources\ApiKeys;
+use Mailngine\Resources\Domains;
+use Mailngine\Resources\Emails;
+use Mailngine\Resources\Templates;
+use Mailngine\Resources\Webhooks;
 
 /**
- * Hello Mail API client.
+ * Mailngine API client.
  *
- * @see https://hellomail.dev/docs
+ * @see https://mailngine.com/docs
  */
-class HelloMail
+class Mailngine
 {
     private const VERSION = '0.1.0';
 
-    private const DEFAULT_BASE_URL = 'https://api.hellomail.dev';
+    private const DEFAULT_BASE_URL = 'https://api.mailngine.com';
 
     private const MAX_RETRIES = 3;
 
@@ -37,7 +37,7 @@ class HelloMail
     private Client $http;
 
     /**
-     * @param  string  $apiKey   Your Hello Mail API key.
+     * @param  string  $apiKey   Your Mailngine API key.
      * @param  array{
      *     base_url?: string,
      *     timeout?: int,
@@ -47,7 +47,7 @@ class HelloMail
     public function __construct(string $apiKey, array $options = [])
     {
         if ($apiKey === '') {
-            throw new HelloMailException('API key is required');
+            throw new MailngineException('API key is required');
         }
 
         $this->apiKey = $apiKey;
@@ -86,7 +86,7 @@ class HelloMail
     }
 
     /**
-     * Send an HTTP request to the Hello Mail API.
+     * Send an HTTP request to the Mailngine API.
      *
      * Automatically retries on 429 (rate limit) and 5xx (server error) responses
      * up to MAX_RETRIES attempts with exponential backoff.
@@ -97,8 +97,8 @@ class HelloMail
      * @param  array       $query   Query parameters for GET requests.
      * @return array                Decoded response data from the "data" envelope.
      *
-     * @throws ApiException         On API error responses.
-     * @throws HelloMailException   On connection or unexpected errors.
+     * @throws ApiException           On API error responses.
+     * @throws MailngineException     On connection or unexpected errors.
      */
     public function request(string $method, string $path, ?array $body = null, array $query = []): array
     {
@@ -109,7 +109,7 @@ class HelloMail
                 'Authorization' => 'Bearer ' . $this->apiKey,
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
-                'User-Agent' => 'hellomail-laravel/' . self::VERSION,
+                'User-Agent' => 'mailngine-laravel/' . self::VERSION,
             ],
         ];
 
@@ -130,8 +130,8 @@ class HelloMail
             try {
                 $response = $this->http->request($method, $url, $requestOptions);
             } catch (ConnectException $e) {
-                $lastException = new HelloMailException(
-                    'Failed to connect to Hello Mail API: ' . $e->getMessage(),
+                $lastException = new MailngineException(
+                    'Failed to connect to Mailngine API: ' . $e->getMessage(),
                     0,
                     $e
                 );
@@ -143,8 +143,8 @@ class HelloMail
 
                 throw $lastException;
             } catch (\Throwable $e) {
-                throw new HelloMailException(
-                    'Unexpected error communicating with Hello Mail API: ' . $e->getMessage(),
+                throw new MailngineException(
+                    'Unexpected error communicating with Mailngine API: ' . $e->getMessage(),
                     0,
                     $e
                 );
@@ -164,8 +164,8 @@ class HelloMail
             $decoded = json_decode($responseBody, true);
 
             if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new HelloMailException(
-                    'Invalid JSON response from Hello Mail API'
+                throw new MailngineException(
+                    'Invalid JSON response from Mailngine API'
                 );
             }
 
@@ -182,7 +182,7 @@ class HelloMail
         }
 
         // Should not reach here, but handle gracefully
-        throw $lastException ?? new HelloMailException('Request failed after ' . self::MAX_RETRIES . ' attempts');
+        throw $lastException ?? new MailngineException('Request failed after ' . self::MAX_RETRIES . ' attempts');
     }
 
     /**

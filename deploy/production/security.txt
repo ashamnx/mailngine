@@ -1,0 +1,5 @@
+Contact: mailto:security@mailngine.com
+Expires: 2027-04-04T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://mailngine.com/.well-known/security.txt
+Policy: https://mailngine.com/security

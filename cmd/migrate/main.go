@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/hellomail/hellomail/internal/config"
+	"github.com/mailngine/mailngine/internal/config"
 )
 
 func main() {

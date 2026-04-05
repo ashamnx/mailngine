@@ -1,7 +1,7 @@
 {
-  "name": "hellomail",
+  "name": "mailngine",
   "version": "0.1.0",
-  "description": "Hello Mail SDK for Node.js",
+  "description": "Mailngine SDK for Node.js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -13,7 +13,7 @@
   },
   "keywords": [
     "email",
-    "hellomail",
+    "mailngine",
     "transactional-email",
     "sdk"
   ],

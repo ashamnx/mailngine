@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/hellomail/hellomail/internal/api/response"
-	"github.com/hellomail/hellomail/internal/auth"
-	"github.com/hellomail/hellomail/internal/observability"
+	"github.com/mailngine/mailngine/internal/api/response"
+	"github.com/mailngine/mailngine/internal/auth"
+	"github.com/mailngine/mailngine/internal/observability"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -67,8 +67,8 @@ func RateLimit(cache *redis.Client, cfg RateLimitConfig) func(http.Handler) http
 			count, err := cache.Incr(ctx, windowKey).Result()
 			if err != nil {
 				logger.Error().Err(err).Msg("rate limit incr failed")
-				// Fail open: allow the request if Valkey is unavailable
-				next.ServeHTTP(w, r)
+				// Fail closed: reject the request if Valkey is unavailable
+				response.ServiceUnavailable(w, "service temporarily unavailable")
 				return
 			}
 
@@ -90,6 +90,48 @@ func RateLimit(cache *redis.Client, cfg RateLimitConfig) func(http.Handler) http
 			w.Header().Set("X-RateLimit-Reset", strconv.FormatInt(resetTime, 10))
 
 			if int(count) > limit {
+				response.TooManyRequests(w, "rate limit exceeded")
+				return
+			}
+
+			next.ServeHTTP(w, r)
+		})
+	}
+}
+
+// IPRateLimit returns middleware that enforces per-IP rate limits for
+// unauthenticated endpoints (e.g. OAuth callbacks, public routes).
+func IPRateLimit(cache *redis.Client, rate int, window time.Duration) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			ctx := r.Context()
+			logger := observability.LoggerFromContext(ctx)
+
+			ip := r.RemoteAddr
+			if fwd := r.Header.Get("X-Real-Ip"); fwd != "" {
+				ip = fwd
+			}
+
+			windowSeconds := int(window.Seconds())
+			if windowSeconds < 1 {
+				windowSeconds = 1
+			}
+
+			now := time.Now().Unix()
+			windowKey := fmt.Sprintf("rl:ip:%s:%d", ip, now/int64(windowSeconds))
+
+			count, err := cache.Incr(ctx, windowKey).Result()
+			if err != nil {
+				logger.Error().Err(err).Msg("ip rate limit incr failed")
+				response.ServiceUnavailable(w, "service temporarily unavailable")
+				return
+			}
+
+			if count == 1 {
+				cache.Expire(ctx, windowKey, window+time.Second)
+			}
+
+			if int(count) > rate {
 				response.TooManyRequests(w, "rate limit exceeded")
 				return
 			}

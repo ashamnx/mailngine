@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"html"
 	"strings"
 
 	"github.com/google/uuid"
@@ -13,7 +14,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
 
-	"github.com/hellomail/hellomail/internal/db/sqlcdb"
+	"github.com/mailngine/mailngine/internal/db/sqlcdb"
 )
 
 // ErrTemplateNotFound is returned when a template cannot be found.
@@ -123,25 +124,30 @@ func (s *Service) Delete(ctx context.Context, orgID, templateID uuid.UUID) error
 
 // Render loads a template and replaces {{variable}} placeholders with values from the data map.
 // It returns the rendered subject, HTML body, and text body.
-func (s *Service) Render(ctx context.Context, orgID, templateID uuid.UUID, data map[string]string) (subject, html, text string, err error) {
+func (s *Service) Render(ctx context.Context, orgID, templateID uuid.UUID, data map[string]string) (subject, htmlBody, text string, err error) {
 	tmpl, err := s.Get(ctx, orgID, templateID)
 	if err != nil {
 		return "", "", "", err
 	}
 
-	subject = replacePlaceholders(tmpl.Subject, data)
-	html = replacePlaceholders(tmpl.HtmlBody, data)
-	text = replacePlaceholders(tmpl.TextBody.String, data)
+	subject = replacePlaceholders(tmpl.Subject, data, false)
+	htmlBody = replacePlaceholders(tmpl.HtmlBody, data, true)
+	text = replacePlaceholders(tmpl.TextBody.String, data, false)
 
-	return subject, html, text, nil
+	return subject, htmlBody, text, nil
 }
 
 // replacePlaceholders replaces {{key}} placeholders in the input string with values from data.
-func replacePlaceholders(input string, data map[string]string) string {
+// When escapeHTML is true, values are HTML-escaped to prevent XSS in HTML email bodies.
+func replacePlaceholders(input string, data map[string]string, escapeHTML bool) string {
 	result := input
 	for key, value := range data {
 		placeholder := "{{" + key + "}}"
-		result = strings.ReplaceAll(result, placeholder, value)
+		v := value
+		if escapeHTML {
+			v = html.EscapeString(v)
+		}
+		result = strings.ReplaceAll(result, placeholder, v)
 	}
 	return result
 }

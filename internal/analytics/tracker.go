@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -13,7 +14,7 @@ import (
 	"github.com/redis/go-redis/v9"
 	"github.com/rs/zerolog"
 
-	"github.com/hellomail/hellomail/internal/db/sqlcdb"
+	"github.com/mailngine/mailngine/internal/db/sqlcdb"
 )
 
 // 1x1 transparent GIF
@@ -51,12 +52,12 @@ func (t *Tracker) TrackOpen(w http.ResponseWriter, r *http.Request) {
 	// Deduplicate opens
 	cacheKey := fmt.Sprintf("open:%s", emailID.String())
 	if t.cache.SetNX(r.Context(), cacheKey, "1", 24*time.Hour).Val() {
-		// First open — record event
-		email, err := t.queries.GetEmail(r.Context(), sqlcdb.GetEmailParams{ID: emailID, OrgID: uuid.Nil})
+		// Look up the email's org_id for event recording.
+		emailRow, err := t.queries.GetEmailOrgID(r.Context(), emailID)
 		if err == nil {
 			t.queries.CreateEmailEvent(r.Context(), sqlcdb.CreateEmailEventParams{
 				EmailID:   emailID,
-				OrgID:     email.OrgID,
+				OrgID:     emailRow.OrgID,
 				EventType: "opened",
 				Recipient: "",
 				UserAgent: pgtype.Text{String: r.UserAgent(), Valid: true},
@@ -70,12 +71,27 @@ func (t *Tracker) TrackOpen(w http.ResponseWriter, r *http.Request) {
 	w.Write(transparentGIF)
 }
 
+// isSafeRedirectURL validates that a URL is safe for redirection (http/https only).
+func isSafeRedirectURL(rawURL string) bool {
+	u, err := url.Parse(rawURL)
+	if err != nil {
+		return false
+	}
+	return u.Scheme == "http" || u.Scheme == "https"
+}
+
 func (t *Tracker) TrackClick(w http.ResponseWriter, r *http.Request) {
 	trackingID := chi.URLParam(r, "id")
 	targetURL := r.URL.Query().Get("url")
 
 	if targetURL == "" {
 		http.Error(w, "missing url", http.StatusBadRequest)
+		return
+	}
+
+	// Prevent open redirect: only allow http/https URLs.
+	if !isSafeRedirectURL(targetURL) {
+		http.Error(w, "invalid redirect url", http.StatusBadRequest)
 		return
 	}
 
@@ -89,11 +105,11 @@ func (t *Tracker) TrackClick(w http.ResponseWriter, r *http.Request) {
 	cacheKey := fmt.Sprintf("click:%s:%s", emailID.String(), targetURL)
 	if t.cache.SetNX(r.Context(), cacheKey, "1", 24*time.Hour).Val() {
 		metadata, _ := json.Marshal(map[string]string{"url": targetURL})
-		email, err := t.queries.GetEmail(r.Context(), sqlcdb.GetEmailParams{ID: emailID, OrgID: uuid.Nil})
+		emailRow, err := t.queries.GetEmailOrgID(r.Context(), emailID)
 		if err == nil {
 			t.queries.CreateEmailEvent(r.Context(), sqlcdb.CreateEmailEventParams{
 				EmailID:   emailID,
-				OrgID:     email.OrgID,
+				OrgID:     emailRow.OrgID,
 				EventType: "clicked",
 				Recipient: "",
 				Metadata:  metadata,

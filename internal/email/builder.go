@@ -73,8 +73,10 @@ func BuildMIMEMessage(from, subject, textBody, htmlBody string, to, cc, bcc []st
 }
 
 // writeHeader writes a single MIME header line.
+// It strips CR and LF characters from the value to prevent header injection.
 func writeHeader(w io.Writer, key, value string) {
-	fmt.Fprintf(w, "%s: %s\r\n", key, value)
+	sanitized := strings.NewReplacer("\r", "", "\n", "").Replace(value)
+	fmt.Fprintf(w, "%s: %s\r\n", key, sanitized)
 }
 
 // writeMultipartAlternative writes a multipart/alternative body with text/plain and text/html parts.
@@ -121,7 +123,7 @@ func generateBoundary() string {
 	b := make([]byte, 16)
 	if _, err := rand.Read(b); err != nil {
 		// Fallback to a timestamp-based boundary if crypto/rand fails.
-		return fmt.Sprintf("hellomail-%d", time.Now().UnixNano())
+		return fmt.Sprintf("mailngine-%d", time.Now().UnixNano())
 	}
-	return "hellomail-" + hex.EncodeToString(b)
+	return "mailngine-" + hex.EncodeToString(b)
 }

@@ -8,10 +8,10 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
 
-	"github.com/hellomail/hellomail/internal/api/response"
-	"github.com/hellomail/hellomail/internal/auth"
-	"github.com/hellomail/hellomail/internal/inbox"
-	"github.com/hellomail/hellomail/internal/observability"
+	"github.com/mailngine/mailngine/internal/api/response"
+	"github.com/mailngine/mailngine/internal/auth"
+	"github.com/mailngine/mailngine/internal/inbox"
+	"github.com/mailngine/mailngine/internal/observability"
 )
 
 // InboxHandler handles inbox-related HTTP requests for threads, messages, and labels.
@@ -346,7 +346,7 @@ func (h *InboxHandler) AddLabel(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := h.inboxSvc.AddMessageLabel(ctx, messageID, req.LabelID); err != nil {
+	if err := h.inboxSvc.AddMessageLabel(ctx, orgID, messageID, req.LabelID); err != nil {
 		logger.Error().Err(err).
 			Str("message_id", messageID.String()).
 			Str("label_id", req.LabelID.String()).
@@ -375,7 +375,9 @@ func (h *InboxHandler) RemoveLabel(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := h.inboxSvc.RemoveMessageLabel(ctx, messageID, labelID); err != nil {
+	orgID := auth.OrgIDFromContext(ctx)
+
+	if err := h.inboxSvc.RemoveMessageLabel(ctx, orgID, messageID, labelID); err != nil {
 		logger.Error().Err(err).
 			Str("message_id", messageID.String()).
 			Str("label_id", labelID.String()).

@@ -3,8 +3,8 @@ package middleware
 import (
 	"net/http"
 
-	"github.com/hellomail/hellomail/internal/api/response"
-	"github.com/hellomail/hellomail/internal/auth"
+	"github.com/mailngine/mailngine/internal/api/response"
+	"github.com/mailngine/mailngine/internal/auth"
 )
 
 // roleHierarchy defines the privilege levels for each role.

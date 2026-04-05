@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/web-manifest-combined.json",
-  "name": "Hello Mail",
-  "short_name": "Hello Mail",
+  "name": "Mailngine",
+  "short_name": "Mailngine",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -9,7 +9,7 @@
   "description": "Reliable email delivery for developers.",
   "icons": [
     {
-      "src": "/favicon.svg",
+      "src": "/logo.svg",
       "type": "image/svg+xml",
       "sizes": "any"
     }

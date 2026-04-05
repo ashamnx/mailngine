@@ -3,10 +3,10 @@ package handler
 import (
 	"net/http"
 
-	"github.com/hellomail/hellomail/internal/api/response"
-	"github.com/hellomail/hellomail/internal/auth"
-	"github.com/hellomail/hellomail/internal/billing"
-	"github.com/hellomail/hellomail/internal/observability"
+	"github.com/mailngine/mailngine/internal/api/response"
+	"github.com/mailngine/mailngine/internal/auth"
+	"github.com/mailngine/mailngine/internal/billing"
+	"github.com/mailngine/mailngine/internal/observability"
 )
 
 // BillingHandler handles billing-related HTTP requests.

@@ -41,10 +41,19 @@
   font-size: 28px;
 }
 
+.hm-header__logo-img {
+  height: 32px;
+  width: auto;
+}
+
 .hm-header__logo-text {
   font-family: var(--font-primary);
   font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-semibold);
+  font-weight: 400;
+}
+
+.hm-header__logo-text strong {
+  font-weight: 700;
 }
 
 /* --- Desktop Nav --- */

@@ -1,4 +1,4 @@
-// Package inbox implements the inbound email inbox for Hello Mail.
+// Package inbox implements the inbound email inbox for Mailngine.
 // It provides thread management, message CRUD, label operations,
 // and email threading for received messages.
 package inbox
@@ -14,7 +14,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
 
-	sqlcdb "github.com/hellomail/hellomail/internal/db/sqlcdb"
+	sqlcdb "github.com/mailngine/mailngine/internal/db/sqlcdb"
 )
 
 // Sentinel errors for inbox operations.
@@ -276,10 +276,12 @@ func (s *Service) DeleteLabel(ctx context.Context, orgID, labelID uuid.UUID) err
 }
 
 // AddMessageLabel associates a label with a message.
-func (s *Service) AddMessageLabel(ctx context.Context, messageID, labelID uuid.UUID) error {
+// orgID is used to verify the label belongs to the same organization.
+func (s *Service) AddMessageLabel(ctx context.Context, orgID, messageID, labelID uuid.UUID) error {
 	if err := s.queries.AddMessageLabel(ctx, sqlcdb.AddMessageLabelParams{
 		MessageID: messageID,
 		LabelID:   labelID,
+		OrgID:     orgID,
 	}); err != nil {
 		return fmt.Errorf("add message label: %w", err)
 	}
@@ -287,10 +289,12 @@ func (s *Service) AddMessageLabel(ctx context.Context, messageID, labelID uuid.U
 }
 
 // RemoveMessageLabel dissociates a label from a message.
-func (s *Service) RemoveMessageLabel(ctx context.Context, messageID, labelID uuid.UUID) error {
+// orgID is used to verify the label belongs to the same organization.
+func (s *Service) RemoveMessageLabel(ctx context.Context, orgID, messageID, labelID uuid.UUID) error {
 	if err := s.queries.RemoveMessageLabel(ctx, sqlcdb.RemoveMessageLabelParams{
 		MessageID: messageID,
 		LabelID:   labelID,
+		OrgID:     orgID,
 	}); err != nil {
 		return fmt.Errorf("remove message label: %w", err)
 	}

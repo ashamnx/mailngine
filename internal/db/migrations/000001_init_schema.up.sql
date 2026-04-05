@@ -1,4 +1,4 @@
--- Hello Mail Initial Schema
+-- Mailngine Initial Schema
 -- Extensions
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "pg_trgm";

@@ -60,7 +60,7 @@ export default component$(() => {
             <section id="acceptance">
               <h2>1. Acceptance of Terms</h2>
               <p>
-                By accessing or using the Hello Mail service ("Service"), you
+                By accessing or using the Mailngine service ("Service"), you
                 agree to be bound by these Terms of Service ("Terms"). If you do
                 not agree to these Terms, you may not use the Service. These
                 Terms apply to all users, including individuals and organizations
@@ -71,7 +71,7 @@ export default component$(() => {
             <section id="description">
               <h2>2. Description of Service</h2>
               <p>
-                Hello Mail provides email infrastructure services including
+                Mailngine provides email infrastructure services including
                 transactional email delivery, domain management, email
                 analytics, webhook notifications, and related developer tools.
                 The Service is offered via a web dashboard, REST API, SMTP
@@ -183,7 +183,7 @@ export default component$(() => {
                 ownership over Your Data.
               </p>
               <p>
-                You grant Hello Mail a limited, non-exclusive license to
+                You grant Mailngine a limited, non-exclusive license to
                 process Your Data solely for the purpose of providing the
                 Service. We will not access, use, or share Your Data for any
                 other purpose, including advertising or data analytics, without
@@ -194,7 +194,7 @@ export default component$(() => {
             <section id="liability">
               <h2>8. Limitation of Liability</h2>
               <p>
-                To the fullest extent permitted by law, Hello Mail and its
+                To the fullest extent permitted by law, Mailngine and its
                 officers, directors, employees, and agents shall not be liable
                 for any indirect, incidental, special, consequential, or
                 punitive damages, including loss of profits, data, or goodwill,
@@ -203,7 +203,7 @@ export default component$(() => {
               <p>
                 Our total cumulative liability to you for all claims arising
                 from or related to the Service shall not exceed the amount you
-                paid to Hello Mail in the twelve (12) months preceding the
+                paid to Mailngine in the twelve (12) months preceding the
                 claim.
               </p>
             </section>
@@ -252,7 +252,7 @@ export default component$(() => {
               <p>
                 If you have any questions about these Terms, please contact us
                 at{" "}
-                <a href="mailto:legal@hellomail.dev">legal@hellomail.dev</a> or
+                <a href="mailto:legal@mailngine.com">legal@mailngine.com</a> or
                 visit our <a href="/contact">contact page</a>.
               </p>
             </section>
@@ -338,21 +338,21 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-  title: "Terms of Service - Hello Mail",
+  title: "Terms of Service - Mailngine",
   meta: [
     {
       name: "description",
       content:
-        "Hello Mail Terms of Service. Read our terms and conditions for using the Hello Mail email delivery platform.",
+        "Mailngine Terms of Service. Read our terms and conditions for using the Mailngine email delivery platform.",
     },
     {
-      name: "og:title",
-      content: "Terms of Service - Hello Mail",
+      property: "og:title",
+      content: "Terms of Service - Mailngine",
     },
     {
-      name: "og:description",
+      property: "og:description",
       content:
-        "Hello Mail Terms of Service. Read our terms and conditions for using the Hello Mail email delivery platform.",
+        "Mailngine Terms of Service. Read our terms and conditions for using the Mailngine email delivery platform.",
     },
   ],
 };

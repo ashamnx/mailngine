@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://hellomail.dev/sitemap.xml
+Sitemap: https://mailngine.com/sitemap.xml

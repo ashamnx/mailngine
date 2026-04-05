@@ -118,7 +118,7 @@ export default component$(() => {
         <div class="status-page">
           <h1 class="status-page__title">System Status</h1>
           <p class="status-page__subtitle">
-            Real-time health of Hello Mail infrastructure. This page
+            Real-time health of Mailngine infrastructure. This page
             auto-refreshes every 30 seconds.
           </p>
 
@@ -133,7 +133,7 @@ export default component$(() => {
           <div class="status-page__footer">
             <p>
               Having issues? Contact us at{" "}
-              <a href="mailto:support@hellomail.dev">support@hellomail.dev</a>
+              <a href="mailto:support@mailngine.com">support@mailngine.com</a>
             </p>
           </div>
         </div>
@@ -228,12 +228,12 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-  title: "System Status | Hello Mail",
+  title: "System Status | Mailngine",
   meta: [
     {
       name: "description",
       content:
-        "Real-time system status for Hello Mail. Monitor API, database, cache, SMTP, and storage health.",
+        "Real-time system status for Mailngine. Monitor API, database, cache, SMTP, and storage health.",
     },
   ],
 };

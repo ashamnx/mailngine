@@ -8,20 +8,20 @@ import (
 	chimw "github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/hibiken/asynq"
-	"github.com/hellomail/hellomail/internal/api/handler"
-	"github.com/hellomail/hellomail/internal/api/middleware"
-	"github.com/hellomail/hellomail/internal/auth"
-	"github.com/hellomail/hellomail/internal/config"
-	"github.com/hellomail/hellomail/internal/domain"
-	"github.com/hellomail/hellomail/internal/email"
-	"github.com/hellomail/hellomail/internal/analytics"
-	"github.com/hellomail/hellomail/internal/audit"
-	"github.com/hellomail/hellomail/internal/billing"
-	"github.com/hellomail/hellomail/internal/inbox"
-	"github.com/hellomail/hellomail/internal/suppression"
-	"github.com/hellomail/hellomail/internal/team"
-	hmtemplate "github.com/hellomail/hellomail/internal/template"
-	"github.com/hellomail/hellomail/internal/webhook"
+	"github.com/mailngine/mailngine/internal/api/handler"
+	"github.com/mailngine/mailngine/internal/api/middleware"
+	"github.com/mailngine/mailngine/internal/auth"
+	"github.com/mailngine/mailngine/internal/config"
+	"github.com/mailngine/mailngine/internal/domain"
+	"github.com/mailngine/mailngine/internal/email"
+	"github.com/mailngine/mailngine/internal/analytics"
+	"github.com/mailngine/mailngine/internal/audit"
+	"github.com/mailngine/mailngine/internal/billing"
+	"github.com/mailngine/mailngine/internal/inbox"
+	"github.com/mailngine/mailngine/internal/suppression"
+	"github.com/mailngine/mailngine/internal/team"
+	hmtemplate "github.com/mailngine/mailngine/internal/template"
+	"github.com/mailngine/mailngine/internal/webhook"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/redis/go-redis/v9"
@@ -53,9 +53,9 @@ func NewRouter(cfg *config.Config, db *pgxpool.Pool, cache *redis.Client, asynqC
 
 	// Services
 	domainSvc := domain.NewService(db, logger)
-	emailSvc := email.NewService(db, asynqClient, logger)
-	inboxSvc := inbox.NewService(db, logger)
 	suppressionSvc := suppression.NewService(db, cache, logger)
+	emailSvc := email.NewService(db, asynqClient, suppressionSvc, logger)
+	inboxSvc := inbox.NewService(db, logger)
 	webhookSvc := webhook.NewService(db, asynqClient, logger)
 	auditSvc := audit.NewService(db, logger)
 	analyticsSvc := analytics.NewService(db, cache, logger)
@@ -87,9 +87,14 @@ func NewRouter(cfg *config.Config, db *pgxpool.Pool, cache *redis.Client, asynqC
 		Window:      1 * time.Second,
 	})
 
-	// Health & metrics (no auth)
+	// Health (public, no auth)
 	r.Get("/health", healthHandler.Check)
-	r.Handle("/metrics", promhttp.Handler())
+
+	// Metrics (protected — require internal bearer token via header)
+	r.Group(func(r chi.Router) {
+		r.Use(authenticate)
+		r.Handle("/metrics", promhttp.Handler())
+	})
 
 	// Tracking endpoints (public, no auth)
 	r.Get("/t/o/{id}", tracker.TrackOpen)
@@ -97,8 +102,9 @@ func NewRouter(cfg *config.Config, db *pgxpool.Pool, cache *redis.Client, asynqC
 
 	// API v1
 	r.Route("/v1", func(r chi.Router) {
-		// Auth routes (no auth required)
+		// Auth routes (no auth required, IP rate-limited)
 		r.Route("/auth", func(r chi.Router) {
+			r.Use(middleware.IPRateLimit(cache, 20, 1*time.Minute))
 			r.Get("/google", authHandler.GoogleRedirect)
 			r.Get("/google/callback", authHandler.GoogleCallback)
 

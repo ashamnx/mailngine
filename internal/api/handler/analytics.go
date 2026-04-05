@@ -4,10 +4,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/hellomail/hellomail/internal/analytics"
-	"github.com/hellomail/hellomail/internal/api/response"
-	"github.com/hellomail/hellomail/internal/auth"
-	"github.com/hellomail/hellomail/internal/observability"
+	"github.com/mailngine/mailngine/internal/analytics"
+	"github.com/mailngine/mailngine/internal/api/response"
+	"github.com/mailngine/mailngine/internal/auth"
+	"github.com/mailngine/mailngine/internal/observability"
 )
 
 type AnalyticsHandler struct {

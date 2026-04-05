@@ -246,16 +246,17 @@ func (q *Queries) ListDomainsByOrg(ctx context.Context, orgID uuid.UUID) ([]Doma
 }
 
 const updateDNSRecordStatus = `-- name: UpdateDNSRecordStatus :exec
-UPDATE dns_records SET status = $2, verified_at = CASE WHEN $2 = 'verified' THEN NOW() ELSE verified_at END WHERE id = $1
+UPDATE dns_records SET status = $2, verified_at = CASE WHEN $2 = 'verified' THEN NOW() ELSE verified_at END WHERE id = $1 AND domain_id = $3
 `
 
 type UpdateDNSRecordStatusParams struct {
-	ID     uuid.UUID `json:"id"`
-	Status string    `json:"status"`
+	ID       uuid.UUID `json:"id"`
+	Status   string    `json:"status"`
+	DomainID uuid.UUID `json:"domain_id"`
 }
 
 func (q *Queries) UpdateDNSRecordStatus(ctx context.Context, arg UpdateDNSRecordStatusParams) error {
-	_, err := q.db.Exec(ctx, updateDNSRecordStatus, arg.ID, arg.Status)
+	_, err := q.db.Exec(ctx, updateDNSRecordStatus, arg.ID, arg.Status, arg.DomainID)
 	return err
 }
 

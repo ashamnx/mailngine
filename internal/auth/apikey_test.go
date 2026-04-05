@@ -34,7 +34,7 @@ func TestGenerateAPIKey_PrefixAndFormat(t *testing.T) {
 }
 
 func TestHashAPIKey_Consistent(t *testing.T) {
-	key := "hm_live_test-key-12345"
+	key := "mn_live_test-key-12345"
 
 	hash1 := HashAPIKey(key)
 	hash2 := HashAPIKey(key)
@@ -45,8 +45,8 @@ func TestHashAPIKey_Consistent(t *testing.T) {
 }
 
 func TestHashAPIKey_DifferentKeysProduceDifferentHashes(t *testing.T) {
-	hash1 := HashAPIKey("hm_live_key-aaa")
-	hash2 := HashAPIKey("hm_live_key-bbb")
+	hash1 := HashAPIKey("mn_live_key-aaa")
+	hash2 := HashAPIKey("mn_live_key-bbb")
 
 	if hash1 == hash2 {
 		t.Error("HashAPIKey produced identical hashes for different keys")

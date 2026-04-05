@@ -39,8 +39,8 @@ func TestJWTManager_GenerateAndValidate(t *testing.T) {
 	if claims.Role != role {
 		t.Errorf("Role = %q, want %q", claims.Role, role)
 	}
-	if claims.Issuer != "hellomail" {
-		t.Errorf("Issuer = %q, want %q", claims.Issuer, "hellomail")
+	if claims.Issuer != "mailngine" {
+		t.Errorf("Issuer = %q, want %q", claims.Issuer, "mailngine")
 	}
 	if claims.Subject != userID.String() {
 		t.Errorf("Subject = %q, want %q", claims.Subject, userID.String())
@@ -100,7 +100,7 @@ func TestJWTManager_WrongSigningMethodRejected(t *testing.T) {
 	// Create a token with an unexpected signing method (none).
 	token := jwt.NewWithClaims(jwt.SigningMethodNone, &Claims{
 		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer:    "hellomail",
+			Issuer:    "mailngine",
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(15 * time.Minute)),
 		},
 		UserID: uuid.New(),

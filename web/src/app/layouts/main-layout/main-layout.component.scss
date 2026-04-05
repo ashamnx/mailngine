@@ -30,10 +30,25 @@
 }
 
 .logo {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  text-decoration: none;
+}
+
+.logo-icon {
+  display: block;
+}
+
+.logo-text {
   font-family: $font-primary;
   font-size: $font-size-xl;
-  font-weight: $font-weight-semibold;
-  color: $color-primary;
+  font-weight: 400;
+  color: $color-text-primary;
+
+  strong {
+    font-weight: 700;
+  }
 }
 
 .topbar-center {

@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
-	"github.com/hellomail/hellomail/internal/observability"
+	"github.com/mailngine/mailngine/internal/observability"
 )
 
 const RequestIDHeader = "X-Request-ID"

@@ -6,15 +6,47 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"net"
+	"net/url"
 
 	"github.com/google/uuid"
 	"github.com/hibiken/asynq"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
 
-	"github.com/hellomail/hellomail/internal/db/sqlcdb"
-	"github.com/hellomail/hellomail/internal/queue"
+	"github.com/mailngine/mailngine/internal/db/sqlcdb"
+	"github.com/mailngine/mailngine/internal/queue"
 )
+
+// ErrUnsafeURL is returned when a webhook URL targets a private/internal IP address.
+var ErrUnsafeURL = fmt.Errorf("webhook URL must not target private or internal IP addresses")
+
+// validateWebhookURL checks that the URL uses https or http and does not resolve
+// to a private, loopback, or link-local IP address (SSRF protection).
+func validateWebhookURL(rawURL string) error {
+	u, err := url.Parse(rawURL)
+	if err != nil {
+		return fmt.Errorf("invalid URL: %w", err)
+	}
+
+	if u.Scheme != "http" && u.Scheme != "https" {
+		return fmt.Errorf("webhook URL must use http or https scheme")
+	}
+
+	host := u.Hostname()
+	ips, err := net.LookupIP(host)
+	if err != nil {
+		return fmt.Errorf("cannot resolve webhook host %q: %w", host, err)
+	}
+
+	for _, ip := range ips {
+		if ip.IsLoopback() || ip.IsPrivate() || ip.IsLinkLocalUnicast() || ip.IsLinkLocalMulticast() || ip.IsUnspecified() {
+			return ErrUnsafeURL
+		}
+	}
+
+	return nil
+}
 
 type Service struct {
 	db      *pgxpool.Pool
@@ -32,7 +64,11 @@ func NewService(db *pgxpool.Pool, queue *asynq.Client, logger zerolog.Logger) *S
 	}
 }
 
-func (s *Service) Create(ctx context.Context, orgID uuid.UUID, url string, events []string) (*sqlcdb.Webhook, error) {
+func (s *Service) Create(ctx context.Context, orgID uuid.UUID, webhookURL string, events []string) (*sqlcdb.Webhook, error) {
+	if err := validateWebhookURL(webhookURL); err != nil {
+		return nil, fmt.Errorf("validate webhook URL: %w", err)
+	}
+
 	secret, err := generateSecret()
 	if err != nil {
 		return nil, fmt.Errorf("generate webhook secret: %w", err)
@@ -45,7 +81,7 @@ func (s *Service) Create(ctx context.Context, orgID uuid.UUID, url string, event
 
 	webhook, err := s.queries.CreateWebhook(ctx, sqlcdb.CreateWebhookParams{
 		OrgID:    orgID,
-		Url:      url,
+		Url:      webhookURL,
 		Events:   eventsJSON,
 		Secret:   secret,
 		IsActive: true,
@@ -68,7 +104,11 @@ func (s *Service) Get(ctx context.Context, orgID, webhookID uuid.UUID) (*sqlcdb.
 	return &wh, nil
 }
 
-func (s *Service) Update(ctx context.Context, orgID, webhookID uuid.UUID, url string, events []string, isActive bool) (*sqlcdb.Webhook, error) {
+func (s *Service) Update(ctx context.Context, orgID, webhookID uuid.UUID, webhookURL string, events []string, isActive bool) (*sqlcdb.Webhook, error) {
+	if err := validateWebhookURL(webhookURL); err != nil {
+		return nil, fmt.Errorf("validate webhook URL: %w", err)
+	}
+
 	eventsJSON, err := json.Marshal(events)
 	if err != nil {
 		return nil, fmt.Errorf("marshal events: %w", err)
@@ -77,7 +117,7 @@ func (s *Service) Update(ctx context.Context, orgID, webhookID uuid.UUID, url st
 	wh, err := s.queries.UpdateWebhook(ctx, sqlcdb.UpdateWebhookParams{
 		ID:       webhookID,
 		OrgID:    orgID,
-		Url:      url,
+		Url:      webhookURL,
 		Events:   eventsJSON,
 		IsActive: isActive,
 	})

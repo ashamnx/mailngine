@@ -14,7 +14,11 @@ export class CallbackComponent implements OnInit {
   private readonly authService = inject(AuthService);
 
   ngOnInit(): void {
-    const token = this.route.snapshot.queryParamMap.get('token');
+    // Token is passed in the URL fragment (#token=...) to prevent it from
+    // appearing in Referer headers, server logs, or proxy logs.
+    const fragment = this.route.snapshot.fragment || '';
+    const params = new URLSearchParams(fragment);
+    const token = params.get('token');
 
     if (token) {
       this.authService.handleCallback(token);

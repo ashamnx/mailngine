@@ -10,10 +10,10 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
 
-	"github.com/hellomail/hellomail/internal/api/response"
-	"github.com/hellomail/hellomail/internal/auth"
-	"github.com/hellomail/hellomail/internal/email"
-	"github.com/hellomail/hellomail/internal/observability"
+	"github.com/mailngine/mailngine/internal/api/response"
+	"github.com/mailngine/mailngine/internal/auth"
+	"github.com/mailngine/mailngine/internal/email"
+	"github.com/mailngine/mailngine/internal/observability"
 )
 
 // validate is a package-level validator instance, safe for concurrent use.

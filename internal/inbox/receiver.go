@@ -9,7 +9,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 
-	sqlcdb "github.com/hellomail/hellomail/internal/db/sqlcdb"
+	sqlcdb "github.com/mailngine/mailngine/internal/db/sqlcdb"
 )
 
 // ReceiveMessage processes an incoming email by assigning it to a thread

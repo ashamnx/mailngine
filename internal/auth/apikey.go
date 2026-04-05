@@ -8,8 +8,8 @@ import (
 	"fmt"
 )
 
-// APIKeyPrefix is the standard prefix for all Hello Mail API keys.
-const APIKeyPrefix = "hm_live_"
+// APIKeyPrefix is the standard prefix for all Mailngine API keys.
+const APIKeyPrefix = "mn_live_"
 
 // GenerateAPIKey creates a new API key with a cryptographically random value.
 // It returns the full key (to be shown once), the prefix (for identification),

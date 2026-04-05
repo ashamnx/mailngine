@@ -1,9 +1,9 @@
 {
-    "name": "hellomail/hellomail-laravel",
-    "description": "Hello Mail SDK for Laravel",
+    "name": "mailngine/mailngine-laravel",
+    "description": "Mailngine SDK for Laravel",
     "type": "library",
     "license": "MIT",
-    "keywords": ["email", "hellomail", "laravel", "mailer", "transactional"],
+    "keywords": ["email", "mailngine", "laravel", "mailer", "transactional"],
     "require": {
         "php": "^8.1",
         "guzzlehttp/guzzle": "^7.0",
@@ -11,7 +11,7 @@
     },
     "autoload": {
         "psr-4": {
-            "HelloMail\\": "src/"
+            "Mailngine\\": "src/"
         }
     },
     "minimum-stability": "stable",

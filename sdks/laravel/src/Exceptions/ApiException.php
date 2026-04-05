@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace HelloMail\Exceptions;
+namespace Mailngine\Exceptions;
 
 /**
- * Represents a structured error response from the Hello Mail API.
+ * Represents a structured error response from the Mailngine API.
  */
-class ApiException extends HelloMailException
+class ApiException extends MailngineException
 {
     public int $statusCode;
 

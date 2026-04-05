@@ -1,18 +1,18 @@
-// Package hellomail provides a Go client for the Hello Mail email API.
+// Package mailngine provides a Go client for the Mailngine email API.
 //
 // Create a client with your API key:
 //
-//	client := hellomail.New("hm_live_...")
+//	client := mailngine.New("mn_live_...")
 //
 // Then use the resource fields to interact with the API:
 //
-//	email, err := client.Emails.Send(ctx, &hellomail.SendEmailParams{
+//	email, err := client.Emails.Send(ctx, &mailngine.SendEmailParams{
 //	    From:    "hello@example.com",
 //	    To:      []string{"user@example.com"},
 //	    Subject: "Hello!",
 //	    HTML:    "<h1>Welcome</h1>",
 //	})
-package hellomail
+package mailngine
 
 import (
 	"bytes"
@@ -25,8 +25,8 @@ import (
 )
 
 const (
-	// DefaultBaseURL is the default Hello Mail API base URL.
-	DefaultBaseURL = "https://api.hellomail.dev"
+	// DefaultBaseURL is the default Mailngine API base URL.
+	DefaultBaseURL = "https://api.mailngine.com"
 
 	// Version is the SDK version.
 	Version = "0.1.0"
@@ -36,7 +36,7 @@ const (
 	initialRetryDelay = 1 * time.Second
 )
 
-// Client is the Hello Mail API client. Use New to create one.
+// Client is the Mailngine API client. Use New to create one.
 type Client struct {
 	apiKey     string
 	baseURL    string
@@ -62,7 +62,7 @@ type Client struct {
 type Option func(*Client)
 
 // WithBaseURL sets a custom base URL for the API. This is useful for testing
-// or when using a self-hosted Hello Mail instance.
+// or when using a self-hosted Mailngine instance.
 func WithBaseURL(url string) Option {
 	return func(c *Client) {
 		c.baseURL = url
@@ -77,7 +77,7 @@ func WithHTTPClient(client *http.Client) Option {
 	}
 }
 
-// New creates a new Hello Mail API client with the given API key.
+// New creates a new Mailngine API client with the given API key.
 func New(apiKey string, opts ...Option) *Client {
 	c := &Client{
 		apiKey:  apiKey,
@@ -116,7 +116,7 @@ func (c *Client) do(ctx context.Context, method, path string, body, result any) 
 	if body != nil {
 		data, err := json.Marshal(body)
 		if err != nil {
-			return fmt.Errorf("hellomail: marshal request body: %w", err)
+			return fmt.Errorf("mailngine: marshal request body: %w", err)
 		}
 		reqBody = bytes.NewReader(data)
 	}
@@ -140,18 +140,18 @@ func (c *Client) do(ctx context.Context, method, path string, body, result any) 
 
 		req, err := http.NewRequestWithContext(ctx, method, c.baseURL+path, reqBody)
 		if err != nil {
-			return fmt.Errorf("hellomail: create request: %w", err)
+			return fmt.Errorf("mailngine: create request: %w", err)
 		}
 
 		req.Header.Set("Authorization", "Bearer "+c.apiKey)
-		req.Header.Set("User-Agent", "hellomail-go/"+Version)
+		req.Header.Set("User-Agent", "mailngine-go/"+Version)
 		if body != nil {
 			req.Header.Set("Content-Type", "application/json")
 		}
 
 		resp, err := c.httpClient.Do(req)
 		if err != nil {
-			lastErr = fmt.Errorf("hellomail: send request: %w", err)
+			lastErr = fmt.Errorf("mailngine: send request: %w", err)
 			// Network errors are retryable
 			continue
 		}
@@ -159,7 +159,7 @@ func (c *Client) do(ctx context.Context, method, path string, body, result any) 
 		respBody, err := io.ReadAll(resp.Body)
 		resp.Body.Close()
 		if err != nil {
-			lastErr = fmt.Errorf("hellomail: read response: %w", err)
+			lastErr = fmt.Errorf("mailngine: read response: %w", err)
 			continue
 		}
 
@@ -197,10 +197,10 @@ func (c *Client) do(ctx context.Context, method, path string, body, result any) 
 		if result != nil {
 			var env envelope
 			if err := json.Unmarshal(respBody, &env); err != nil {
-				return fmt.Errorf("hellomail: unmarshal response: %w", err)
+				return fmt.Errorf("mailngine: unmarshal response: %w", err)
 			}
 			if err := json.Unmarshal(env.Data, result); err != nil {
-				return fmt.Errorf("hellomail: unmarshal data: %w", err)
+				return fmt.Errorf("mailngine: unmarshal data: %w", err)
 			}
 		}
 
@@ -216,7 +216,7 @@ func (c *Client) doWithMeta(ctx context.Context, method, path string, body, resu
 	if body != nil {
 		data, err := json.Marshal(body)
 		if err != nil {
-			return nil, fmt.Errorf("hellomail: marshal request body: %w", err)
+			return nil, fmt.Errorf("mailngine: marshal request body: %w", err)
 		}
 		reqBody = bytes.NewReader(data)
 	}
@@ -239,25 +239,25 @@ func (c *Client) doWithMeta(ctx context.Context, method, path string, body, resu
 
 		req, err := http.NewRequestWithContext(ctx, method, c.baseURL+path, reqBody)
 		if err != nil {
-			return nil, fmt.Errorf("hellomail: create request: %w", err)
+			return nil, fmt.Errorf("mailngine: create request: %w", err)
 		}
 
 		req.Header.Set("Authorization", "Bearer "+c.apiKey)
-		req.Header.Set("User-Agent", "hellomail-go/"+Version)
+		req.Header.Set("User-Agent", "mailngine-go/"+Version)
 		if body != nil {
 			req.Header.Set("Content-Type", "application/json")
 		}
 
 		resp, err := c.httpClient.Do(req)
 		if err != nil {
-			lastErr = fmt.Errorf("hellomail: send request: %w", err)
+			lastErr = fmt.Errorf("mailngine: send request: %w", err)
 			continue
 		}
 
 		respBody, err := io.ReadAll(resp.Body)
 		resp.Body.Close()
 		if err != nil {
-			lastErr = fmt.Errorf("hellomail: read response: %w", err)
+			lastErr = fmt.Errorf("mailngine: read response: %w", err)
 			continue
 		}
 
@@ -292,10 +292,10 @@ func (c *Client) doWithMeta(ctx context.Context, method, path string, body, resu
 		if result != nil {
 			var env envelope
 			if err := json.Unmarshal(respBody, &env); err != nil {
-				return nil, fmt.Errorf("hellomail: unmarshal response: %w", err)
+				return nil, fmt.Errorf("mailngine: unmarshal response: %w", err)
 			}
 			if err := json.Unmarshal(env.Data, result); err != nil {
-				return nil, fmt.Errorf("hellomail: unmarshal data: %w", err)
+				return nil, fmt.Errorf("mailngine: unmarshal data: %w", err)
 			}
 			return env.Meta, nil
 		}

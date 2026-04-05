@@ -70,7 +70,7 @@
           </div>
           <div class="provider-banner__info">
             <strong>{{ analysis()!.detected_provider!.name }} detected</strong>
-            <p>This domain currently receives email via {{ analysis()!.detected_provider!.name }}. We'll set up Hello Mail for <strong>sending only</strong> to avoid disrupting your mailboxes.</p>
+            <p>This domain currently receives email via {{ analysis()!.detected_provider!.name }}. We'll set up Mailngine for <strong>sending only</strong> to avoid disrupting your mailboxes.</p>
           </div>
         </div>
 
@@ -115,7 +115,7 @@
           <code class="existing-record__value">{{ analysis()!.existing_spf }}</code>
           <h4>Merged SPF Record <span class="badge badge--success">Ready to use</span></h4>
           <code class="existing-record__value existing-record__value--new">{{ analysis()!.merged_spf }}</code>
-          <p class="existing-record__note">Replace your current SPF record with this merged version. It includes both your existing configuration and Hello Mail.</p>
+          <p class="existing-record__note">Replace your current SPF record with this merged version. It includes both your existing configuration and Mailngine.</p>
         </div>
       }
 
@@ -138,7 +138,7 @@
             />
             <span class="toggle-field__label">
               <strong>Enable inbound email</strong>
-              <span class="toggle-field__desc">Add MX records to receive email on this domain via Hello Mail.</span>
+              <span class="toggle-field__desc">Add MX records to receive email on this domain via Mailngine.</span>
             </span>
           </label>
         </div>
@@ -183,7 +183,7 @@
         </div>
         <div class="confirm-row">
           <span class="confirm-label">DKIM</span>
-          <span class="badge badge--info">New record (selector: hm1)</span>
+          <span class="badge badge--info">New record (selector: mn1)</span>
         </div>
         <div class="confirm-row">
           <span class="confirm-label">DMARC</span>

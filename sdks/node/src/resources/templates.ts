@@ -1,4 +1,4 @@
-import type { HelloMail } from '../client.js';
+import type { Mailngine } from '../client.js';
 import type {
   CreateTemplateParams,
   PreviewTemplateParams,
@@ -11,7 +11,7 @@ import type {
  * Resource for managing email templates.
  */
 export class TemplatesResource {
-  constructor(private readonly client: HelloMail) {}
+  constructor(private readonly client: Mailngine) {}
 
   /**
    * Create a new template.

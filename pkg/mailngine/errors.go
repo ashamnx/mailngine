@@ -1,8 +1,8 @@
-package hellomail
+package mailngine
 
 import "fmt"
 
-// APIError represents a structured error from the Hello Mail API.
+// APIError represents a structured error from the Mailngine API.
 type APIError struct {
 	StatusCode int    `json:"-"`
 	Code       string `json:"code"`

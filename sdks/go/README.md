@@ -1,11 +1,11 @@
-# hellomail-go
+# mailngine-go
 
-Official Go SDK for the [Hello Mail](https://hellomail.dev) email API.
+Official Go SDK for the [Mailngine](https://mailngine.com) email API.
 
 ## Installation
 
 ```bash
-go get github.com/hellomail/hellomail-go
+go get github.com/mailngine/mailngine-go
 ```
 
 ## Usage
@@ -18,16 +18,16 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hellomail/hellomail-go/hellomail"
+	"github.com/mailngine/mailngine-go/mailngine"
 )
 
 func main() {
-	client := hellomail.New("hm_live_...")
+	client := mailngine.New("mn_live_...")
 
 	ctx := context.Background()
 
 	// Send an email
-	email, err := client.Emails.Send(ctx, &hellomail.SendEmailParams{
+	email, err := client.Emails.Send(ctx, &mailngine.SendEmailParams{
 		From:    "hello@example.com",
 		To:      []string{"user@example.com"},
 		Subject: "Hello!",
@@ -46,7 +46,7 @@ func main() {
 	fmt.Printf("Status: %s\n", email.Status)
 
 	// List emails with pagination
-	list, err := client.Emails.List(ctx, &hellomail.ListOptions{
+	list, err := client.Emails.List(ctx, &mailngine.ListOptions{
 		Page:    1,
 		PerPage: 20,
 	})
@@ -109,23 +109,23 @@ client.APIKeys.Revoke(ctx, id)      // Revoke an API key
 
 ## Error Handling
 
-All API errors are returned as `*hellomail.APIError`. Use the provided helper
+All API errors are returned as `*mailngine.APIError`. Use the provided helper
 functions to check for specific error conditions:
 
 ```go
 email, err := client.Emails.Get(ctx, "nonexistent")
-if hellomail.IsNotFound(err) {
+if mailngine.IsNotFound(err) {
 	// Handle 404
 }
-if hellomail.IsRateLimited(err) {
+if mailngine.IsRateLimited(err) {
 	// Handle 429 - the SDK already retries these automatically
 }
-if hellomail.IsValidationError(err) {
+if mailngine.IsValidationError(err) {
 	// Handle 400
 }
 
 // Access the full error details
-var apiErr *hellomail.APIError
+var apiErr *mailngine.APIError
 if errors.As(err, &apiErr) {
 	fmt.Printf("Code: %s, Message: %s\n", apiErr.Code, apiErr.Message)
 }
@@ -135,13 +135,13 @@ if errors.As(err, &apiErr) {
 
 ```go
 // Custom base URL (self-hosted)
-client := hellomail.New("hm_live_...",
-	hellomail.WithBaseURL("https://api.your-instance.com"),
+client := mailngine.New("mn_live_...",
+	mailngine.WithBaseURL("https://api.your-instance.com"),
 )
 
 // Custom HTTP client
-client := hellomail.New("hm_live_...",
-	hellomail.WithHTTPClient(&http.Client{
+client := mailngine.New("mn_live_...",
+	mailngine.WithHTTPClient(&http.Client{
 		Timeout: 60 * time.Second,
 	}),
 )

@@ -1,10 +1,10 @@
-# Hello Mail - PostgreSQL virtual domain lookup for Postfix
+# Mailngine - PostgreSQL virtual domain lookup for Postfix
 # Place this file at /etc/postfix/pgsql-virtual-domains.cf
 # Referenced by main.cf: virtual_mailbox_domains = pgsql:/etc/postfix/pgsql-virtual-domains.cf
 #
 # Template variables should be replaced at deployment time:
 #   {{.DatabaseHost}}     - PostgreSQL host (e.g., 127.0.0.1)
-#   {{.DatabaseName}}     - Database name (e.g., hellomail)
+#   {{.DatabaseName}}     - Database name (e.g., mailngine)
 #   {{.DatabaseUser}}     - Database user (e.g., postfix_reader)
 #   {{.DatabasePassword}} - Database password
 

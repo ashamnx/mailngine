@@ -111,8 +111,8 @@
           <span class="material-symbols-rounded sm">warning</span>
           <div>
             <strong>SPF Record — Merge Required</strong>
-            <p>If you already have an SPF record (e.g., for Google Workspace or Office 365), <strong>do not create a new one</strong>. Instead, add <code>include:spf.hellomail.dev</code> to your existing record. For example:</p>
-            <code class="dns-callout__example">v=spf1 include:_spf.google.com include:spf.hellomail.dev ~all</code>
+            <p>If you already have an SPF record (e.g., for Google Workspace or Office 365), <strong>do not create a new one</strong>. Instead, add <code>include:spf.mailngine.com</code> to your existing record. For example:</p>
+            <code class="dns-callout__example">v=spf1 include:_spf.google.com include:spf.mailngine.com ~all</code>
           </div>
         </div>
 
@@ -152,7 +152,7 @@
         } @else {
           <p class="section-description">
             Your DNS provider supports automatic configuration via Domain Connect.
-            Click below to authorize Hello Mail to create the required DNS records — no manual setup needed.
+            Click below to authorize Mailngine to create the required DNS records — no manual setup needed.
           </p>
           <button class="btn-primary" (click)="autoConfigure()">
             <span class="material-symbols-rounded sm">open_in_new</span>

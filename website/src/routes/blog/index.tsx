@@ -12,8 +12,8 @@ export default component$(() => {
         <div class="blog-hero">
           <h1>Blog</h1>
           <p>
-            Product updates, engineering deep dives, and guides from the Hello
-            Mail team.
+            Product updates, engineering deep dives, and guides from the
+            Mailngine team.
           </p>
         </div>
       </Section>
@@ -126,21 +126,21 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-  title: "Blog - Hello Mail",
+  title: "Blog - Mailngine",
   meta: [
     {
       name: "description",
       content:
-        "Product updates, engineering deep dives, and guides from the Hello Mail team.",
+        "Product updates, engineering deep dives, and guides from the Mailngine team.",
     },
     {
-      name: "og:title",
-      content: "Blog - Hello Mail",
+      property: "og:title",
+      content: "Blog - Mailngine",
     },
     {
-      name: "og:description",
+      property: "og:description",
       content:
-        "Product updates, engineering deep dives, and guides from the Hello Mail team.",
+        "Product updates, engineering deep dives, and guides from the Mailngine team.",
     },
   ],
 };

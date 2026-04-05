@@ -7,11 +7,11 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/hellomail/hellomail/internal/api/response"
-	"github.com/hellomail/hellomail/internal/auth"
-	"github.com/hellomail/hellomail/internal/config"
-	sqlcdb "github.com/hellomail/hellomail/internal/db/sqlcdb"
-	"github.com/hellomail/hellomail/internal/observability"
+	"github.com/mailngine/mailngine/internal/api/response"
+	"github.com/mailngine/mailngine/internal/auth"
+	"github.com/mailngine/mailngine/internal/config"
+	sqlcdb "github.com/mailngine/mailngine/internal/db/sqlcdb"
+	"github.com/mailngine/mailngine/internal/observability"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/redis/go-redis/v9"
@@ -177,8 +177,9 @@ func (h *AuthHandler) GoogleCallback(w http.ResponseWriter, r *http.Request) {
 		MaxAge:   expirySeconds,
 	})
 
-	// Redirect to frontend with token
-	redirectURL := h.cfg.FrontendURL + "/auth/callback?token=" + token
+	// Redirect to frontend. Token is in the fragment (#) so it is NOT sent
+	// to the server in Referer headers or logged by proxies.
+	redirectURL := h.cfg.FrontendURL + "/auth/callback#token=" + token
 	http.Redirect(w, r, redirectURL, http.StatusTemporaryRedirect)
 }
 

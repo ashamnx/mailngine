@@ -7,10 +7,10 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
 
-	"github.com/hellomail/hellomail/internal/api/response"
-	"github.com/hellomail/hellomail/internal/auth"
-	"github.com/hellomail/hellomail/internal/observability"
-	"github.com/hellomail/hellomail/internal/webhook"
+	"github.com/mailngine/mailngine/internal/api/response"
+	"github.com/mailngine/mailngine/internal/auth"
+	"github.com/mailngine/mailngine/internal/observability"
+	"github.com/mailngine/mailngine/internal/webhook"
 )
 
 type WebhookHandler struct {
@@ -130,9 +130,17 @@ func (h *WebhookHandler) Delete(w http.ResponseWriter, r *http.Request) {
 func (h *WebhookHandler) ListDeliveries(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	logger := observability.LoggerFromContext(ctx)
+	orgID := auth.OrgIDFromContext(ctx)
+
 	id, err := uuid.Parse(chi.URLParam(r, "id"))
 	if err != nil {
 		response.BadRequest(w, "invalid webhook ID")
+		return
+	}
+
+	// Verify the webhook belongs to this organization before listing deliveries.
+	if _, err := h.webhookSvc.Get(ctx, orgID, id); err != nil {
+		response.NotFound(w, "webhook not found")
 		return
 	}
 

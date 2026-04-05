@@ -49,7 +49,7 @@ clean:
 
 # Docker
 docker-build:
-	docker build -t hellomail .
+	docker build -t mailngine .
 
 docker-up:
 	docker compose up -d

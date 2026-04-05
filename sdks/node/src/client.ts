@@ -1,4 +1,4 @@
-import { HelloMailError } from './errors.js';
+import { MailngineError } from './errors.js';
 import { ApiKeysResource } from './resources/api-keys.js';
 import { DomainsResource } from './resources/domains.js';
 import { EmailsResource } from './resources/emails.js';
@@ -7,11 +7,11 @@ import { WebhooksResource } from './resources/webhooks.js';
 import type { ListMeta, ListResponse } from './types.js';
 
 const VERSION = '0.1.0';
-const DEFAULT_BASE_URL = 'https://api.hellomail.dev';
+const DEFAULT_BASE_URL = 'https://api.mailngine.com';
 const MAX_RETRIES = 3;
 const RETRYABLE_STATUS_CODES = new Set([429, 500, 502, 503, 504]);
 
-export interface HelloMailOptions {
+export interface MailngineOptions {
   /** Override the base URL (e.g. for self-hosted or staging). */
   baseURL?: string;
 }
@@ -28,13 +28,13 @@ export interface RequestOptions {
 }
 
 /**
- * Hello Mail API client.
+ * Mailngine API client.
  *
  * @example
  * ```ts
- * import { HelloMail } from 'hellomail';
+ * import { Mailngine } from 'mailngine';
  *
- * const client = new HelloMail('hm_live_...');
+ * const client = new Mailngine('mn_live_...');
  *
  * const email = await client.emails.send({
  *   from: 'hello@example.com',
@@ -44,7 +44,7 @@ export interface RequestOptions {
  * });
  * ```
  */
-export class HelloMail {
+export class Mailngine {
   private readonly apiKey: string;
   private readonly baseURL: string;
 
@@ -54,10 +54,10 @@ export class HelloMail {
   readonly templates: TemplatesResource;
   readonly apiKeys: ApiKeysResource;
 
-  constructor(apiKey: string, options?: HelloMailOptions) {
+  constructor(apiKey: string, options?: MailngineOptions) {
     if (!apiKey) {
       throw new Error(
-        'Missing API key. Pass it to the HelloMail constructor: new HelloMail("hm_live_...")',
+        'Missing API key. Pass it to the Mailngine constructor: new Mailngine("mn_live_...")',
       );
     }
 
@@ -86,7 +86,7 @@ export class HelloMail {
     const headers: Record<string, string> = {
       Authorization: `Bearer ${this.apiKey}`,
       'Content-Type': 'application/json',
-      'User-Agent': `hellomail-node/${VERSION}`,
+      'User-Agent': `mailngine-node/${VERSION}`,
     };
 
     const fetchOptions: RequestInit = { method, headers };
@@ -95,7 +95,7 @@ export class HelloMail {
       fetchOptions.body = JSON.stringify(options.body);
     }
 
-    let lastError: HelloMailError | undefined;
+    let lastError: MailngineError | undefined;
 
     for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
       if (attempt > 0) {
@@ -123,7 +123,7 @@ export class HelloMail {
 
       // Parse the error envelope.
       const errorBody = await this.parseErrorBody(response);
-      lastError = new HelloMailError(
+      lastError = new MailngineError(
         response.status,
         errorBody.code,
         errorBody.message,
@@ -136,7 +136,7 @@ export class HelloMail {
     }
 
     // All retries exhausted.
-    throw lastError ?? new HelloMailError(500, 'unknown_error', 'Request failed after retries');
+    throw lastError ?? new MailngineError(500, 'unknown_error', 'Request failed after retries');
   }
 
   // ---------------------------------------------------------------------------

@@ -29,19 +29,15 @@ server {
     ssl_session_cache shared:SSL:10m;
     ssl_session_timeout 10m;
 
-    # Security headers
-    add_header X-Frame-Options "DENY" always;
-    add_header X-Content-Type-Options "nosniff" always;
-    add_header X-XSS-Protection "1; mode=block" always;
-    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
-    add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
+    # Security headers (applied at server level for locations without add_header)
+    include /etc/nginx/conf.d/security-headers.conf;
 
     # Gzip
     gzip on;
     gzip_types application/json text/plain text/css application/javascript image/svg+xml;
     gzip_min_length 256;
 
-    # API proxy — /v1/*, /health, /metrics, /t/*
+    # API proxy — /v1/*, /health, /t/*
     location /v1/ {
         proxy_pass http://mailngine_api;
         proxy_http_version 1.1;
@@ -75,7 +71,8 @@ server {
     location ~* \.(js|css|woff2?)$ {
         root /opt/mailngine/dashboard;
         expires 1y;
-        add_header Cache-Control "public, immutable";
+        include /etc/nginx/conf.d/security-headers.conf;
+        add_header Cache-Control "public, immutable" always;
         try_files $uri =404;
     }
 
@@ -83,6 +80,7 @@ server {
     location / {
         root /opt/mailngine/dashboard;
         try_files $uri $uri/ /index.html;
-        add_header Cache-Control "no-cache";
+        include /etc/nginx/conf.d/security-headers.conf;
+        add_header Cache-Control "no-cache" always;
     }
 }

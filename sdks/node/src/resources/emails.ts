@@ -1,4 +1,4 @@
-import type { HelloMail } from '../client.js';
+import type { Mailngine } from '../client.js';
 import type { Email, ListOptions, ListResponse, SendEmailParams } from '../types.js';
 
 /**
@@ -15,7 +15,7 @@ import type { Email, ListOptions, ListResponse, SendEmailParams } from '../types
  * ```
  */
 export class EmailsResource {
-  constructor(private readonly client: HelloMail) {}
+  constructor(private readonly client: Mailngine) {}
 
   /**
    * Send an email.

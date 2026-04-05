@@ -374,13 +374,13 @@ const METHOD_VARIANT: Record<HttpMethod, "success" | "info" | "warning" | "error
   DELETE: "error",
 };
 
-const SEND_EMAIL_REQUEST = `curl -X POST https://api.hellomail.dev/v1/emails \\
-  -H "Authorization: Bearer hm_live_xxxxx" \\
+const SEND_EMAIL_REQUEST = `curl -X POST https://api.mailngine.com/v1/emails \\
+  -H "Authorization: Bearer mn_live_xxxxx" \\
   -H "Content-Type: application/json" \\
   -d '{
     "from": "hello@yourdomain.com",
     "to": ["user@example.com"],
-    "subject": "Welcome to Hello Mail",
+    "subject": "Welcome to Mailngine",
     "html": "<h1>Welcome!</h1><p>Thanks for signing up.</p>"
   }'`;
 
@@ -389,7 +389,7 @@ const SEND_EMAIL_RESPONSE = `{
     "id": "em_abc123",
     "from": "hello@yourdomain.com",
     "to": ["user@example.com"],
-    "subject": "Welcome to Hello Mail",
+    "subject": "Welcome to Mailngine",
     "status": "queued",
     "created_at": "2026-04-02T10:30:00Z"
   }
@@ -402,11 +402,11 @@ export default component$(() => {
         <div class="api-hero">
           <h1 class="api-hero__title">API Reference</h1>
           <p class="api-hero__subtitle">
-            Complete REST API documentation for Hello Mail. All endpoints
+            Complete REST API documentation for Mailngine. All endpoints
             require authentication via API key unless otherwise noted.
           </p>
           <p class="api-hero__base-url">
-            Base URL: <code>https://api.hellomail.dev</code>
+            Base URL: <code>https://api.mailngine.com</code>
           </p>
         </div>
       </Section>
@@ -639,12 +639,12 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-  title: "API Reference | Hello Mail",
+  title: "API Reference | Mailngine",
   meta: [
     {
       name: "description",
       content:
-        "Complete REST API reference for Hello Mail. Endpoints for emails, domains, webhooks, templates, API keys, suppressions, analytics, inbox, billing, and more.",
+        "Complete REST API reference for Mailngine. Endpoints for emails, domains, webhooks, templates, API keys, suppressions, analytics, inbox, billing, and more.",
     },
   ],
 };

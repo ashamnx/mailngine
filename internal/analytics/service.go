@@ -11,7 +11,7 @@ import (
 	"github.com/redis/go-redis/v9"
 	"github.com/rs/zerolog"
 
-	"github.com/hellomail/hellomail/internal/db/sqlcdb"
+	"github.com/mailngine/mailngine/internal/db/sqlcdb"
 )
 
 type Service struct {

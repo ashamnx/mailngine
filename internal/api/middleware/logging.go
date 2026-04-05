@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/hellomail/hellomail/internal/observability"
+	"github.com/mailngine/mailngine/internal/observability"
 	"github.com/rs/zerolog"
 )
 

@@ -1,4 +1,4 @@
-module github.com/hellomail/hellomail
+module github.com/mailngine/mailngine
 
 go 1.26.1
 

@@ -1,6 +1,6 @@
-# hellomail
+# mailngine
 
-The official Node.js/TypeScript SDK for [Hello Mail](https://hellomail.dev).
+The official Node.js/TypeScript SDK for [Mailngine](https://mailngine.com).
 
 ## Requirements
 
@@ -9,15 +9,15 @@ The official Node.js/TypeScript SDK for [Hello Mail](https://hellomail.dev).
 ## Installation
 
 ```bash
-npm install hellomail
+npm install mailngine
 ```
 
 ## Quick start
 
 ```typescript
-import { HelloMail } from 'hellomail';
+import { Mailngine } from 'mailngine';
 
-const client = new HelloMail('hm_live_...');
+const client = new Mailngine('mn_live_...');
 
 const email = await client.emails.send({
   from: 'hello@example.com',
@@ -121,7 +121,7 @@ const key = await client.apiKeys.create({
   name: 'Production',
   permission: 'send_only',
 });
-console.log(key.key); // hm_live_...
+console.log(key.key); // mn_live_...
 
 // List keys
 const keys = await client.apiKeys.list();
@@ -133,14 +133,14 @@ await client.apiKeys.revoke(key.id);
 ## Error handling
 
 ```typescript
-import { HelloMail, HelloMailError } from 'hellomail';
+import { Mailngine, MailngineError } from 'mailngine';
 
-const client = new HelloMail('hm_live_...');
+const client = new Mailngine('mn_live_...');
 
 try {
   await client.emails.send({ /* ... */ });
 } catch (err) {
-  if (err instanceof HelloMailError) {
+  if (err instanceof MailngineError) {
     console.error(err.statusCode); // 422
     console.error(err.code);       // "domain_not_verified"
     console.error(err.message);    // "The sending domain has not been verified"
@@ -152,8 +152,8 @@ try {
 
 ```typescript
 // Custom base URL (self-hosted or staging)
-const client = new HelloMail('hm_live_...', {
-  baseURL: 'https://api.staging.hellomail.dev',
+const client = new Mailngine('mn_live_...', {
+  baseURL: 'https://api.staging.mailngine.com',
 });
 ```
 

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace HelloMail;
+namespace Mailngine;
 
-use HelloMail\Exceptions\ApiException;
-use HelloMail\Exceptions\HelloMailException;
+use Mailngine\Exceptions\ApiException;
+use Mailngine\Exceptions\MailngineException;
 use Symfony\Component\Mailer\Envelope;
 use Symfony\Component\Mailer\SentMessage;
 use Symfony\Component\Mailer\Transport\TransportInterface;
@@ -14,40 +14,40 @@ use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\RawMessage;
 
 /**
- * Symfony Mailer transport that sends emails through the Hello Mail API.
+ * Symfony Mailer transport that sends emails through the Mailngine API.
  *
  * Integrates with Laravel's Mail system so you can use:
- *   Mail::mailer('hellomail')->to($user)->send(new WelcomeEmail());
+ *   Mail::mailer('mailngine')->to($user)->send(new WelcomeEmail());
  *
  * Configuration in config/mail.php:
  *   'mailers' => [
- *       'hellomail' => [
- *           'transport' => 'hellomail',
- *           'key' => env('HELLOMAIL_API_KEY'),
+ *       'mailngine' => [
+ *           'transport' => 'mailngine',
+ *           'key' => env('MAILNGINE_API_KEY'),
  *       ],
  *   ],
  */
-class HelloMailTransport implements TransportInterface
+class MailngineTransport implements TransportInterface
 {
-    private HelloMail $client;
+    private Mailngine $client;
 
-    public function __construct(HelloMail $client)
+    public function __construct(Mailngine $client)
     {
         $this->client = $client;
     }
 
     /**
-     * Send an email message via the Hello Mail API.
+     * Send an email message via the Mailngine API.
      *
-     * @throws HelloMailException  If the API request fails.
+     * @throws MailngineException  If the API request fails.
      */
     public function send(RawMessage $message, ?Envelope $envelope = null): ?SentMessage
     {
         $envelope ??= Envelope::create($message);
 
         if (! $message instanceof Email) {
-            throw new HelloMailException(
-                'HelloMailTransport only supports Symfony\Component\Mime\Email instances'
+            throw new MailngineException(
+                'MailngineTransport only supports Symfony\Component\Mime\Email instances'
             );
         }
 
@@ -111,6 +111,6 @@ class HelloMailTransport implements TransportInterface
 
     public function __toString(): string
     {
-        return 'hellomail';
+        return 'mailngine';
     }
 }

@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 
-	"github.com/hellomail/hellomail/internal/suppression"
+	"github.com/mailngine/mailngine/internal/suppression"
 )
 
 // FBLProcessor handles Feedback Loop (FBL) reports. ISPs send these when a

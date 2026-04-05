@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 )
 
-// Claims represents the JWT claims for Hello Mail authentication.
+// Claims represents the JWT claims for Mailngine authentication.
 type Claims struct {
 	jwt.RegisteredClaims
 	UserID uuid.UUID `json:"uid"`
@@ -35,7 +35,7 @@ func (m *JWTManager) Generate(userID, orgID uuid.UUID, role string) (string, err
 	now := time.Now()
 	claims := Claims{
 		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer:    "hellomail",
+			Issuer:    "mailngine",
 			Subject:   userID.String(),
 			ExpiresAt: jwt.NewNumericDate(now.Add(m.expiry)),
 			IssuedAt:  jwt.NewNumericDate(now),

@@ -7,10 +7,10 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
-	"github.com/hellomail/hellomail/internal/api/response"
-	"github.com/hellomail/hellomail/internal/auth"
-	sqlcdb "github.com/hellomail/hellomail/internal/db/sqlcdb"
-	"github.com/hellomail/hellomail/internal/observability"
+	"github.com/mailngine/mailngine/internal/api/response"
+	"github.com/mailngine/mailngine/internal/auth"
+	sqlcdb "github.com/mailngine/mailngine/internal/db/sqlcdb"
+	"github.com/mailngine/mailngine/internal/observability"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
 )

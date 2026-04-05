@@ -15,16 +15,19 @@ import (
 )
 
 const addMessageLabel = `-- name: AddMessageLabel :exec
-INSERT INTO inbox_message_labels (message_id, label_id) VALUES ($1, $2) ON CONFLICT DO NOTHING
+INSERT INTO inbox_message_labels (message_id, label_id)
+SELECT $1, $2 WHERE EXISTS (SELECT 1 FROM inbox_labels WHERE id = $2 AND org_id = $3)
+ON CONFLICT DO NOTHING
 `
 
 type AddMessageLabelParams struct {
 	MessageID uuid.UUID `json:"message_id"`
 	LabelID   uuid.UUID `json:"label_id"`
+	OrgID     uuid.UUID `json:"org_id"`
 }
 
 func (q *Queries) AddMessageLabel(ctx context.Context, arg AddMessageLabelParams) error {
-	_, err := q.db.Exec(ctx, addMessageLabel, arg.MessageID, arg.LabelID)
+	_, err := q.db.Exec(ctx, addMessageLabel, arg.MessageID, arg.LabelID, arg.OrgID)
 	return err
 }
 
@@ -382,11 +385,16 @@ func (q *Queries) ListLabelsByOrg(ctx context.Context, orgID uuid.UUID) ([]Inbox
 }
 
 const listMessageLabels = `-- name: ListMessageLabels :many
-SELECT il.id, il.org_id, il.name, il.color, il.created_at FROM inbox_labels il JOIN inbox_message_labels iml ON il.id = iml.label_id WHERE iml.message_id = $1
+SELECT il.id, il.org_id, il.name, il.color, il.created_at FROM inbox_labels il JOIN inbox_message_labels iml ON il.id = iml.label_id WHERE iml.message_id = $1 AND il.org_id = $2
 `
 
-func (q *Queries) ListMessageLabels(ctx context.Context, messageID uuid.UUID) ([]InboxLabel, error) {
-	rows, err := q.db.Query(ctx, listMessageLabels, messageID)
+type ListMessageLabelsParams struct {
+	MessageID uuid.UUID `json:"message_id"`
+	OrgID     uuid.UUID `json:"org_id"`
+}
+
+func (q *Queries) ListMessageLabels(ctx context.Context, arg ListMessageLabelsParams) ([]InboxLabel, error) {
+	rows, err := q.db.Query(ctx, listMessageLabels, arg.MessageID, arg.OrgID)
 	if err != nil {
 		return nil, err
 	}
@@ -516,16 +524,19 @@ func (q *Queries) MarkMessageRead(ctx context.Context, arg MarkMessageReadParams
 }
 
 const removeMessageLabel = `-- name: RemoveMessageLabel :exec
-DELETE FROM inbox_message_labels WHERE message_id = $1 AND label_id = $2
+DELETE FROM inbox_message_labels
+WHERE message_id = $1 AND label_id = $2
+AND EXISTS (SELECT 1 FROM inbox_labels WHERE id = $2 AND org_id = $3)
 `
 
 type RemoveMessageLabelParams struct {
 	MessageID uuid.UUID `json:"message_id"`
 	LabelID   uuid.UUID `json:"label_id"`
+	OrgID     uuid.UUID `json:"org_id"`
 }
 
 func (q *Queries) RemoveMessageLabel(ctx context.Context, arg RemoveMessageLabelParams) error {
-	_, err := q.db.Exec(ctx, removeMessageLabel, arg.MessageID, arg.LabelID)
+	_, err := q.db.Exec(ctx, removeMessageLabel, arg.MessageID, arg.LabelID, arg.OrgID)
 	return err
 }
 
@@ -642,16 +653,22 @@ func (q *Queries) UpdateMessageFlags(ctx context.Context, arg UpdateMessageFlags
 }
 
 const updateThreadLastMessage = `-- name: UpdateThreadLastMessage :exec
-UPDATE inbox_threads SET last_message_at = $2, message_count = message_count + 1, participant_addresses = $3 WHERE id = $1
+UPDATE inbox_threads SET last_message_at = $2, message_count = message_count + 1, participant_addresses = $3 WHERE id = $1 AND org_id = $4
 `
 
 type UpdateThreadLastMessageParams struct {
 	ID                   uuid.UUID       `json:"id"`
 	LastMessageAt        time.Time       `json:"last_message_at"`
 	ParticipantAddresses json.RawMessage `json:"participant_addresses"`
+	OrgID                uuid.UUID       `json:"org_id"`
 }
 
 func (q *Queries) UpdateThreadLastMessage(ctx context.Context, arg UpdateThreadLastMessageParams) error {
-	_, err := q.db.Exec(ctx, updateThreadLastMessage, arg.ID, arg.LastMessageAt, arg.ParticipantAddresses)
+	_, err := q.db.Exec(ctx, updateThreadLastMessage,
+		arg.ID,
+		arg.LastMessageAt,
+		arg.ParticipantAddresses,
+		arg.OrgID,
+	)
 	return err
 }

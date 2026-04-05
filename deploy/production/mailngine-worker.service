@@ -1,20 +1,31 @@
 [Unit]
-Description=Hello Mail Background Worker
+Description=Mailngine Background Worker
 After=network.target
 
 [Service]
 Type=simple
 User=root
 WorkingDirectory=/opt/mailngine
-EnvironmentFile=/opt/mailngine/.env
-ExecStart=/opt/mailngine/bin/worker
+EnvironmentFile=/opt/mailngine/shared/.env
+ExecStart=/opt/mailngine/current/worker
 Restart=always
 RestartSec=5
 LimitNOFILE=65535
 
+# Graceful shutdown: asynq drains in-flight tasks for up to ShutdownTimeout (default 60s)
+TimeoutStopSec=65
+KillMode=mixed
+KillSignal=SIGTERM
+
+# Security
 NoNewPrivileges=true
 ProtectHome=true
 PrivateTmp=true
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=mailngine-worker
 
 [Install]
 WantedBy=multi-user.target

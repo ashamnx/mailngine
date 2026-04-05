@@ -1,4 +1,4 @@
-# Hello Mail - Postfix main.cf template
+# Mailngine - Postfix main.cf template
 # This is a Go text/template file. Render with the appropriate configuration
 # values before deploying to /etc/postfix/main.cf.
 
@@ -17,12 +17,12 @@ mynetworks = 127.0.0.0/8 [::1]/128
 # Verified sending domains are resolved from PostgreSQL via the
 # pgsql-virtual-domains.cf lookup table.
 virtual_mailbox_domains = pgsql:/etc/postfix/pgsql-virtual-domains.cf
-virtual_transport = lmtp:unix:private/hellomail-lmtp
+virtual_transport = lmtp:unix:private/mailngine-lmtp
 
 # ============================================================
 # MILTER CONFIGURATION
 # ============================================================
-# The Hello Mail milter runs on localhost:10382 and handles
+# The Mailngine milter runs on localhost:10382 and handles
 # suppression checks, DKIM signing, and tracking injection.
 smtpd_milters = inet:127.0.0.1:10382
 non_smtpd_milters = inet:127.0.0.1:10382

@@ -1,4 +1,4 @@
-import type { HelloMail } from '../client.js';
+import type { Mailngine } from '../client.js';
 import type {
   CreateWebhookParams,
   ListOptions,
@@ -11,7 +11,7 @@ import type {
  * Resource for managing webhook endpoints.
  */
 export class WebhooksResource {
-  constructor(private readonly client: HelloMail) {}
+  constructor(private readonly client: Mailngine) {}
 
   /**
    * Create a new webhook endpoint.

@@ -1,15 +1,15 @@
 [Unit]
-Description=Hello Mail API Server
+Description=Mailngine Background Worker
 After=network.target
 Wants=network-online.target
 
 [Service]
 Type=simple
-User=hellomail
-Group=hellomail
-WorkingDirectory=/opt/hellomail
-ExecStart=/opt/hellomail/server
-EnvironmentFile=/opt/hellomail/.env
+User=mailngine
+Group=mailngine
+WorkingDirectory=/opt/mailngine
+ExecStart=/opt/mailngine/worker
+EnvironmentFile=/opt/mailngine/.env
 Restart=always
 RestartSec=5
 
@@ -17,7 +17,7 @@ RestartSec=5
 NoNewPrivileges=true
 ProtectSystem=strict
 ProtectHome=true
-ReadWritePaths=/opt/hellomail
+ReadWritePaths=/opt/mailngine
 PrivateTmp=true
 
 # Resource limits

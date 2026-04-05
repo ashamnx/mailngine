@@ -126,16 +126,16 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-  title: "Pricing - Hello Mail",
+  title: "Pricing - Mailngine",
   meta: [
     {
       name: "description",
       content:
-        "Simple, transparent pricing for Hello Mail. Start free with 100 emails/day. Scale to millions with Pro and Enterprise plans.",
+        "Simple, transparent pricing for Mailngine. Start free with 100 emails/day. Scale to millions with Pro and Enterprise plans.",
     },
     {
       property: "og:title",
-      content: "Pricing - Hello Mail",
+      content: "Pricing - Mailngine",
     },
     {
       property: "og:description",

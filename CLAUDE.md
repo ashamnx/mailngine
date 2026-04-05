@@ -1,4 +1,4 @@
-# Hello Mail
+# Mailngine
 
 Multi-tenant SaaS email platform (like Resend).
 

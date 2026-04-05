@@ -5,19 +5,19 @@ import { Section, Card, Button, CodeBlock } from "~/components/ui";
 const SDKS = [
   {
     name: "Go",
-    install: "go get github.com/hellomail/hellomail-go",
+    install: "go get github.com/mailngine/mailngine-go",
     installLang: "bash",
     example: `package main
 
 import (
   "context"
-  hellomail "github.com/hellomail/hellomail-go"
+  mailngine "github.com/mailngine/mailngine-go"
 )
 
 func main() {
-  client := hellomail.NewClient("hm_live_xxxxx")
+  client := mailngine.NewClient("mn_live_xxxxx")
 
-  _, err := client.Emails.Send(context.Background(), &hellomail.SendEmailParams{
+  _, err := client.Emails.Send(context.Background(), &mailngine.SendEmailParams{
     From:    "hello@yourdomain.com",
     To:      []string{"user@example.com"},
     Subject: "Welcome!",
@@ -28,15 +28,15 @@ func main() {
   }
 }`,
     exampleLang: "go",
-    docsHref: "https://github.com/hellomail/hellomail-go",
+    docsHref: "https://github.com/mailngine/mailngine-go",
   },
   {
     name: "Node.js",
-    install: "npm install hellomail",
+    install: "npm install mailngine",
     installLang: "bash",
-    example: `import { HelloMail } from 'hellomail';
+    example: `import { Mailngine } from 'mailngine';
 
-const client = new HelloMail('hm_live_xxxxx');
+const client = new Mailngine('mn_live_xxxxx');
 
 await client.emails.send({
   from: 'hello@yourdomain.com',
@@ -45,26 +45,26 @@ await client.emails.send({
   html: '<h1>Hello from Node.js</h1>',
 });`,
     exampleLang: "typescript",
-    docsHref: "https://github.com/hellomail/hellomail-node",
+    docsHref: "https://github.com/mailngine/mailngine-node",
   },
   {
     name: "Laravel",
-    install: "composer require hellomail/hellomail-laravel",
+    install: "composer require mailngine/mailngine-laravel",
     installLang: "bash",
     example: `// config/mail.php — add to 'mailers' array:
-'hellomail' => [
-    'transport' => 'hellomail',
+'mailngine' => [
+    'transport' => 'mailngine',
 ],
 
 // .env
-MAIL_MAILER=hellomail
-HELLOMAIL_API_KEY=hm_live_xxxxx
+MAIL_MAILER=mailngine
+MAILNGINE_API_KEY=mn_live_xxxxx
 
 // Usage — standard Laravel Mail
 Mail::to('user@example.com')
     ->send(new WelcomeEmail());`,
     exampleLang: "php",
-    docsHref: "https://github.com/hellomail/hellomail-laravel",
+    docsHref: "https://github.com/mailngine/mailngine-laravel",
   },
 ] as const;
 
@@ -81,7 +81,7 @@ export default component$(() => {
         <div class="integrations-hero">
           <h1 class="integrations-hero__title">Integrations</h1>
           <p class="integrations-hero__subtitle">
-            Official SDKs and libraries to integrate Hello Mail into your
+            Official SDKs and libraries to integrate Mailngine into your
             application. Get from zero to sending in minutes.
           </p>
         </div>
@@ -225,12 +225,12 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-  title: "Integrations | Hello Mail",
+  title: "Integrations | Mailngine",
   meta: [
     {
       name: "description",
       content:
-        "Official Hello Mail SDKs for Go, Node.js, and Laravel. Install, configure, and start sending emails in minutes.",
+        "Official Mailngine SDKs for Go, Node.js, and Laravel. Install, configure, and start sending emails in minutes.",
     },
   ],
 };

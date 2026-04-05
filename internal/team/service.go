@@ -1,4 +1,4 @@
-// Package team implements team and organization management for Hello Mail.
+// Package team implements team and organization management for Mailngine.
 package team
 
 import (
@@ -13,7 +13,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
 
-	sqlcdb "github.com/hellomail/hellomail/internal/db/sqlcdb"
+	sqlcdb "github.com/mailngine/mailngine/internal/db/sqlcdb"
 )
 
 // Valid roles for organization members.

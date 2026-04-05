@@ -160,8 +160,8 @@ export default component$(() => {
             <section id="third-party">
               <h2>5. Third-Party Services</h2>
               <p>
-                We use the following third-party services to operate Hello
-                Mail:
+                We use the following third-party services to operate
+                Mailngine:
               </p>
               <ul>
                 <li>
@@ -171,7 +171,7 @@ export default component$(() => {
                 <li>
                   <strong>Google OAuth</strong> -- Authentication provider for
                   user sign-in. Google receives your authentication request but
-                  does not receive your Hello Mail usage data.
+                  does not receive your Mailngine usage data.
                 </li>
                 <li>
                   <strong>Cloudflare</strong> -- DNS management and CDN
@@ -225,8 +225,8 @@ export default component$(() => {
               </ul>
               <p>
                 To exercise any of these rights, please contact us at{" "}
-                <a href="mailto:privacy@hellomail.dev">
-                  privacy@hellomail.dev
+                <a href="mailto:privacy@mailngine.com">
+                  privacy@mailngine.com
                 </a>
                 . We will respond to your request within 30 days.
               </p>
@@ -263,8 +263,8 @@ export default component$(() => {
               <p>
                 If you have any questions about this Privacy Policy or how we
                 handle your data, please contact us at{" "}
-                <a href="mailto:privacy@hellomail.dev">
-                  privacy@hellomail.dev
+                <a href="mailto:privacy@mailngine.com">
+                  privacy@mailngine.com
                 </a>{" "}
                 or visit our <a href="/contact">contact page</a>.
               </p>
@@ -351,21 +351,21 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-  title: "Privacy Policy - Hello Mail",
+  title: "Privacy Policy - Mailngine",
   meta: [
     {
       name: "description",
       content:
-        "Hello Mail Privacy Policy. Learn how we collect, use, and protect your data.",
+        "Mailngine Privacy Policy. Learn how we collect, use, and protect your data.",
     },
     {
-      name: "og:title",
-      content: "Privacy Policy - Hello Mail",
+      property: "og:title",
+      content: "Privacy Policy - Mailngine",
     },
     {
-      name: "og:description",
+      property: "og:description",
       content:
-        "Hello Mail Privacy Policy. Learn how we collect, use, and protect your data.",
+        "Mailngine Privacy Policy. Learn how we collect, use, and protect your data.",
     },
   ],
 };

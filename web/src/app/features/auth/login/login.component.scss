@@ -97,20 +97,9 @@
   margin-bottom: $space-6;
 }
 
-.login-logo__icon {
-  width: 56px;
+.login-logo__img {
   height: 56px;
-  border-radius: $border-radius-md;
-  background: linear-gradient(135deg, $color-primary 0%, #1557B0 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 8px rgba($color-primary, 0.3);
-
-  .material-symbols-rounded {
-    font-size: 28px;
-    color: white;
-  }
+  width: auto;
 }
 
 // ============================================================

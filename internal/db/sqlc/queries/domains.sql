@@ -31,7 +31,7 @@ INSERT INTO dns_records (domain_id, record_type, host, value, purpose) VALUES ($
 SELECT * FROM dns_records WHERE domain_id = $1 ORDER BY purpose;
 
 -- name: UpdateDNSRecordStatus :exec
-UPDATE dns_records SET status = $2, verified_at = CASE WHEN $2 = 'verified' THEN NOW() ELSE verified_at END WHERE id = $1;
+UPDATE dns_records SET status = $2, verified_at = CASE WHEN $2 = 'verified' THEN NOW() ELSE verified_at END WHERE id = $1 AND domain_id = $3;
 
 -- name: DeleteDNSRecordsByDomain :exec
 DELETE FROM dns_records WHERE domain_id = $1;

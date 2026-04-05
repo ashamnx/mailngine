@@ -1,11 +1,11 @@
-package hellomail
+package mailngine
 
 import (
 	"errors"
 	"fmt"
 )
 
-// APIError represents a structured error response from the Hello Mail API.
+// APIError represents a structured error response from the Mailngine API.
 type APIError struct {
 	StatusCode int    `json:"-"`
 	Code       string `json:"code"`
@@ -14,7 +14,7 @@ type APIError struct {
 
 // Error implements the error interface.
 func (e *APIError) Error() string {
-	return fmt.Sprintf("hellomail: %s: %s (status %d)", e.Code, e.Message, e.StatusCode)
+	return fmt.Sprintf("mailngine: %s: %s (status %d)", e.Code, e.Message, e.StatusCode)
 }
 
 // IsNotFound reports whether the error indicates a 404 Not Found response.

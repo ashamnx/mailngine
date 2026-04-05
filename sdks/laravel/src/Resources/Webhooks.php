@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace HelloMail\Resources;
+namespace Mailngine\Resources;
 
-use HelloMail\HelloMail;
+use Mailngine\Mailngine;
 
 /**
- * Manage webhooks through the Hello Mail API.
+ * Manage webhooks through the Mailngine API.
  *
  * @see POST   /v1/webhooks                    Create a webhook
  * @see GET    /v1/webhooks                    List webhooks
@@ -18,7 +18,7 @@ use HelloMail\HelloMail;
  */
 class Webhooks
 {
-    public function __construct(private HelloMail $client)
+    public function __construct(private Mailngine $client)
     {
     }
 

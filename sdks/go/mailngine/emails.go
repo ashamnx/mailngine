@@ -1,4 +1,4 @@
-package hellomail
+package mailngine
 
 import (
 	"context"

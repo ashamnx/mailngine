@@ -1,4 +1,4 @@
-# Hello Mail
+# Mailngine
 
 A multi-tenant SaaS email platform for developers. Send, receive, and manage email at any scale with powerful APIs and a beautiful dashboard.
 
@@ -35,7 +35,7 @@ A multi-tenant SaaS email platform for developers. Send, receive, and manage ema
 ## Project Structure
 
 ```
-hello-mail/
+mailngine/
   cmd/
     server/           Go API server entry point
     worker/           Asynq background worker
@@ -58,7 +58,7 @@ hello-mail/
     db/               PostgreSQL pool, migrations, sqlc queries
     cache/            Valkey connection
     observability/    zerolog, Prometheus metrics
-  pkg/hellomail/      Shared API types and errors
+  pkg/mailngine/      Shared API types and errors
   web/                Angular 19 dashboard
   website/            Qwik marketing website (14 pages)
   sdks/
@@ -86,8 +86,8 @@ hello-mail/
 
 ```bash
 # Clone
-git clone https://github.com/hellomail/hellomail.git
-cd hellomail
+git clone https://github.com/mailngine/mailngine.git
+cd mailngine
 
 # Configure
 cp .env.example .env
@@ -128,7 +128,7 @@ make docker-down    # Stop docker-compose
 
 Base URL: `https://app.mailngine.com/v1`
 
-Auth: `Authorization: Bearer hm_live_...` (API key) or `Bearer <jwt>` (session)
+Auth: `Authorization: Bearer mn_live_...` (API key) or `Bearer <jwt>` (session)
 
 ### Endpoints
 
@@ -154,9 +154,9 @@ Auth: `Authorization: Bearer hm_live_...` (API key) or `Bearer <jwt>` (session)
 ### Go
 
 ```go
-client := hellomail.New("hm_live_...")
+client := mailngine.New("mn_live_...")
 
-email, err := client.Emails.Send(ctx, &hellomail.SendEmailParams{
+email, err := client.Emails.Send(ctx, &mailngine.SendEmailParams{
     From:    "hello@example.com",
     To:      []string{"user@example.com"},
     Subject: "Welcome!",
@@ -165,15 +165,15 @@ email, err := client.Emails.Send(ctx, &hellomail.SendEmailParams{
 ```
 
 ```bash
-go get github.com/hellomail/hellomail-go
+go get github.com/mailngine/mailngine-go
 ```
 
 ### Node.js
 
 ```typescript
-import { HelloMail } from 'hellomail';
+import { Mailngine } from 'mailngine';
 
-const client = new HelloMail('hm_live_...');
+const client = new Mailngine('mn_live_...');
 
 const email = await client.emails.send({
     from: 'hello@example.com',
@@ -184,15 +184,15 @@ const email = await client.emails.send({
 ```
 
 ```bash
-npm install hellomail
+npm install mailngine
 ```
 
 ### Laravel
 
 ```php
-use HelloMail\HelloMail;
+use Mailngine\Mailngine;
 
-$client = new HelloMail('hm_live_...');
+$client = new Mailngine('mn_live_...');
 
 $email = $client->emails()->send([
     'from' => 'hello@example.com',
@@ -206,18 +206,18 @@ Laravel Mail integration:
 ```php
 // config/mail.php
 'mailers' => [
-    'hellomail' => [
-        'transport' => 'hellomail',
-        'key' => env('HELLOMAIL_API_KEY'),
+    'mailngine' => [
+        'transport' => 'mailngine',
+        'key' => env('MAILNGINE_API_KEY'),
     ],
 ],
 
 // Usage
-Mail::mailer('hellomail')->to($user)->send(new WelcomeEmail());
+Mail::mailer('mailngine')->to($user)->send(new WelcomeEmail());
 ```
 
 ```bash
-composer require hellomail/hellomail-laravel
+composer require mailngine/mailngine-laravel
 ```
 
 ## Deployment

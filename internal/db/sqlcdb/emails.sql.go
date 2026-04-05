@@ -188,6 +188,22 @@ func (q *Queries) GetEmailByIdempotencyKey(ctx context.Context, arg GetEmailById
 	return i, err
 }
 
+const getEmailOrgID = `-- name: GetEmailOrgID :one
+SELECT id, org_id FROM emails WHERE id = $1
+`
+
+type GetEmailOrgIDRow struct {
+	ID    uuid.UUID `json:"id"`
+	OrgID uuid.UUID `json:"org_id"`
+}
+
+func (q *Queries) GetEmailOrgID(ctx context.Context, id uuid.UUID) (GetEmailOrgIDRow, error) {
+	row := q.db.QueryRow(ctx, getEmailOrgID, id)
+	var i GetEmailOrgIDRow
+	err := row.Scan(&i.ID, &i.OrgID)
+	return i, err
+}
+
 const getVerifiedDomainByName = `-- name: GetVerifiedDomainByName :one
 SELECT id, org_id, name, status, region, dkim_private_key, dkim_selector, open_tracking, click_tracking, cloudflare_zone_id, cloudflare_api_token_enc, verified_at, created_at, updated_at FROM domains WHERE name = $1 AND org_id = $2 AND status = 'verified'
 `
@@ -275,15 +291,16 @@ func (q *Queries) ListEmailsByOrg(ctx context.Context, arg ListEmailsByOrgParams
 }
 
 const updateEmailStatus = `-- name: UpdateEmailStatus :exec
-UPDATE emails SET status = $2, sent_at = CASE WHEN $2 = 'sent' THEN NOW() ELSE sent_at END, delivered_at = CASE WHEN $2 = 'delivered' THEN NOW() ELSE delivered_at END WHERE id = $1
+UPDATE emails SET status = $2, sent_at = CASE WHEN $2 = 'sent' THEN NOW() ELSE sent_at END, delivered_at = CASE WHEN $2 = 'delivered' THEN NOW() ELSE delivered_at END WHERE id = $1 AND org_id = $3
 `
 
 type UpdateEmailStatusParams struct {
 	ID     uuid.UUID `json:"id"`
 	Status string    `json:"status"`
+	OrgID  uuid.UUID `json:"org_id"`
 }
 
 func (q *Queries) UpdateEmailStatus(ctx context.Context, arg UpdateEmailStatusParams) error {
-	_, err := q.db.Exec(ctx, updateEmailStatus, arg.ID, arg.Status)
+	_, err := q.db.Exec(ctx, updateEmailStatus, arg.ID, arg.Status, arg.OrgID)
 	return err
 }

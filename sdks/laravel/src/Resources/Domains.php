@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace HelloMail\Resources;
+namespace Mailngine\Resources;
 
-use HelloMail\HelloMail;
+use Mailngine\Mailngine;
 
 /**
- * Manage sending domains through the Hello Mail API.
+ * Manage sending domains through the Mailngine API.
  *
  * @see POST   /v1/domains              Create a domain
  * @see GET    /v1/domains              List domains
@@ -18,7 +18,7 @@ use HelloMail\HelloMail;
  */
 class Domains
 {
-    public function __construct(private HelloMail $client)
+    public function __construct(private Mailngine $client)
     {
     }
 

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace HelloMail\Resources;
+namespace Mailngine\Resources;
 
-use HelloMail\HelloMail;
+use Mailngine\Mailngine;
 
 /**
- * Manage email templates through the Hello Mail API.
+ * Manage email templates through the Mailngine API.
  *
  * @see POST   /v1/templates               Create a template
  * @see GET    /v1/templates               List templates
@@ -18,7 +18,7 @@ use HelloMail\HelloMail;
  */
 class Templates
 {
-    public function __construct(private HelloMail $client)
+    public function __construct(private Mailngine $client)
     {
     }
 

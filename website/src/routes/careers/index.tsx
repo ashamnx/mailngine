@@ -55,7 +55,7 @@ export default component$(() => {
 
       <Section padding="lg">
         <div class="careers-benefits">
-          <h2 class="careers-section-title">Why Hello Mail</h2>
+          <h2 class="careers-section-title">Why Mailngine</h2>
           <div class="careers-benefits__grid">
             {benefits.map((benefit) => (
               <Card key={benefit.title} elevated>
@@ -95,8 +95,8 @@ export default component$(() => {
             love to hear from you. Send us an email and tell us what you're
             passionate about.
           </p>
-          <Button variant="secondary" size="lg" href="mailto:careers@hellomail.dev">
-            careers@hellomail.dev
+          <Button variant="secondary" size="lg" href="mailto:careers@mailngine.com">
+            careers@mailngine.com
           </Button>
         </div>
       </Section>
@@ -200,21 +200,21 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-  title: "Careers - Hello Mail",
+  title: "Careers - Mailngine",
   meta: [
     {
       name: "description",
       content:
-        "Join the Hello Mail team. We're building the future of email infrastructure with a remote-first, developer-focused culture.",
+        "Join the Mailngine team. We're building the future of email infrastructure with a remote-first, developer-focused culture.",
     },
     {
-      name: "og:title",
-      content: "Careers - Hello Mail",
+      property: "og:title",
+      content: "Careers - Mailngine",
     },
     {
-      name: "og:description",
+      property: "og:description",
       content:
-        "Join the Hello Mail team. We're building the future of email infrastructure with a remote-first, developer-focused culture.",
+        "Join the Mailngine team. We're building the future of email infrastructure with a remote-first, developer-focused culture.",
     },
   ],
 };

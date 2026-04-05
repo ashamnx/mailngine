@@ -138,7 +138,7 @@ export default component$(() => {
                 <span class="material-symbols-rounded">mail</span>
                 <div>
                   <p class="contact-info__label">Email</p>
-                  <a href="mailto:hello@hellomail.dev">hello@hellomail.dev</a>
+                  <a href="mailto:hello@mailngine.com">hello@mailngine.com</a>
                 </div>
               </div>
 
@@ -155,21 +155,21 @@ export default component$(() => {
               <h4 class="contact-info__subtitle">Follow Us</h4>
               <div class="contact-info__social">
                 <a
-                  href="https://github.com/hellomail"
+                  href="https://github.com/mailngine"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   GitHub
                 </a>
                 <a
-                  href="https://twitter.com/hellomail"
+                  href="https://twitter.com/mailngine"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   Twitter
                 </a>
                 <a
-                  href="https://discord.gg/hellomail"
+                  href="https://discord.gg/mailngine"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -304,21 +304,21 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-  title: "Contact Us - Hello Mail",
+  title: "Contact Us - Mailngine",
   meta: [
     {
       name: "description",
       content:
-        "Get in touch with the Hello Mail team. We're here to help with questions, feature requests, and support.",
+        "Get in touch with the Mailngine team. We're here to help with questions, feature requests, and support.",
     },
     {
-      name: "og:title",
-      content: "Contact Us - Hello Mail",
+      property: "og:title",
+      content: "Contact Us - Mailngine",
     },
     {
-      name: "og:description",
+      property: "og:description",
       content:
-        "Get in touch with the Hello Mail team. We're here to help with questions, feature requests, and support.",
+        "Get in touch with the Mailngine team. We're here to help with questions, feature requests, and support.",
     },
   ],
 };

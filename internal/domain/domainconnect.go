@@ -18,7 +18,7 @@ import (
 )
 
 const (
-	dcProviderID = "hellomail.dev"
+	dcProviderID = "mailngine.com"
 	dcServiceID  = "mail"
 )
 
@@ -139,8 +139,8 @@ func GenerateRedirectURL(provider *ProviderInfo, domainName string, dkimSelector
 	// Build the sync URL with query parameters
 	params := url.Values{}
 	params.Set("domain", domainName)
-	params.Set("providerName", "Hello Mail")
-	params.Set("hm_selector", dkimSelector)
+	params.Set("providerName", "Mailngine")
+	params.Set("mn_selector", dkimSelector)
 	params.Set("dkim_public_key", dkimPublicKey)
 	params.Set("redirect_uri", redirectURI)
 	params.Set("state", state)

@@ -19,8 +19,8 @@ export default component$(() => {
         <div class="changelog-hero">
           <h1>Changelog</h1>
           <p>
-            A history of improvements, new features, and fixes shipped to Hello
-            Mail.
+            A history of improvements, new features, and fixes shipped to
+            Mailngine.
           </p>
         </div>
       </Section>
@@ -155,21 +155,21 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-  title: "Changelog - Hello Mail",
+  title: "Changelog - Mailngine",
   meta: [
     {
       name: "description",
       content:
-        "See what's new in Hello Mail. A history of features, improvements, and fixes.",
+        "See what's new in Mailngine. A history of features, improvements, and fixes.",
     },
     {
-      name: "og:title",
-      content: "Changelog - Hello Mail",
+      property: "og:title",
+      content: "Changelog - Mailngine",
     },
     {
-      name: "og:description",
+      property: "og:description",
       content:
-        "See what's new in Hello Mail. A history of features, improvements, and fixes.",
+        "See what's new in Mailngine. A history of features, improvements, and fixes.",
     },
   ],
 };

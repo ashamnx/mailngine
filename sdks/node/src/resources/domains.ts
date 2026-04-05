@@ -1,4 +1,4 @@
-import type { HelloMail } from '../client.js';
+import type { Mailngine } from '../client.js';
 import type {
   CreateDomainParams,
   CreateDomainResponse,
@@ -11,7 +11,7 @@ import type {
  * Resource for managing sending domains.
  */
 export class DomainsResource {
-  constructor(private readonly client: HelloMail) {}
+  constructor(private readonly client: Mailngine) {}
 
   /**
    * Register a new sending domain.

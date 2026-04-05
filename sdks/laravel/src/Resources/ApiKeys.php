@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace HelloMail\Resources;
+namespace Mailngine\Resources;
 
-use HelloMail\HelloMail;
+use Mailngine\Mailngine;
 
 /**
- * Manage API keys through the Hello Mail API.
+ * Manage API keys through the Mailngine API.
  *
  * @see POST   /v1/api-keys       Create an API key
  * @see GET    /v1/api-keys       List API keys
@@ -15,7 +15,7 @@ use HelloMail\HelloMail;
  */
 class ApiKeys
 {
-    public function __construct(private HelloMail $client)
+    public function __construct(private Mailngine $client)
     {
     }
 

@@ -14,11 +14,11 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
 
-	sqlcdb "github.com/hellomail/hellomail/internal/db/sqlcdb"
+	sqlcdb "github.com/mailngine/mailngine/internal/db/sqlcdb"
 )
 
 const (
-	dkimSelector = "hm1"
+	dkimSelector = "mn1"
 
 	statusPending  = "pending"
 	statusVerified = "verified"
@@ -134,13 +134,13 @@ func (s *Service) CreateDomain(ctx context.Context, orgID uuid.UUID, name string
 	// Build DNS records based on options.
 	// SPF: We generate an "include" directive — users with existing SPF records
 	// (e.g., Google Workspace, Office 365) must merge this into their existing record.
-	// DKIM: Uses a unique selector (hm1) so it safely coexists with other providers.
+	// DKIM: Uses a unique selector (mn1) so it safely coexists with other providers.
 	// DMARC: Only suggested if user doesn't already have one.
 	// MX: Only generated when inbound email is enabled (to avoid breaking existing mailboxes).
 	// Return-Path: CNAME for bounce handling, always safe to add.
 	// SPF: Use pre-computed merged SPF if provided (from domain analysis),
 	// otherwise generate a standalone SPF include.
-	spfValue := "v=spf1 include:spf.hellomail.dev ~all"
+	spfValue := "v=spf1 include:spf.mailngine.com ~all"
 	if opts.MergedSPF != "" {
 		spfValue = opts.MergedSPF
 	}
@@ -164,7 +164,7 @@ func (s *Service) CreateDomain(ctx context.Context, orgID uuid.UUID, name string
 			DomainID:   domain.ID,
 			RecordType: "CNAME",
 			Host:       "bounce." + name,
-			Value:      "bounces.hellomail.dev",
+			Value:      "bounces.mailngine.com",
 			Purpose:    purposeReturnPath,
 		},
 	}
@@ -175,7 +175,7 @@ func (s *Service) CreateDomain(ctx context.Context, orgID uuid.UUID, name string
 			DomainID:   domain.ID,
 			RecordType: "TXT",
 			Host:       "_dmarc." + name,
-			Value:      "v=DMARC1; p=none; rua=mailto:dmarc@hellomail.dev",
+			Value:      "v=DMARC1; p=none; rua=mailto:dmarc@mailngine.com",
 			Purpose:    purposeDMARC,
 		})
 	}
@@ -186,7 +186,7 @@ func (s *Service) CreateDomain(ctx context.Context, orgID uuid.UUID, name string
 			DomainID:   domain.ID,
 			RecordType: "MX",
 			Host:       name,
-			Value:      "10 mx.hellomail.dev",
+			Value:      "10 mx.mailngine.com",
 			Purpose:    purposeMX,
 		})
 	}
@@ -316,8 +316,9 @@ func (s *Service) VerifyDomain(ctx context.Context, orgID, domainID uuid.UUID) (
 		}
 
 		if err := s.queries.UpdateDNSRecordStatus(ctx, sqlcdb.UpdateDNSRecordStatusParams{
-			ID:     rec.ID,
-			Status: newStatus,
+			ID:       rec.ID,
+			Status:   newStatus,
+			DomainID: rec.DomainID,
 		}); err != nil {
 			s.logger.Error().Err(err).
 				Str("record_id", rec.ID.String()).
@@ -374,7 +375,7 @@ func verifyDNSRecord(ctx context.Context, rec sqlcdb.DnsRecord) bool {
 		if err != nil {
 			return false
 		}
-		// Expected value format: "10 mx.hellomail.dev"
+		// Expected value format: "10 mx.mailngine.com"
 		parts := strings.Fields(rec.Value)
 		if len(parts) < 2 {
 			return false

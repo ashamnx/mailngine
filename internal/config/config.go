@@ -21,6 +21,8 @@ type Config struct {
 	FrontendURL   string
 
 	Postfix PostfixConfig
+
+	WorkerShutdownTimeout time.Duration
 }
 
 type SpacesConfig struct {
@@ -62,7 +64,7 @@ func Load() (*Config, error) {
 		Spaces: SpacesConfig{
 			Endpoint:  getEnv("SPACES_ENDPOINT", ""),
 			Region:    getEnv("SPACES_REGION", "sgp1"),
-			Bucket:    getEnv("SPACES_BUCKET", "hellomail"),
+			Bucket:    getEnv("SPACES_BUCKET", "mailngine"),
 			AccessKey: getEnv("SPACES_ACCESS_KEY", ""),
 			SecretKey: getEnv("SPACES_SECRET_KEY", ""),
 		},
@@ -85,6 +87,17 @@ func Load() (*Config, error) {
 			SMTPHost: getEnv("POSTFIX_SMTP_HOST", "127.0.0.1"),
 			SMTPPort: getEnv("POSTFIX_SMTP_PORT", "25"),
 		},
+	}
+
+	workerTimeout, err := time.ParseDuration(getEnv("WORKER_SHUTDOWN_TIMEOUT", "60s"))
+	if err != nil {
+		return nil, fmt.Errorf("invalid WORKER_SHUTDOWN_TIMEOUT: %w", err)
+	}
+	cfg.WorkerShutdownTimeout = workerTimeout
+
+	// Reject weak JWT secrets in non-development environments.
+	if cfg.Env != "development" && len(cfg.JWT.Secret) < 32 {
+		return nil, fmt.Errorf("JWT_SECRET must be at least 32 characters in production")
 	}
 
 	return cfg, nil

@@ -10,7 +10,13 @@ export const RouterHead = component$(() => {
 
   return (
     <>
-      <title>{head.title ? `${head.title} | Hello Mail` : "Hello Mail"}</title>
+      <title>
+        {head.title
+          ? head.title.includes("Mailngine")
+            ? head.title
+            : `${head.title} | Mailngine`
+          : "Mailngine"}
+      </title>
 
       <link rel="canonical" href={loc.url.href} />
 

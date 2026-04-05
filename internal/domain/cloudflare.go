@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	sqlcdb "github.com/hellomail/hellomail/internal/db/sqlcdb"
+	sqlcdb "github.com/mailngine/mailngine/internal/db/sqlcdb"
 )
 
 const cloudflareAPIBase = "https://api.cloudflare.com/client/v4"
@@ -139,7 +139,7 @@ func buildCloudflareRequest(rec sqlcdb.DnsRecord) cloudflareCreateRequest {
 
 	switch rec.RecordType {
 	case "MX":
-		// Value format: "10 mx.hellomail.dev"
+		// Value format: "10 mx.mailngine.com"
 		parts := strings.Fields(rec.Value)
 		if len(parts) >= 2 {
 			priority := 10

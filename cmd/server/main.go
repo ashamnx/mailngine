@@ -10,11 +10,11 @@ import (
 	"time"
 
 	"github.com/hibiken/asynq"
-	"github.com/hellomail/hellomail/internal/api"
-	"github.com/hellomail/hellomail/internal/cache"
-	"github.com/hellomail/hellomail/internal/config"
-	"github.com/hellomail/hellomail/internal/db"
-	"github.com/hellomail/hellomail/internal/observability"
+	"github.com/mailngine/mailngine/internal/api"
+	"github.com/mailngine/mailngine/internal/cache"
+	"github.com/mailngine/mailngine/internal/config"
+	"github.com/mailngine/mailngine/internal/db"
+	"github.com/mailngine/mailngine/internal/observability"
 )
 
 func main() {
@@ -39,7 +39,7 @@ func run() error {
 	logger.Info().
 		Str("env", cfg.Env).
 		Str("port", cfg.Port).
-		Msg("starting Hello Mail server")
+		Msg("starting Mailngine server")
 
 	// Connect to PostgreSQL
 	pool, err := db.NewPool(ctx, cfg.DatabaseURL, logger)

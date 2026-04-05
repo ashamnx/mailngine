@@ -1,4 +1,4 @@
-// Package email implements the email sending pipeline for Hello Mail.
+// Package email implements the email sending pipeline for Mailngine.
 // It handles validation, queuing, and orchestration of outbound email delivery.
 package email
 
@@ -17,8 +17,8 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
 
-	sqlcdb "github.com/hellomail/hellomail/internal/db/sqlcdb"
-	"github.com/hellomail/hellomail/internal/queue"
+	sqlcdb "github.com/mailngine/mailngine/internal/db/sqlcdb"
+	"github.com/mailngine/mailngine/internal/queue"
 )
 
 // SendRequest represents the payload for sending an email via the API.
@@ -67,21 +67,31 @@ var ErrInvalidFromAddress = errors.New("invalid from address")
 // ErrEmailNotFound is returned when an email record does not exist.
 var ErrEmailNotFound = errors.New("email not found")
 
+// ErrRecipientSuppressed is returned when one or more recipients are on the suppression list.
+var ErrRecipientSuppressed = errors.New("recipient is suppressed")
+
+// SuppressionChecker checks if an email address is suppressed for an organization.
+type SuppressionChecker interface {
+	Check(ctx context.Context, orgID uuid.UUID, email string) (bool, error)
+}
+
 // Service provides email sending operations.
 type Service struct {
-	db      *pgxpool.Pool
-	queries *sqlcdb.Queries
-	queue   *asynq.Client
-	logger  zerolog.Logger
+	db             *pgxpool.Pool
+	queries        *sqlcdb.Queries
+	queue          *asynq.Client
+	suppressionSvc SuppressionChecker
+	logger         zerolog.Logger
 }
 
 // NewService creates a new email Service with the given dependencies.
-func NewService(db *pgxpool.Pool, queue *asynq.Client, logger zerolog.Logger) *Service {
+func NewService(db *pgxpool.Pool, queue *asynq.Client, suppressionSvc SuppressionChecker, logger zerolog.Logger) *Service {
 	return &Service{
-		db:      db,
-		queries: sqlcdb.New(db),
-		queue:   queue,
-		logger:  logger.With().Str("component", "email_service").Logger(),
+		db:             db,
+		queries:        sqlcdb.New(db),
+		queue:          queue,
+		suppressionSvc: suppressionSvc,
+		logger:         logger.With().Str("component", "email_service").Logger(),
 	}
 }
 
@@ -119,8 +129,24 @@ func (s *Service) SendEmail(ctx context.Context, orgID uuid.UUID, apiKeyID *uuid
 		}
 	}
 
+	// Check all recipients against the suppression list.
+	allRecipients := make([]string, 0, len(req.To)+len(req.CC)+len(req.BCC))
+	allRecipients = append(allRecipients, req.To...)
+	allRecipients = append(allRecipients, req.CC...)
+	allRecipients = append(allRecipients, req.BCC...)
+
+	for _, rcpt := range allRecipients {
+		suppressed, err := s.suppressionSvc.Check(ctx, orgID, rcpt)
+		if err != nil {
+			return nil, fmt.Errorf("check suppression for %s: %w", rcpt, err)
+		}
+		if suppressed {
+			return nil, fmt.Errorf("%w: %s", ErrRecipientSuppressed, rcpt)
+		}
+	}
+
 	// Generate a unique Message-ID per RFC 5322.
-	messageID := fmt.Sprintf("<%s@hellomail.dev>", uuid.New().String())
+	messageID := fmt.Sprintf("<%s@mailngine.com>", uuid.New().String())
 
 	// Marshal JSON fields.
 	toJSON, err := json.Marshal(req.To)

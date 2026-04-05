@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.hellomail.dev',
+  apiUrl: 'https://api.mailngine.com',
   googleClientId: '',
 };

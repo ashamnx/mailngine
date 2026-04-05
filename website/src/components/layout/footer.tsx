@@ -62,11 +62,11 @@ export const Footer = component$(() => {
         {/* Bottom Bar */}
         <div class="hm-footer__bottom">
           <p class="hm-footer__copyright">
-            &copy; 2026 Hello Mail. All rights reserved.
+            &copy; 2026 Mailngine. All rights reserved.
           </p>
           <div class="hm-footer__social">
             <a
-              href="https://github.com/hellomail"
+              href="https://github.com/mailngine"
               class="hm-footer__social-link"
               aria-label="GitHub"
               rel="noopener noreferrer"
@@ -84,7 +84,7 @@ export const Footer = component$(() => {
               </svg>
             </a>
             <a
-              href="https://twitter.com/hellomail"
+              href="https://twitter.com/mailngine"
               class="hm-footer__social-link"
               aria-label="Twitter"
               rel="noopener noreferrer"

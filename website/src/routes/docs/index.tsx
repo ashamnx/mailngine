@@ -7,7 +7,7 @@ const STEPS = [
     number: 1,
     title: "Create your account",
     description:
-      "Sign up with Google at app.hellomail.dev. No credit card required to get started.",
+      "Sign up with Google at app.mailngine.com. No credit card required to get started.",
   },
   {
     number: 2,
@@ -32,20 +32,20 @@ const STEPS = [
 const SDK_CARDS = [
   {
     name: "Go SDK",
-    install: "go get github.com/hellomail/hellomail-go",
-    href: "https://github.com/hellomail/hellomail-go",
+    install: "go get github.com/mailngine/mailngine-go",
+    href: "https://github.com/mailngine/mailngine-go",
     language: "bash",
   },
   {
     name: "Node.js SDK",
-    install: "npm install hellomail",
-    href: "https://github.com/hellomail/hellomail-node",
+    install: "npm install mailngine",
+    href: "https://github.com/mailngine/mailngine-node",
     language: "bash",
   },
   {
     name: "Laravel SDK",
-    install: "composer require hellomail/hellomail-laravel",
-    href: "https://github.com/hellomail/hellomail-laravel",
+    install: "composer require mailngine/mailngine-laravel",
+    href: "https://github.com/mailngine/mailngine-laravel",
     language: "bash",
   },
 ] as const;
@@ -57,7 +57,7 @@ export default component$(() => {
         <div class="docs-hero">
           <h1 class="docs-hero__title">Getting Started</h1>
           <p class="docs-hero__subtitle">
-            Start sending emails with Hello Mail in under 5 minutes. Follow
+            Start sending emails with Mailngine in under 5 minutes. Follow
             these four steps to go from sign-up to your first delivered email.
           </p>
         </div>
@@ -191,12 +191,12 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-  title: "Documentation | Hello Mail",
+  title: "Documentation | Mailngine",
   meta: [
     {
       name: "description",
       content:
-        "Get started with Hello Mail. Learn how to send transactional and marketing emails with our API, Go SDK, Node.js SDK, and Laravel SDK.",
+        "Get started with Mailngine. Learn how to send transactional and marketing emails with our API, Go SDK, Node.js SDK, and Laravel SDK.",
     },
   ],
 };

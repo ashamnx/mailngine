@@ -1,6 +1,6 @@
-# Hello Mail Laravel SDK
+# Mailngine Laravel SDK
 
-Official PHP/Laravel SDK for the [Hello Mail](https://hellomail.dev) email API.
+Official PHP/Laravel SDK for the [Mailngine](https://mailngine.com) email API.
 
 ## Requirements
 
@@ -11,7 +11,7 @@ Official PHP/Laravel SDK for the [Hello Mail](https://hellomail.dev) email API.
 ## Installation
 
 ```bash
-composer require hellomail/hellomail-laravel
+composer require mailngine/mailngine-laravel
 ```
 
 ## Quick Start
@@ -19,15 +19,15 @@ composer require hellomail/hellomail-laravel
 ### Direct API Usage
 
 ```php
-use HelloMail\HelloMail;
+use Mailngine\Mailngine;
 
-$hellomail = new HelloMail('your-api-key');
+$mailngine = new Mailngine('your-api-key');
 
 // Send an email
-$email = $hellomail->emails()->send([
+$email = $mailngine->emails()->send([
     'from' => 'you@example.com',
     'to' => ['recipient@example.com'],
-    'subject' => 'Hello from Hello Mail',
+    'subject' => 'Hello from Mailngine',
     'html' => '<h1>Welcome!</h1><p>Thanks for signing up.</p>',
     'text' => 'Welcome! Thanks for signing up.',
 ]);
@@ -37,13 +37,13 @@ echo $email['id']; // Email UUID
 
 ### Laravel Mail Integration
 
-Add the Hello Mail mailer to `config/mail.php`:
+Add the Mailngine mailer to `config/mail.php`:
 
 ```php
 'mailers' => [
-    'hellomail' => [
-        'transport' => 'hellomail',
-        'key' => env('HELLOMAIL_API_KEY'),
+    'mailngine' => [
+        'transport' => 'mailngine',
+        'key' => env('MAILNGINE_API_KEY'),
     ],
 ],
 ```
@@ -51,15 +51,15 @@ Add the Hello Mail mailer to `config/mail.php`:
 Register the transport in a service provider (e.g. `AppServiceProvider`):
 
 ```php
-use HelloMail\HelloMail;
-use HelloMail\HelloMailTransport;
+use Mailngine\Mailngine;
+use Mailngine\MailngineTransport;
 use Illuminate\Support\Facades\Mail;
 
 public function boot(): void
 {
-    Mail::extend('hellomail', function (array $config) {
-        $client = new HelloMail($config['key']);
-        return new HelloMailTransport($client);
+    Mail::extend('mailngine', function (array $config) {
+        $client = new Mailngine($config['key']);
+        return new MailngineTransport($client);
     });
 }
 ```
@@ -67,7 +67,7 @@ public function boot(): void
 Set your API key in `.env`:
 
 ```
-HELLOMAIL_API_KEY=hm_your_api_key_here
+MAILNGINE_API_KEY=mn_your_api_key_here
 ```
 
 Then send emails using Laravel's standard Mail facade:
@@ -75,7 +75,7 @@ Then send emails using Laravel's standard Mail facade:
 ```php
 use Illuminate\Support\Facades\Mail;
 
-Mail::mailer('hellomail')->to('user@example.com')->send(new WelcomeEmail());
+Mail::mailer('mailngine')->to('user@example.com')->send(new WelcomeEmail());
 ```
 
 ## API Resources
@@ -84,7 +84,7 @@ Mail::mailer('hellomail')->to('user@example.com')->send(new WelcomeEmail());
 
 ```php
 // Send an email
-$email = $hellomail->emails()->send([
+$email = $mailngine->emails()->send([
     'from' => 'you@example.com',
     'to' => ['recipient@example.com'],
     'subject' => 'Order Confirmation',
@@ -93,7 +93,7 @@ $email = $hellomail->emails()->send([
 ]);
 
 // Send with a template
-$email = $hellomail->emails()->send([
+$email = $mailngine->emails()->send([
     'from' => 'you@example.com',
     'to' => ['recipient@example.com'],
     'template_id' => 'tmpl_abc123',
@@ -101,68 +101,68 @@ $email = $hellomail->emails()->send([
 ]);
 
 // Get an email by ID
-$email = $hellomail->emails()->get('email-uuid');
+$email = $mailngine->emails()->get('email-uuid');
 
 // List emails (paginated)
-$emails = $hellomail->emails()->list(['page' => 1, 'per_page' => 50]);
+$emails = $mailngine->emails()->list(['page' => 1, 'per_page' => 50]);
 ```
 
 ### Domains
 
 ```php
 // Add a sending domain
-$domain = $hellomail->domains()->create('example.com');
+$domain = $mailngine->domains()->create('example.com');
 
 // List all domains
-$domains = $hellomail->domains()->list();
+$domains = $mailngine->domains()->list();
 
 // Get a domain
-$domain = $hellomail->domains()->get('domain-uuid');
+$domain = $mailngine->domains()->get('domain-uuid');
 
 // Update tracking settings
-$domain = $hellomail->domains()->update('domain-uuid', [
+$domain = $mailngine->domains()->update('domain-uuid', [
     'open_tracking' => true,
     'click_tracking' => true,
 ]);
 
 // Verify DNS records
-$records = $hellomail->domains()->verify('domain-uuid');
+$records = $mailngine->domains()->verify('domain-uuid');
 
 // Delete a domain
-$hellomail->domains()->delete('domain-uuid');
+$mailngine->domains()->delete('domain-uuid');
 ```
 
 ### Webhooks
 
 ```php
 // Create a webhook
-$webhook = $hellomail->webhooks()->create([
-    'url' => 'https://example.com/webhooks/hellomail',
+$webhook = $mailngine->webhooks()->create([
+    'url' => 'https://example.com/webhooks/mailngine',
     'events' => ['email.delivered', 'email.bounced', 'email.complained'],
 ]);
 
 // List webhooks
-$webhooks = $hellomail->webhooks()->list();
+$webhooks = $mailngine->webhooks()->list();
 
 // Update a webhook
-$webhook = $hellomail->webhooks()->update('webhook-uuid', [
-    'url' => 'https://example.com/webhooks/hellomail',
+$webhook = $mailngine->webhooks()->update('webhook-uuid', [
+    'url' => 'https://example.com/webhooks/mailngine',
     'events' => ['email.delivered'],
     'is_active' => true,
 ]);
 
 // List delivery attempts
-$deliveries = $hellomail->webhooks()->listDeliveries('webhook-uuid');
+$deliveries = $mailngine->webhooks()->listDeliveries('webhook-uuid');
 
 // Delete a webhook
-$hellomail->webhooks()->delete('webhook-uuid');
+$mailngine->webhooks()->delete('webhook-uuid');
 ```
 
 ### Templates
 
 ```php
 // Create a template
-$template = $hellomail->templates()->create([
+$template = $mailngine->templates()->create([
     'name' => 'Welcome Email',
     'subject' => 'Welcome, {{name}}!',
     'html_body' => '<h1>Hello {{name}}</h1><p>Welcome to our service.</p>',
@@ -171,55 +171,55 @@ $template = $hellomail->templates()->create([
 ]);
 
 // List templates
-$templates = $hellomail->templates()->list();
+$templates = $mailngine->templates()->list();
 
 // Preview a rendered template
-$preview = $hellomail->templates()->preview('template-uuid', [
+$preview = $mailngine->templates()->preview('template-uuid', [
     'name' => 'Alice',
 ]);
 
 // Update a template
-$template = $hellomail->templates()->update('template-uuid', [
+$template = $mailngine->templates()->update('template-uuid', [
     'name' => 'Welcome Email v2',
     'subject' => 'Welcome aboard, {{name}}!',
     'html_body' => '<h1>Welcome aboard, {{name}}!</h1>',
 ]);
 
 // Delete a template
-$hellomail->templates()->delete('template-uuid');
+$mailngine->templates()->delete('template-uuid');
 ```
 
 ### API Keys
 
 ```php
 // Create an API key (full key only returned once)
-$key = $hellomail->apiKeys()->create([
+$key = $mailngine->apiKeys()->create([
     'name' => 'Production Sending Key',
     'permission' => 'send_only',
 ]);
 echo $key['key']; // Store this securely
 
 // List API keys
-$keys = $hellomail->apiKeys()->list();
+$keys = $mailngine->apiKeys()->list();
 
 // Revoke an API key
-$hellomail->apiKeys()->revoke('key-uuid');
+$mailngine->apiKeys()->revoke('key-uuid');
 ```
 
 ## Error Handling
 
 ```php
-use HelloMail\Exceptions\ApiException;
-use HelloMail\Exceptions\HelloMailException;
+use Mailngine\Exceptions\ApiException;
+use Mailngine\Exceptions\MailngineException;
 
 try {
-    $email = $hellomail->emails()->send([...]);
+    $email = $mailngine->emails()->send([...]);
 } catch (ApiException $e) {
     // API returned an error response
     echo $e->statusCode;  // HTTP status code (e.g. 422)
     echo $e->errorCode;   // API error code (e.g. "domain_not_verified")
     echo $e->getMessage(); // Human-readable error message
-} catch (HelloMailException $e) {
+} catch (MailngineException $e) {
     // Connection or unexpected error
     echo $e->getMessage();
 }
@@ -228,9 +228,9 @@ try {
 ## Configuration Options
 
 ```php
-$hellomail = new HelloMail('your-api-key', [
-    'base_url' => 'https://api.hellomail.dev', // Custom API base URL
-    'timeout' => 30,                           // Request timeout in seconds
+$mailngine = new Mailngine('your-api-key', [
+    'base_url' => 'https://api.mailngine.com', // Custom API base URL
+    'timeout' => 30,                            // Request timeout in seconds
 ]);
 ```
 

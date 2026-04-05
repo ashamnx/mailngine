@@ -1,4 +1,4 @@
-// Package smtp implements the Postfix integration layer for Hello Mail,
+// Package smtp implements the Postfix integration layer for Mailngine,
 // including bounce processing, FBL handling, and milter business logic.
 package smtp
 
@@ -13,8 +13,8 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
 
-	sqlcdb "github.com/hellomail/hellomail/internal/db/sqlcdb"
-	"github.com/hellomail/hellomail/internal/suppression"
+	sqlcdb "github.com/mailngine/mailngine/internal/db/sqlcdb"
+	"github.com/mailngine/mailngine/internal/suppression"
 )
 
 // BounceProcessor handles DSN (Delivery Status Notification) messages from
@@ -103,6 +103,7 @@ func (bp *BounceProcessor) ProcessBounce(ctx context.Context, emailID, orgID uui
 		if err := bp.queries.UpdateEmailStatus(ctx, sqlcdb.UpdateEmailStatusParams{
 			ID:     emailID,
 			Status: "bounced",
+			OrgID:  orgID,
 		}); err != nil {
 			return fmt.Errorf("update email status to bounced: %w", err)
 		}
